@@ -2,32 +2,28 @@
   <div class="ul-btns">
     <div class="menu-icon_1" @click="gotoPage('score')">
       <i class="iconfont icon_luluchengjidan"></i>
-<!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">成绩单</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('subAnalysis')">
       <i class="iconfont icon_lulufenxi"></i>
-      <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">学科分析</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('comAnalysis')">
       <i class="iconfont icon_luludbfx"></i>
-      <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">对比分析</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('hisAnalysis')">
-      <i class="iconfont icon_lululishifenxi"></i>
-      <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
+      <div class="icon-bac">
+        <i class="iconfont icon_lululishifenxi"></i>
+      </div>
       <div class="icon-text">历史分析</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('question')">
       <i class="iconfont icon_lulujiachang_cuotiben"></i>
-      <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">错题诊断</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('classSchedule')">
       <i class="iconfont icon_lulukechengbiao"></i>
-      <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">课程表</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('schoolInquire')">
@@ -40,22 +36,6 @@
       <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">更多</div>
     </div>
-<!--    <div class="menu-icon" @click="gotoPage('major')">-->
-<!--      <div class="icon-bac"><i class="iconfont iconxueke"></i></div>-->
-<!--      <div class="icon-text">查专业</div>-->
-<!--    </div>-->
-<!--    <div class="menu-icon" @click="gotoPage('news')">-->
-<!--      <div class="icon-bac"><i class="iconfont iconxinwen"></i></div>-->
-<!--      <div class="icon-text">看资讯</div>-->
-<!--    </div>-->
-<!--    <div class="menu-icon" @click="gotoPage('bbs')">-->
-<!--      &lt;!&ndash; <div class="icon-bac"><i class="iconfont iconxiaoyou"></i></div> &ndash;&gt;-->
-<!--      <div class="icon-bac"><i class="iconfont icontiezi"></i></div>-->
-<!--      <div class="icon-text">逛圈子</div>-->
-<!--    </div>-->
-<!--    <div class="menu-circle" @click="gotoPage('predict')">-->
-<!--      <div class="icon-text">预测</div>-->
-<!--    </div>-->
   </div>
 </template>
 <script>
@@ -86,6 +66,7 @@ export default {
     width: 55px;
     background-color: #42b983;
     border-radius: 50%;
+    box-shadow: 1px 1px 12px 1px #10184852;
     display: inline-block;
   }
   .icon-text{
@@ -106,6 +87,7 @@ export default {
     text-align: center;
     font-size: 0;
     position: relative;
+    /*background-color: #72b7e4;*/
   }
   .menu-circle {
     position: absolute;
@@ -126,12 +108,12 @@ export default {
   .menu-icon {
     position: relative;
     display: inline-block;
-    width: 44%;
+    width: 22%;
     margin: 1.5%;
     text-align: center;
     padding-top: 6px;
     padding-bottom: 10px;
-    border-radius: 8px;
+    border-radius: 50%;
     box-shadow: 0px 0px 12px 0px #10184852;
     &:nth-child(1) {
       background: #4b6a98;

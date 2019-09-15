@@ -260,8 +260,9 @@ export default {
     text-align: center;
     width: 100%;
     background-color: #42b983;
-    height: 30px;
-    padding-top: 5px;
+    height: 35px;
+    line-height: 35px;
+    /*padding-top: 5px;*/
     margin-bottom: 5px;
     /*background: url("../assets/img/home-bac.png") no-repeat;*/
     /*background-size: 100% 100%;*/
@@ -275,11 +276,12 @@ export default {
     height: 150px;
   }
   .third{
-    height: 55px;
+    height: 60px;
     background-color: cornflowerblue;
     color: #fff;
     text-align: center;
-    padding-top: 15px;
+    line-height: 60px;
+    /*padding-top: 15px;*/
     /*transform: translate(-50%);*/
   }
 </style>
