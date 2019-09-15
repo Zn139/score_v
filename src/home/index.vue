@@ -267,7 +267,7 @@ export default {
     /*background-size: 100% 100%;*/
   }
   .second{
-    height: 200px;
+    height: 150px;
     background-color: antiquewhite;
     margin-bottom: 5px;
   }
@@ -275,11 +275,11 @@ export default {
     height: 150px;
   }
   .third{
-    height: 60px;
+    height: 55px;
     background-color: cornflowerblue;
     color: #fff;
     text-align: center;
-    padding-top: 7px;
+    padding-top: 15px;
     /*transform: translate(-50%);*/
   }
 </style>
