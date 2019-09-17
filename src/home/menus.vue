@@ -87,6 +87,7 @@ export default {
     text-align: center;
     font-size: 0;
     position: relative;
+    border-radius: 50px;
     /*background-color: #72b7e4;*/
   }
   .menu-circle {

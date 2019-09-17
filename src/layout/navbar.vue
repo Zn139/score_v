@@ -18,7 +18,7 @@ export default {
       }, {
         link: 'study',
         value: 'study',
-        name: '学习集',
+        name: '学习',
         icon: 'icon_luluziyuan'
       },
       {
@@ -30,7 +30,7 @@ export default {
       {
         link: 'lineCourse',
         value: 'lineCourse',
-        name: '在线课堂',
+        name: '课堂',
         icon: 'icon_luluzaixianketang'
       }, {
         link: 'my',
@@ -57,19 +57,25 @@ export default {
 </script>
 <style lang="scss">
   .weui-tabbar {
-    background-color: RGB(52,127,245);
-    color: #fff;
-    height: 50px;
+    /*background-color: RGB(52,127,245);*/
+    background-color: #fff;
+    /*color: #000;*/
+    /*height: 50px;*/
   }
 
   .weui-tabbar__icon>i, i.weui-tabbar__icon {
-    color: #fff;
-    opacity: 0.6;
+    font-size: 22px;
+    /*color: #000;*/
+    /*opacity: 0.6;*/
+    /*font-max-size: large;*/
+    /*border-radius: 50%;*/
   }
   .active {
     .weui-tabbar__icon {
-      color: #fff;
-      opacity: 1;
+      color: #42b983;
+      /*color: RGB(52,127,245);*/
+      /*border-radius: 10px;*/
+      /*opacity: 1;*/
     }
   }
   .weui-tabbar__item {
@@ -79,8 +85,12 @@ export default {
     margin-top: 2px;
     line-height: 1.8;
     font-size: 12px;
-    color: #fff;
-    /*display: inline-block;*/
+    color: silver;
+  }
+  .icon_lulujiahao-tianchong:before {
+    font-size: 35px;
+    /*margin-bottom: 3px;*/
+    line-height: 50px;
   }
   /*.iconfont icon_lulujiahao-tianchong{*/
   /*  font-size: 20px;*/
