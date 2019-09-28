@@ -8,6 +8,7 @@ import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
 import { ToastPlugin, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, Toast } from 'vux'
+import store from './store'
 
 Vue.use(VueRouter)
 Vue.use(vueTap)
@@ -26,6 +27,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
