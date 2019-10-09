@@ -1,7 +1,7 @@
 <template>
   <div class="home-page" ref="homeWrapper">
     <div class="home_content">
-      <div class="content">2019年期中考试</div>
+      <first></first>
       <sun-chart></sun-chart>
       <menus></menus>
       <hot-recommend></hot-recommend>
@@ -13,9 +13,10 @@ import BScroll from 'better-scroll'
 import menus from './menus'
 import hotRecommend from './hotRecommend'
 import sunChart from './sunChart'
+import first from './first'
 import { mapState } from 'vuex'
 export default {
-  components: { menus, hotRecommend, sunChart },
+  components: { menus, hotRecommend, sunChart, first },
   name: 'home',
   inject: ['reload'],
   data () {
@@ -42,22 +43,9 @@ export default {
 </script>
 <style scoped="">
   .home-page {
-       height: calc(100% - 50px);
-       overflow: hidden;
-       flex: 1;
-       background: #fff;
-     }
-  .content {
-    /*padding: 0;*/
-    font-size: 16px;
-    text-align: center;
-    width: 100%;
-    background-color: #42b983;
-    height: 40px;
-    line-height: 40px;
-    /*padding-top: 5px;*/
-    margin-bottom: 5px;
-    /*background: url("../assets/img/home-bac.png") no-repeat;*/
-    /*background-size: 100% 100%;*/
-  }
+     height: calc(100% - 50px);
+     overflow: hidden;
+     flex: 1;
+     background: #fff;
+   }
 </style>

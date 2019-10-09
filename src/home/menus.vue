@@ -59,11 +59,11 @@ export default {
 </script>
 <style scoped>
   .menu-icon_1{
-    margin: 10px 10px 38px 20px;
+    margin: 10px 10px 38px 18px;
     /*margin-top: 10px;*/
     /*margin-left: 20px;*/
-    height: 55px;
-    width: 55px;
+    height: 53px;
+    width: 53px;
     background-color: #42b983;
     border-radius: 50%;
     box-shadow: 1px 1px 12px 1px #10184852;
@@ -74,7 +74,7 @@ export default {
     padding-top: 65px;
   }
   .iconfont {
-    padding-top: 12px;
+    padding-top: 10px;
     margin-left: -12px;
     /*padding-left: -30px;*/
     padding-right: 20px;
@@ -83,11 +83,15 @@ export default {
     position: absolute;
   }
   .ul-btns {
-    margin: 10px 0 30px;
+    margin: 10px 13px 30px;
     text-align: center;
     font-size: 0;
     position: relative;
-    border-radius: 50px;
+    /*border-radius: 50px;*/
+    /*box-shadow: 4px 4px 4px 0px rgba(71, 89, 172, 0.12);*/
+    border-radius: 10px;
+    background: #e1e9ff;
+    box-shadow: 1px 1px 5px 1px #10184852;
     /*background-color: #72b7e4;*/
   }
   .menu-circle {

@@ -18,6 +18,7 @@ const question = () => import('@/menus/question')
 const classSchedule = () => import('@/menus/classSchedule')
 const schoolInquire = () => import('@/menus/schoolInquire')
 const more = () => import('@/menus/more')
+const addScore = () => import('@/home/addScore')
 
 export default new Router({
   routes: [
@@ -32,6 +33,14 @@ export default new Router({
       },
       name: 'home',
       meta: { tab: 'home', title: 'home' }
+    },
+    {
+      path: '/addScore',
+      components: {
+        default: addScore
+      },
+      name: 'addScore',
+      meta: { tab: 'addScore', title: 'addScore' }
     },
     {
       path: '/my',

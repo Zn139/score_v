@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="hot_recom">
     <div class="recommend">
       <i class="iconfont icon_luluremen"></i>
       热门推荐
@@ -31,8 +31,8 @@
   }
   .hot_img{
     display: inline-block;
-    height: 105px;
-    width: 105px;
+    height: 100px;
+    width: 100px;
     margin: 5px;
   }
 /*.icon_luluyoujiantou{*/
@@ -40,5 +40,11 @@
 /*  transform: translate(-10%);*/
 /*  position: relative;*/
 /*}*/
+  .recommend{
+    margin: 0 10px 10px;
+    padding-left: 5px;
+    box-shadow: 4px 4px 4px 0px rgba(71, 89, 172, 0.12);
+    border-radius: 10px;
+  }
 
 </style>
