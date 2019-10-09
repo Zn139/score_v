@@ -3,41 +3,40 @@
     <div class="second">
       <div ref="sunChart" class="second_chart"></div>
       <div class="second_screen">
-        <div class="second_deafult second_screen_info">
-<!--          <div v-if="docState === 'current'">-->
-          <div v-if="list.showDefault">
+        <div class="second_deafult">
+          <div v-if="docState === 'current'">
             <p class="second_screen_title">当前是</p>
             <p class="second_screen_content">19年3月考试</p>
             <p class="second_screen_content">分数:{{total}}</p>
           </div>
         </div>
-        <transition name="fade" mode="out-in">
-          <div v-if="list.showLink" v-for="item in clickCTList" class="second_screen_info">
+        <transition
+          name="fade" mode="out-in">
+<!--          <div v-if="docState === 'current'">-->
+<!--            <p class="second_screen_title">当前是</p>-->
+<!--            <p class="second_screen_content">19年3月考试</p>-->
+<!--            <p class="second_screen_content">分数:{{total}}</p>-->
+<!--          </div>-->
+          <div v-if="docState === 'allScore'" v-for="(item,index) in clickCTList" :key="index">
             <p class="second_screen_title">总分</p>
             <p class="second_screen_content">班排：{{item.examCoversionTotal.classIndex}}</p>
             <p class="second_screen_content">校排：{{item.examCoversionTotal.schoolIndex}}</p>
             <p class="second_screen_content">班进；{{item.waveClass}}</p>
             <p class="second_screen_content">年进：{{item.waveGrade}}</p>
           </div>
-        </transition>
-        <transition name="fade" mode="out-in">
-          <div v-show="list.showZongHe" v-for="item in zonghe" class="second_screen_info">
+          <div v-if="docState === 'zong_he'" v-for="(item,index) in zonghe" :key="index">
             <p class="second_screen_title">综合</p>
             <p class="second_screen_content">分数：{{item.comprehensive}}</p>
             <p class="second_screen_content">班排：{{item.complexClassRank}}</p>
             <p class="second_screen_content">年排：{{item.complexGradeRank}}</p>
           </div>
-        </transition>
-        <transition name="fade" mode="out-in">
-          <div v-show="list.showThree" v-for="item in threeProject" class="second_screen_info">
+          <div v-if="docState === 'san_ke'" v-for="(item,index) in threeProject" :key="index">
             <p class="second_screen_title">三科</p>
             <p class="second_screen_content">分数：{{item.threeSubject}}</p>
             <p class="second_screen_content">班排：{{item.classRank}}</p>
             <p class="second_screen_content">年排：{{item.gradeRank}}</p>
           </div>
-        </transition>
-        <transition name="fade" mode="out-in">
-          <div v-show="list.showPro" v-if="subList.length > 0" v-for="item in subList" class="second_screen_info">
+          <div v-if="docState === 'single_ke'"  v-for="(item,index) in subList" :key="index">
             <p class="second_screen_title">{{project}}</p>
             <p class="second_screen_content">分数：{{item.score}}</p>
             <p class="second_screen_content">班排：{{item.classRank}}</p>
@@ -46,6 +45,41 @@
             <p class="second_screen_content">年进：{{item.waveGrade}}</p>
           </div>
         </transition>
+<!--        <transition name="fade" mode="out-in">-->
+<!--          <div v-if="list.showLink" v-for="item in clickCTList" :key="item">-->
+<!--            <p class="second_screen_title">总分</p>-->
+<!--            <p class="second_screen_content">班排：{{item.examCoversionTotal.classIndex}}</p>-->
+<!--            <p class="second_screen_content">校排：{{item.examCoversionTotal.schoolIndex}}</p>-->
+<!--            <p class="second_screen_content">班进；{{item.waveClass}}</p>-->
+<!--            <p class="second_screen_content">年进：{{item.waveGrade}}</p>-->
+<!--          </div>-->
+<!--        </transition>-->
+<!--        <transition name="fade" mode="in-out">-->
+<!--          <div v-show="list.showZongHe" v-for="item in zonghe" :key="item">-->
+<!--            <p class="second_screen_title">综合</p>-->
+<!--            <p class="second_screen_content">分数：{{item.comprehensive}}</p>-->
+<!--            <p class="second_screen_content">班排：{{item.complexClassRank}}</p>-->
+<!--            <p class="second_screen_content">年排：{{item.complexGradeRank}}</p>-->
+<!--          </div>-->
+<!--        </transition>-->
+<!--        <transition name="fade" mode="in-out">-->
+<!--          <div v-show="list.showThree" v-for="item in threeProject" :key="item">-->
+<!--            <p class="second_screen_title">三科</p>-->
+<!--            <p class="second_screen_content">分数：{{item.threeSubject}}</p>-->
+<!--            <p class="second_screen_content">班排：{{item.classRank}}</p>-->
+<!--            <p class="second_screen_content">年排：{{item.gradeRank}}</p>-->
+<!--          </div>-->
+<!--        </transition>-->
+<!--        <transition name="fade" mode="in-out">-->
+<!--          <div v-show="list.showPro" v-if="subList.length > 0" v-for="item in subList" :key="item">-->
+<!--            <p class="second_screen_title">{{project}}</p>-->
+<!--            <p class="second_screen_content">分数：{{item.score}}</p>-->
+<!--            <p class="second_screen_content">班排：{{item.classRank}}</p>-->
+<!--            <p class="second_screen_content">年排：{{item.gradeRank}}</p>-->
+<!--            <p class="second_screen_content">班进：{{item.waveClass}}</p>-->
+<!--            <p class="second_screen_content">年进：{{item.waveGrade}}</p>-->
+<!--          </div>-->
+<!--        </transition>-->
       </div>
     </div>
   </div>
@@ -292,6 +326,13 @@ export default {
         this.three = res.data.data[0].list
         console.log(this.three)
         this.getSix(this.three)
+        // for (let item in this.three) {
+        //   console.log('three:', this.three)
+        // this.sunData[0].children[1].children[0].name = this.three[item].list[0]
+        // this.sunData[0].children[1].children[1].name = this.three[item].list[1]
+        // this.sunData[0].children[1].children[2].name = this.three[item].list[2]
+        // this.drawSunburst()
+        // }
       })
     },
     drawSunburst () {
@@ -363,10 +404,45 @@ export default {
         console.log('param.name:', param.name)
         if (param.value === 356) {
           that.getClickData()
+          // getScoreAnalysis({
+          //   stuNumber: '08047737',
+          //   examType: '2019年1月期末'
+          // }).then(res => {
+          //   that.clickCTList = res.data.data
+          //   for (const a in that.list) {
+          //     that.list[a] = false
+          //     that.list.showLink = true
+          //   }
+          //   // that.showLink = true
+          //   // this.$store.commit('SET_ShowLink', this.showLink)
+          //   that.$store.commit('SET_ShowLink', true)
+          //   console.log('store:', that.$store.state.sunchart.link)
+          //   // console.log('1111111111', that.showLink)
+          // })
         } else if (param.name === '综合') {
           that.getClickThreeZ()
+          // getThree({
+          //   stuNumber: '08047737',
+          //   examType: '19年3月考试'
+          // }).then(res => {
+          //   that.zonghe = res.data.data
+          //   for (const a in that.list) {
+          //     that.list[a] = false
+          //     that.list.showZongHe = true
+          //   }
+          // })
         } else if (param.name === '三科') {
           that.getClickThreeS()
+          // getThree({
+          //   stuNumber: '08047737',
+          //   examType: '19年3月考试'
+          // }).then(res => {
+          //   that.threeProject = res.data.data
+          //   for (const a in that.list) {
+          //     that.list[a] = false
+          //     that.list.showThree = true
+          //   }
+          // })
         } else if (param.name === '化学') {
           that.project = '化学'
           that.getClickChemistry('huaxue_coversion')
@@ -418,15 +494,17 @@ export default {
         examType: '19年3月考试'
       }).then(res => {
         this.clickCTList = res.data.data
-        // this.docState = 'allScore'
-        for (const a in this.list) {
-          this.list[a] = false
-          this.list.showLink = true
-        }
+        // console.log('123', this.clickCTList)
+        this.docState = 'allScore'
+        // for (const a in this.list) {
+        //   this.list[a] = false
+        //   this.list.showLink = true
+        // }
         // that.showLink = true
         // this.$store.commit('SET_ShowLink', this.showLink)
         this.$store.commit('SET_ShowLink', true)
         console.log('store:', this.$store.state.sunchart.link)
+        // console.log('1111111111', that.showLink)
       })
     }),
     getClickThreeZ: _.debounce(function () {
@@ -435,11 +513,11 @@ export default {
         examType: '19年3月考试'
       }).then(res => {
         this.zonghe = res.data.data
-        // this.docState = 'zong_he'
-        for (const a in this.list) {
-          this.list[a] = false
-          this.list.showZongHe = true
-        }
+        this.docState = 'zong_he'
+        // for (const a in this.list) {
+        //   this.list[a] = false
+        //   this.list.showZongHe = true
+        // }
       })
     }),
     getClickThreeS: _.debounce(function () {
@@ -448,11 +526,11 @@ export default {
         examType: '19年3月考试'
       }).then(res => {
         this.threeProject = res.data.data
-        // this.docState = 'san_ke'
-        for (const a in this.list) {
-          this.list[a] = false
-          this.list.showThree = true
-        }
+        this.docState = 'san_ke'
+        // for (const a in this.list) {
+        //   this.list[a] = false
+        //   this.list.showThree = true
+        // }
       })
     }),
     getClickChemistry: _.debounce(function (project) {
@@ -463,11 +541,14 @@ export default {
         subject: project
       }).then(res => {
         this.subList = res.data.data
-        // this.docState = 'single_ke'
-        for (const a in this.list) {
-          this.list[a] = false
-          this.list.showPro = true
-        }
+        this.docState = 'single_ke'
+        // this.score = res.data.data[0].score
+        // console.log('score:', this.score)
+        // console.log('score:', res.data.data[0].examCoversionTotal)
+        // for (const a in this.list) {
+        //   this.list[a] = false
+        //   this.list.showPro = true
+        // }
       })
     })
   }
@@ -488,8 +569,6 @@ export default {
   .second_screen{
     border: 1px #72b7e4 dashed;
     border-radius: 10px;
-    height: 160px;
-    /*line-height: 180px;*/
     /*margin: 20px -8px 10px 5px;*/
     top: 50%;
     transform: translateY(-50%);
@@ -509,28 +588,28 @@ export default {
     width: 65%;
     display: inline-block;
   }
-  .fade-enter-active{
-    transition: opacity 2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  .fade-enter-active, .fade-leave-active {
+    /*transition: opacity .3s ease;*/
+    transition: opacity 2.5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    /*transition: opacity 2s;*/
   }
-  .fade-enter{
-    /*animation-fill-mode: none;*/
+  .fade-enter, .fade-leave-to {
+    transform: translateY(10px);
     opacity: 0;
   }
-  /*.fade-leave-active {*/
-  /*  opacity: 0;*/
-  /*}*/
-  /*.fade-leave-to{*/
-  /*  animation: .3s linear infinite;*/
+  /*.third{*/
+  /*  height: 60px;*/
+  /*  background-color: cornflowerblue;*/
+  /*  color: #fff;*/
+  /*  text-align: center;*/
+  /*  line-height: 60px;*/
+  /*  !*padding-top: 15px;*!*/
+  /*  !*transform: translate(-50%);*!*/
   /*}*/
   .second_screen_content{
     margin-top: 5px;
     margin-bottom: 3px;
     /*padding-bottom: 10px;*/
-  }
-  .second_screen_info{
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
   }
   .second_screen_title{
     font-size: 15px;
