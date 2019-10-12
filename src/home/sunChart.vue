@@ -15,7 +15,7 @@
         </div>
       </div>
       <div ref="sunChart" class="second_chart"></div>
-      <div class="second_screen">
+      <div class="second_screen" :class="{'second_screen--single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">
         <transition >
           <div v-if="list.showLink" v-for="(item, index) in clickCTList" :key="index" class="second_screen_info">
             <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>总分</p>
@@ -485,6 +485,7 @@ export default {
     position: relative;
     font-size: 0;
     background: #fff;
+    text-align: center;
   }
   .second_screen{
     width: 35%;
@@ -495,6 +496,9 @@ export default {
     text-align: left;
     display: inline-block;
     vertical-align: top;
+    &.second_screen--single {
+      display: none;
+    }
   }
   .second_chart{
     padding-left: -15px;

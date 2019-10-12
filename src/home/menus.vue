@@ -88,7 +88,7 @@ export default {
     position: relative;
     /*border-radius: 50px;*/
     border-radius: 4px;
-    background: #f1f1f1;
+    background: #f7f7f7;
     box-shadow: 0px 0px 6px 0px rgba(88, 88, 88, 0.35);
     /*background-color: #72b7e4;*/
   }
