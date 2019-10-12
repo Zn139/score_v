@@ -59,7 +59,7 @@ export default {
 </script>
 <style scoped>
   .menu-icon_1{
-    margin: 10px 16px 20px;
+    margin: 10px 16px 30px;
     /*margin-top: 10px;*/
     /*margin-left: 20px;*/
     height: 50px;
