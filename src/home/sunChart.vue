@@ -1,49 +1,54 @@
 <template>
   <div>
     <div class="second">
+      <div class="second_deafult">
+        <!--<div v-if="docState === 'current'">-->
+        <div class="score-overview">
+          <p class="second_screen_title">
+            <i class="iconfont iconriqi"></i>2019年3月考试
+          </p>
+          <p class="second_screen_title">
+            <i class="iconfont iconjixiaodefenchaxun"></i>{{total}}
+          </p>
+          <!-- <p class="second_screen_content"></p> -->
+          <!-- <p class="second_screen_content">分数:{{total}}</p> -->
+        </div>
+      </div>
       <div ref="sunChart" class="second_chart"></div>
       <div class="second_screen">
-        <div class="second_deafult second_screen_info">
-<!--          <div v-if="docState === 'current'">-->
-          <div v-if="list.showDefault">
-            <p class="second_screen_title">当前是</p>
-            <p class="second_screen_content">19年3月考试</p>
-            <p class="second_screen_content">分数:{{total}}</p>
-          </div>
-        </div>
-        <transition name="fade" mode="out-in">
-          <div v-if="list.showLink" v-for="item in clickCTList" class="second_screen_info">
-            <p class="second_screen_title">总分</p>
-            <p class="second_screen_content">班排：{{item.examCoversionTotal.classIndex}}</p>
-            <p class="second_screen_content">校排：{{item.examCoversionTotal.schoolIndex}}</p>
-            <p class="second_screen_content">班进；{{item.waveClass}}</p>
-            <p class="second_screen_content">年进：{{item.waveGrade}}</p>
+        <transition >
+          <div v-if="list.showLink" v-for="(item, index) in clickCTList" :key="index" class="second_screen_info">
+            <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>总分</p>
+            <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.examCoversionTotal.classIndex}}</span></p>
+            <p class="second_screen_content"><span class="content-label">校排</span><span class="content-value">{{item.examCoversionTotal.schoolIndex}}</span></p>
+            <p class="second_screen_content"><span class="content-label">班进</span><span class="content-value">{{item.waveClass}}</span></p>
+            <p class="second_screen_content"><span class="content-label">年进</span><span class="content-value">{{item.waveGrade}}</span></p>
           </div>
         </transition>
-        <transition name="fade" mode="out-in">
-          <div v-show="list.showZongHe" v-for="item in zonghe" class="second_screen_info">
-            <p class="second_screen_title">综合</p>
-            <p class="second_screen_content">分数：{{item.comprehensive}}</p>
-            <p class="second_screen_content">班排：{{item.complexClassRank}}</p>
-            <p class="second_screen_content">年排：{{item.complexGradeRank}}</p>
+        <transition >
+          <div v-show="list.showZongHe" v-for="(item, index) in zonghe" :key="index" class="second_screen_info">
+            <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>综合</p>
+            <p class="second_screen_content"><span class="content-label">分数</span><span class="content-value">{{item.comprehensive}}</span></p>
+            <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.complexClassRank}}</span></p>
+            <p class="second_screen_content"><span class="content-label">年排</span><span class="content-value">{{item.complexGradeRank}}</span></p>
           </div>
         </transition>
-        <transition name="fade" mode="out-in">
-          <div v-show="list.showThree" v-for="item in threeProject" class="second_screen_info">
-            <p class="second_screen_title">三科</p>
-            <p class="second_screen_content">分数：{{item.threeSubject}}</p>
-            <p class="second_screen_content">班排：{{item.classRank}}</p>
-            <p class="second_screen_content">年排：{{item.gradeRank}}</p>
+        <transition >
+          <div v-show="list.showThree" v-for="(item, index) in threeProject" :key="index" class="second_screen_info">
+            <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>
+            <p class="second_screen_content"><span class="content-label">分数</span><span class="content-value">{{item.threeSubject}}</span></p>
+            <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.classRank}}</span></p>
+            <p class="second_screen_content"><span class="content-label">年排</span><span class="content-value">{{item.gradeRank}}</span></p>
           </div>
         </transition>
-        <transition name="fade" mode="out-in">
-          <div v-show="list.showPro" v-if="subList.length > 0" v-for="item in subList" class="second_screen_info">
-            <p class="second_screen_title">{{project}}</p>
-            <p class="second_screen_content">分数：{{item.score}}</p>
-            <p class="second_screen_content">班排：{{item.classRank}}</p>
-            <p class="second_screen_content">年排：{{item.gradeRank}}</p>
-            <p class="second_screen_content">班进：{{item.waveClass}}</p>
-            <p class="second_screen_content">年进：{{item.waveGrade}}</p>
+        <transition >
+          <div v-show="list.showPro" v-if="subList.length > 0" v-for="(item, index) in subList" :key="index" class="second_screen_info">
+            <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>
+            <p class="second_screen_content"><span class="content-label">分数</span><span class="content-value">{{item.score}}</span></p>
+            <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.classRank}}</span></p>
+            <p class="second_screen_content"><span class="content-label">年排</span><span class="content-value">{{item.gradeRank}}</span></p>
+            <p class="second_screen_content"><span class="content-label">班进</span><span class="content-value">{{item.waveClass}}</span></p>
+            <p class="second_screen_content"><span class="content-label">年进</span><span class="content-value">{{item.waveGrade}}</span></p>
           </div>
         </transition>
       </div>
@@ -473,38 +478,26 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
   .second{
-    margin: 10px 14px 20px;
-    box-shadow: 4px 4px 4px 0px rgba(71, 89, 172, 0.12);
-    border-radius: 10px;
-    height: 210px;
-    /*background-color: antiquewhite;*/
-    background-color: #f0f0f0;
+    padding: 10px 14px 20px;
+    height: 240px;
     position: relative;
-    /*margin-bottom: 5px;*/
-    /*display: inline-block;*/
+    font-size: 0;
+    background: #fff;
   }
   .second_screen{
-    border: 1px #72b7e4 dashed;
-    border-radius: 10px;
+    width: 35%;
+    margin-top: 10px;
     height: 160px;
-    /*line-height: 180px;*/
-    /*margin: 20px -8px 10px 5px;*/
-    top: 50%;
-    transform: translateY(-50%);
     font-size: 14px;
-    padding: 5px 10px;
-    background-color: #e1e9ff;
     color: #828282;
     text-align: left;
-    position: absolute;
     display: inline-block;
-    box-shadow: 2px 1px 3px 1px #10184852;
-    }
+    vertical-align: top;
+  }
   .second_chart{
     padding-left: -15px;
-    padding-top: 5px;
     height: 200px;
     width: 65%;
     display: inline-block;
@@ -523,20 +516,43 @@ export default {
   /*  animation: .3s linear infinite;*/
   /*}*/
   .second_screen_content{
-    margin-top: 5px;
-    margin-bottom: 3px;
+    padding-left: 10px;
+    margin-top: 6px;
     /*padding-bottom: 10px;*/
+  }
+  .content-label {
+    background: rgba(66, 185, 130, 0.5);
+    border-radius: 4px;
+    margin-right: 10px;
+    padding: 3px 6px;
+    color: #fff;
   }
   .second_screen_info{
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    .iconfont {
+      color: #42b982;
+    }
+  }
+  .score-overview {
+    font-size: 0;
+    box-shadow: 0px 1px 5px 0px rgba(66, 185, 130, 0.3);
+    padding: 6px 0;
+    margin-bottom: 10px;
   }
   .second_screen_title{
     font-size: 15px;
     font-weight: bold;
-    color: #000;
-    margin-bottom: 10px;
+    color: #676767;
+    & > .iconfont {
+      margin-right: 10px;
+      font-weight: normal;
+    }
+    .score-overview & {
+      display: inline-block;
+      width: 50%;
+      margin-bottom: 0;
+      text-align: center;
+    }
   }
   .second_deafult {
     animation: twinkling 2s 1 ease-in-out;

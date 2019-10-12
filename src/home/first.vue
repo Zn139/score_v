@@ -52,16 +52,15 @@ export default {
     text-align: center;
     width: 100%;
     background-color: #42b983;
+    color: #fff;
     height: 40px;
     line-height: 40px;
-    /*padding-top: 5px;*/
-    margin-bottom: 5px;
   }
   .iconfont{
     position: absolute;
     margin-left: 23%;
     font-size: 17px;
-    color: #000;
+    color: #fff;
     z-index: 100;
     font-weight: bold;
   }

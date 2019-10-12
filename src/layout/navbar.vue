@@ -88,6 +88,7 @@ export default {
     color: silver;
   }
   .icon_lulujiahao-tianchong:before {
+    color: #42b982;
     font-size: 35px;
     /*margin-bottom: 3px;*/
     line-height: 50px;

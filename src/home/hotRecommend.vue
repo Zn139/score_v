@@ -5,45 +5,45 @@
       热门推荐
       <i class="iconfont icon_luluyoujiantou"></i>
     </div>
-    <div>
-      <img src="../assets/img/14.jpg" class="hot_img">
-      <img src="../assets/img/15.jpg" class="hot_img">
-      <img src="../assets/img/16.jpg" class="hot_img">
+    <div class="hot_img_block">
+      <div class="hot_img"><img src="../assets/img/14.jpg"></div>
+      <div class="hot_img"><img src="../assets/img/15.jpg"></div>
+      <div class="hot_img"><img src="../assets/img/16.jpg"></div>
     </div>
   </div>
 </template>
 <script>
 
 </script>
-<style scoped>
-.recommend{
-  background-color: #f0f0f0;
-  font-weight: bold;
-  font-size: 14px;
-  height: 25px;
-  padding-top: 3px;
-}
+<style scoped lang="scss">
+  .recommend{
+    font-weight: bold;
+    font-size: 14px;
+    height: 25px;
+    padding-top: 3px;
+  }
   .iconfont{
     color: #d81e06;
   }
   .icon_luluyoujiantou{
     margin-left: 70%;
   }
+  .hot_img_block {
+    text-align: center;
+  }
   .hot_img{
     display: inline-block;
-    height: 100px;
+    height: 60px;
     width: 100px;
-    margin: 5px;
+    margin: 4px;
   }
-/*.icon_luluyoujiantou{*/
-/*  padding-left: 90%;*/
-/*  transform: translate(-10%);*/
-/*  position: relative;*/
-/*}*/
+  .hot_img img {
+    width: 100%;
+    height: 100%;
+  }
   .recommend{
-    margin: 0 10px 10px;
-    padding-left: 5px;
-    box-shadow: 4px 4px 4px 0px rgba(71, 89, 172, 0.12);
+    margin: 0 10px 4px;
+    padding-left: 4px;
     border-radius: 10px;
   }
 
