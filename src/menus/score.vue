@@ -206,7 +206,7 @@ export default {
             min: 0,
             max: this.classNum, // 班级总人数
             splitNumber: 1,
-            radius: '35%',
+            radius: '38%',
             axisLine: { // 坐标轴线
               lineStyle: { // 属性lineStyle控制线条样式
                 width: 6,
@@ -256,6 +256,7 @@ export default {
               // },
               offsetCenter: ['0', '35%'],
               fontWeight: 'bold',
+              // fontSize: '24',
               // borderRadius: 3,
               // backgroundColor: '#A6FFA6',
               // backgroundColor: '#444',
@@ -287,7 +288,7 @@ export default {
             min: 0,
             max: this.schoolNum, // nian级总人数
             splitNumber: 1,
-            radius: '35%',
+            radius: '38%',
             axisLine: { // 坐标轴线
               lineStyle: { // 属性lineStyle控制线条样式
                 width: 6,
@@ -335,8 +336,9 @@ export default {
               //   return ('00' + value[0]).slice(-2) +
               //     '.' + (value[1] + '00').slice(0, 2)
               // },
-              offsetCenter: ['0', '35%'],
+              offsetCenter: ['-5%', '32%'],
               fontWeight: 'bold',
+              fontSize: '24',
               // borderRadius: 3,
               // backgroundColor: '#A6FFA6',
               // backgroundColor: '#444',
