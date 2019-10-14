@@ -87,9 +87,9 @@ export default {
     font-size: 0;
     position: relative;
     /*border-radius: 50px;*/
-    border-radius: 4px;
+    border-radius: 7px;
     background: #f7f7f7;
-    box-shadow: 0px 0px 5px 0px rgba(66,185,130,0.4);
+    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
     /*background-color: #72b7e4;*/
   }
   .menu-circle {

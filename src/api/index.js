@@ -28,3 +28,10 @@ export function getAllRate (req) {
     params: req
   })
 }
+export function getScoreReport (req) {
+  return request({
+    url: 'score/getScoreReportInfo',
+    method: 'get',
+    params: req
+  })
+}
