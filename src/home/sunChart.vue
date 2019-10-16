@@ -1,59 +1,112 @@
 <template>
   <div>
     <div class="second">
-      <div class="second_deafult">
         <!--<div v-if="docState === 'current'">-->
-        <div class="score-overview">
-          <p class="second_screen_title">
-            <i class="iconfont iconriqi"></i>2019年3月考试
-          </p>
-          <p class="second_screen_title">
-            <i class="iconfont iconjixiaodefenchaxun"></i>{{total}}
-          </p>
-          <!-- <p class="second_screen_content"></p> -->
-          <!-- <p class="second_screen_content">分数:{{total}}</p> -->
-        </div>
-      </div>
+<!--        <div class="score-overview">-->
+<!--          <p class="second_screen_title">-->
+<!--            <i class="iconfont iconriqi"></i>{{exam}}-->
+<!--          </p>-->
+<!--          <p class="second_screen_title">-->
+<!--            <i class="iconfont iconjixiaodefenchaxun"></i>{{total}}-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="second_title">{{project || '总分'}}</div>
       <div class="second_info">
-        <div ref="sunChart" class="second_chart"></div>
-        <div class="second_screen" :class="{'second_screen--single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">
-          <transition name="fade" mode="out-in">
-            <div v-if="list.showLink" v-for="(item, index) in clickCTList" :key="index" class="second_screen_info">
-              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>总分</p>
-              <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.examCoversionTotal.classIndex}}</span></p>
-              <p class="second_screen_content"><span class="content-label">校排</span><span class="content-value">{{item.examCoversionTotal.schoolIndex}}</span></p>
-              <p class="second_screen_content"><span class="content-label">班进</span><span class="content-value">{{item.waveClass}}</span></p>
-              <p class="second_screen_content"><span class="content-label">年进</span><span class="content-value">{{item.waveGrade}}</span></p>
-            </div>
-          </transition>
-          <transition name="fade" mode="out-in">
-            <div v-show="list.showZongHe" v-for="(item, index) in zonghe" :key="index" class="second_screen_info">
-              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>综合</p>
-              <p class="second_screen_content"><span class="content-label">分数</span><span class="content-value">{{item.comprehensive}}</span></p>
-              <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.complexClassRank}}</span></p>
-              <p class="second_screen_content"><span class="content-label">年排</span><span class="content-value">{{item.complexGradeRank}}</span></p>
-            </div>
-          </transition>
-          <transition name="fade" mode="out-in">
-            <div v-show="list.showThree" v-for="(item, index) in threeProject" :key="index" class="second_screen_info">
-              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>
-              <p class="second_screen_content"><span class="content-label">分数</span><span class="content-value">{{item.threeSubject}}</span></p>
-              <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.classRank}}</span></p>
-              <p class="second_screen_content"><span class="content-label">年排</span><span class="content-value">{{item.gradeRank}}</span></p>
-            </div>
-          </transition>
-          <transition name="fade" mode="out-in">
-            <div v-show="list.showPro" v-if="subList.length > 0" v-for="(item, index) in subList" :key="index" class="second_screen_info">
-              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>
-              <p class="second_screen_content"><span class="content-label">分数</span><span class="content-value">{{item.score}}</span></p>
-              <p class="second_screen_content"><span class="content-label">班排</span><span class="content-value">{{item.classRank}}</span></p>
-              <p class="second_screen_content"><span class="content-label">年排</span><span class="content-value">{{item.gradeRank}}</span></p>
-              <p class="second_screen_content"><span class="content-label">班进</span><span class="content-value">{{item.waveClass}}</span></p>
-              <p class="second_screen_content"><span class="content-label">年进</span><span class="content-value">{{item.waveGrade}}</span></p>
-            </div>
-          </transition>
-        </div>
-
+<!--        <div class="second_content">-->
+          <div class="second_screen" style="text-align: left">
+            <!--        <div class="second_screen" :class="{'second_screen&#45;&#45;single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">-->
+            <transition name="fade" mode="out-in">
+              <div v-if="list.showLink" v-for="(item, index) in clickCTList" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title">&lt;!&ndash;<i class="iconfont iconfangkuai"></i>&ndash;&gt;总分</p>-->
+                <p class="second_screen_title"><!--<i class="iconfont iconfangkuai"></i>-->排名</p>
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{total}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.examCoversionTotal.classIndex}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校排：</span><span class="content-value">{{item.examCoversionTotal.schoolIndex}}</span></p>
+                <!--              <p class="second_screen_content"><span class="content-label">班进:</span><span class="content-value">{{item.waveClass}}</span></p>-->
+                <!--              <p class="second_screen_content"><span class="content-label">年进:</span><span class="content-value">{{item.waveGrade}}</span></p>-->
+              </div>
+            </transition>
+            <transition name="fade" mode="out-in">
+              <div v-show="list.showZongHe" v-for="(item, index) in zonghe" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>综合</p>-->
+                <p class="second_screen_title">排名</p>
+                <!--              <p class="second_screen_title">综合</p>-->
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.comprehensive}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.complexClassRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.complexGradeRank}}</span></p>
+              </div>
+            </transition>
+            <transition name="fade" mode="out-in">
+              <div v-show="list.showThree" v-for="(item, index) in threeProject" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title">三科</p>-->
+                <p class="second_screen_title">排名</p>
+                <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>-->
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.threeSubject}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.classRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.gradeRank}}</span></p>
+              </div>
+            </transition>
+            <transition name="fade" mode="out-in">
+              <div v-show="list.showPro" v-if="subList.length > 0" v-for="(item, index) in subList" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title">{{project}}</p>-->
+                <p class="second_screen_title">排名</p>
+                <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>-->
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.score}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.classRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.gradeRank}}</span></p>
+                <!--              <p class="second_screen_content"><span class="content-label">班进:</span><span class="content-value">{{item.waveClass}}</span></p>-->
+                <!--              <p class="second_screen_content"><span class="content-label">年进:</span><span class="content-value">{{item.waveGrade}}</span></p>-->
+              </div>
+            </transition>
+          </div>
+          <div ref="sunChart" class="second_chart"></div>
+          <div class="second_screen" style="text-align: right">
+            <!--        <div class="second_screen" :class="{'second_screen&#45;&#45;single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">-->
+            <transition name="fade" mode="out-in">
+              <div v-if="list.showLink" v-for="(item, index) in clickCTList" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title">&lt;!&ndash;<i class="iconfont iconfangkuai"></i>&ndash;&gt;总分</p>-->
+                <p class="second_screen_title">名次变化</p>
+                <!--              <p class="second_screen_content"><span class="content-label">班排:</span><span class="content-value">{{item.examCoversionTotal.classIndex}}</span></p>-->
+                <!--              <p class="second_screen_content"><span class="content-label">校排:</span><span class="content-value">{{item.examCoversionTotal.schoolIndex}}</span></p>-->
+                <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.waveClass}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.waveGrade}}</span></p>
+              </div>
+            </transition>
+            <transition name="fade" mode="out-in">
+              <div v-show="list.showZongHe" v-for="(item, index) in zonghe" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>综合</p>-->
+                <!--              <p class="second_screen_title">综合</p>-->
+                <p class="second_screen_title">名次变化</p>
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.comprehensive}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.complexClassRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.complexGradeRank}}</span></p>
+              </div>
+            </transition>
+            <transition name="fade" mode="out-in">
+              <div v-show="list.showThree" v-for="(item, index) in threeProject" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title">三科</p>-->
+                <p class="second_screen_title">名次变化</p>
+                <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>-->
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.threeSubject}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.classRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.gradeRank}}</span></p>
+              </div>
+            </transition>
+            <transition name="fade" mode="out-in">
+              <div v-show="list.showPro" v-if="subList.length > 0" v-for="(item, index) in subList" :key="index" class="second_screen_info">
+                <!--              <p class="second_screen_title">{{project}}</p>-->
+                <p class="second_screen_title">名次变化</p>
+                <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>-->
+                <!--              <p class="second_screen_content"><span class="content-label">分数:</span><span class="content-value">{{item.score}}</span></p>-->
+                <!--              <p class="second_screen_content"><span class="content-label">班排:</span><span class="content-value">{{item.classRank}}</span></p>-->
+                <!--              <p class="second_screen_content"><span class="content-label">年排:</span><span class="content-value">{{item.gradeRank}}</span></p>-->
+                <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.waveClass}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.waveGrade}}</span></p>
+              </div>
+            </transition>
+          </div>
+<!--        </div>-->
       </div>
           </div>
   </div>
@@ -61,17 +114,20 @@
 <script>
 import { getScoreAnalysis, getThree, getSingle, getAllRate } from '@/api/index'
 import _ from 'underscore'
+// import { PopupPicker } from 'vux'
 export default {
+  // components: { PopupPicker },
   data () {
     return {
       docState: 'current',
       list: {
-        showDefault: true,
-        showLink: false,
+        // showDefault: true,
+        showLink: true,
         showZongHe: false,
         showThree: false,
         showPro: false
       },
+      title: '',
       // score: '',
       total: '',
       zhList: [],
@@ -221,6 +277,7 @@ export default {
     // console.log(this.$store.state.sunchart.link)
     this.getData()
     this.getThree()
+    this.getClickData()
     // this.getSix()
     // this.$nextTick(() => {
     //   this.homeScroll = new BScroll(this.$refs.homeWrapper, {
@@ -370,10 +427,13 @@ export default {
         console.log('param.value:', param.value)
         console.log('param.name:', param.name)
         if (param.value === 356) {
+          that.project = '总分'
           that.getClickData()
         } else if (param.name === '综合') {
+          that.project = '综合'
           that.getClickThreeZ()
         } else if (param.name === '三科') {
+          that.project = '三科'
           that.getClickThreeS()
         } else if (param.name === '化学') {
           that.project = '化学'
@@ -483,39 +543,50 @@ export default {
 </script>
 <style scoped lang="scss">
   .second{
-    padding: 10px 14px 20px;
-    height: 240px;
+    padding: 10px 16px 10px;
+    height: 200px;
     position: relative;
-    font-size: 0;
+    /*font-size: 0;*/
     background: #fff;
     text-align: center;
   }
-  /*.second_info{*/
-  /*  background-color: rgba(66, 185, 130, 0.5);*/
-  /*}*/
+  .second_info{
+    height: 200px;
+    /*display: inline-block;*/
+    font-size: 0;
+    /*margin-top: -18px;*/
+  }
   .second_screen{
-    border: 1px rgba(66, 185, 130, 0.5) dashed;
-    border-radius: 10px;
+    /*border: 1px rgba(66, 185, 130, 0.5) dashed;*/
+    /*border-radius: 10px;*/
     margin-top: 30%;
     transform: translateY(-50%);
     /*position: absolute;*/
     padding: 5px 0;
-    width: 33%;
-    /*margin-top: 10px;*/
+    width: 25%;
     height: 170px;
-    font-size: 14px;
-    color: #828282;
+    font-size: 13px;
+    /*color: #828282;*/
+    color: #787878;
     text-align: left;
     display: inline-block;
     vertical-align: top;
-    &.second_screen--single {
-      display: none;
-    }
+    /*&.second_screen--single {*/
+    /*  display: none;*/
+    /*}*/
+  }
+  .second_title {
+    position: absolute;
+    text-align: left;
+    margin-top: 10px;
+    color: #454545;
+    font-weight: bold;
   }
   .second_chart{
-    padding-left: -15px;
+    /*text-align: center;*/
     height: 200px;
-    width: 65%;
+    /*padding: 0 auto;*/
+    width: 50%;
     display: inline-block;
   }
   .fade-enter-active{
@@ -532,20 +603,20 @@ export default {
   /*  animation: .3s linear infinite;*/
   /*}*/
   .second_screen_content{
-    padding-left: 10px;
+    /*padding-left: 10px;*/
     margin-top: 6px;
     /*padding-bottom: 10px;*/
   }
   .content-label {
-    background: rgba(66, 185, 130, 0.5);
-    border-radius: 4px;
-    margin-right: 10px;
-    padding: 3px 6px;
-    color: #fff;
+    /*background: rgba(66, 185, 130, 0.6);*/
+    /*border-radius: 4px;*/
+    /*margin-right: 10px;*/
+    /*padding: 3px 6px;*/
+    /*color: #fff;*/
   }
   .second_screen_info{
     margin-top: -4px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     /*padding: 5px 0;*/
     top: 50%;
     transform: translateY(-50%);
@@ -561,19 +632,24 @@ export default {
     margin-bottom: 10px;
   }
   .second_screen_title{
+    /*margin-bottom: 5px;*/
     font-size: 15px;
     font-weight: bold;
-    color: #676767;
-    & > .iconfont {
-      margin-right: 10px;
-      font-weight: normal;
-    }
+    color: #454545;
+    /*color: #676767;*/
+    /*& > .iconfont {*/
+    /*  margin-right: 10px;*/
+    /*  font-weight: normal;*/
+    /*}*/
     .score-overview & {
       display: inline-block;
-      width: 50%;
+      width: 33%;
       margin-bottom: 0;
       text-align: center;
     }
+  }
+  .second_screen_xiala {
+    margin-top: -2px;
   }
   /*.second_deafult {*/
   /*  animation: twinkling 2s 1 ease-in-out;*/

@@ -35,3 +35,9 @@ export function getScoreReport (req) {
     params: req
   })
 }
+export function getAllExam () {
+  return request({
+    url: 'score/getListExamInfols',
+    method: 'get'
+  })
+}

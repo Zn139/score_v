@@ -65,6 +65,7 @@ export default {
 
   .weui-tabbar__icon>i, i.weui-tabbar__icon {
     font-size: 22px;
+    color: RGB(51,51,51);
     /*color: #000;*/
     /*opacity: 0.6;*/
     /*font-max-size: large;*/
@@ -72,8 +73,8 @@ export default {
   }
   .active {
     .weui-tabbar__icon {
-      color: #42b983;
-      /*color: RGB(52,127,245);*/
+      /*color: #42b983;*/
+      color: RGB(67,183,131);
       /*border-radius: 10px;*/
       /*opacity: 1;*/
     }
@@ -85,13 +86,22 @@ export default {
     margin-top: 2px;
     line-height: 1.8;
     font-size: 12px;
-    color: silver;
+    color: RGB(51,51,51);
+    /*color: silver;*/
   }
   .icon_lulujiahao-tianchong:before {
     color: #42b982;
-    font-size: 35px;
-    /*margin-bottom: 3px;*/
+    font-size: 42px;
+    margin-left: -10px;
+    /*padding-bottom: 3px;*/
     line-height: 50px;
+    border-radius: 50%;
+    border: 0 #fff dashed;
+    /*background-color: #fff;*/
+    /*background-image: url('../assets/img/icon.png');*/
+    /*background-size: 35px;*/
+    /*box-shadow: 1px 1px 4px 0px rgba(0,0,0,0.5);*/
+    box-shadow: 0px 1px 6px 1px rgba(88, 88, 88, 0.35);
   }
   /*.iconfont icon_lulujiahao-tianchong{*/
   /*  font-size: 20px;*/
