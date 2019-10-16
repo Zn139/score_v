@@ -543,7 +543,7 @@ export default {
 </script>
 <style scoped lang="scss">
   .second{
-    padding: 10px 16px 10px;
+    padding: 10px 20px 10px;
     height: 200px;
     position: relative;
     /*font-size: 0;*/

@@ -63,7 +63,7 @@ export default {
     /*margin-top: 10px;*/
     /*margin-left: 20px;*/
     height: 40px;
-    width: 65px;
+    width: 18%;
     /*background-color: #42b983;*/
     /*border-radius: 50%;*/
     /*box-shadow: 0px 0px 6px 0px rgba(88, 88, 88, 0.35);*/

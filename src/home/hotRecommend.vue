@@ -56,7 +56,7 @@ export default {
     width: 100%;
     /*margin-top: 10px;*/
     color: #454545;
-    padding: 0 10px;
+    padding: 0 17px;
     /*padding-top: 3px;*/
     background: #fff;
     line-height: 40px;
@@ -66,7 +66,7 @@ export default {
     /*margin-left: 40px;*/
   }
   .recomend_title {
-    margin-left: 60%;
+    margin-left: 55%;
     transform: translateX(-50%);
     /*text-align: right;*/
   }
