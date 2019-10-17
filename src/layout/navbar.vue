@@ -1,8 +1,15 @@
 <template>
   <div class="navbar weui-tabbar">
-    <div v-for="item in menu" v-tap="[changeMenu, item.link]" :key="item.value" :class="[{'active': item.value === curMenu}, 'weui-tabbar__item']">
-      <i :class="['iconfont', item.icon, 'weui-tabbar__icon']"></i>
-      <p class="weui-tabbar__label">{{item.name}}</p>
+    <div v-for="item in menu" v-tap="[changeMenu, item.link]" :key="item.value" :class="[{'active': item.value === curMenu}, 'weui-tabbar__item', 'tabbar-item--' + item.value]">
+      <template v-if="item.value !== 'add'">
+        <i :class="['iconfont', item.icon, 'weui-tabbar__icon']"></i>
+        <p class="weui-tabbar__label">{{item.name}}</p>
+      </template>
+      <template v-else>
+        <div class="tabbar-add-btn">
+          <i :class="['iconfont', item.icon, 'weui-tabbar__icon']"></i>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -25,7 +32,7 @@ export default {
         link: 'add',
         value: 'add',
         // name: '加号',
-        icon: 'icon_lulujiahao-tianchong'
+        icon: 'iconiconfont7'
       },
       {
         link: 'lineCourse',
@@ -57,10 +64,11 @@ export default {
 </script>
 <style lang="scss">
   .weui-tabbar {
-    /*background-color: RGB(52,127,245);*/
     background-color: #fff;
-    /*color: #000;*/
-    /*height: 50px;*/
+    box-shadow: 0px -1px 3px 1px rgba(0, 0, 0, 0.1);
+    &:before {
+      display: none;
+    }
   }
 
   .weui-tabbar__icon>i, i.weui-tabbar__icon {
@@ -86,10 +94,24 @@ export default {
     margin-top: 2px;
     line-height: 1.8;
     font-size: 12px;
-    color: RGB(51,51,51);
+    color: #6b6b6b;
     /*color: silver;*/
   }
-  .icon_lulujiahao-tianchong:before {
+  .tabbar-add-btn {
+    width: 50px;
+    height: 50px;
+    background: #42b982;
+    border-radius: 100px;
+    margin: -10px auto 0;
+    box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);
+    .iconfont {
+      font-size: 28px;
+      color: #fff;
+      line-height: 50px;
+      text-align: center;
+    }
+  }
+  .d-icon_lulujiahao-tianchong:before {
     color: #42b982;
     font-size: 42px;
     margin-left: -10px;
@@ -97,7 +119,7 @@ export default {
     line-height: 50px;
     border-radius: 50%;
     /*border: 0 #fff dashed;*/
-    /*background-color: #fff;*/
+    background-color: #fff;
     /*background-image: url('../assets/img/icon.png');*/
     /*background-size: 35px;*/
     box-shadow: 0px 0px 3px 0px #42b982;

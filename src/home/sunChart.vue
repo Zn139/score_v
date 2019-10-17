@@ -579,7 +579,7 @@ export default {
   .second_screen{
     /*border: 1px rgba(66, 185, 130, 0.5) dashed;*/
     /*border-radius: 10px;*/
-    margin-top: 30%;
+    margin-top: 120px;
     transform: translateY(-50%);
     /*position: absolute;*/
     padding: 5px 0;
@@ -599,7 +599,7 @@ export default {
     position: absolute;
     text-align: left;
     margin-top: 10px;
-    color: #454545;
+    color: #333;
     font-weight: bold;
   }
   .second_chart{
@@ -653,9 +653,9 @@ export default {
   }
   .second_screen_title{
     /*margin-bottom: 5px;*/
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
-    color: #454545;
+    color: #333;
     /*color: #676767;*/
     /*& > .iconfont {*/
     /*  margin-right: 10px;*/

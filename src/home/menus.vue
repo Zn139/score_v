@@ -73,7 +73,6 @@ export default {
   }
   .icon-text{
     font-size: 12px;
-    font-weight: bold;
     color: #454545;
     /*padding-top: 6px;*/
   }

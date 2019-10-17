@@ -7,15 +7,18 @@
       <div class="second_screen_title" >
         <popup-picker class="second_screen_xiala" :data="[examList]" v-model="exam" @on-change="showChange" @on-show="showExam" :placeholder="exam[0]" @on-hide="hideExam"></popup-picker>
       </div>
-      <div>
-        <popover placement="bottom" @on-show="onShow" @on-hide="onHide" class="first_dialog">
+      <div class="first_dialog">
+        <span class="add_score" @click="addScore">
+          <i class="iconfont iconluru"></i>录入
+        </span>
+
+       <!--  <popover placement="bottom" @on-show="onShow" @on-hide="onHide" class="first_dialog">
           <div slot="content" class="popover-demo-content">
             <div @click="addScore" class="add_score">录入成绩</div>
-            <!--            <div @click="deteScore" class="delete_score">删除成绩</div>-->
+            <div @click="deteScore" class="delete_score">删除成绩</div>
           </div>
-          <!--        <button class="btn btn-default">Popover on top</button>-->
           <i class="iconfont icon_luluadd" @click="add"></i>
-        </popover>
+        </popover> -->
       </div>
     </div>
   </div>
@@ -82,7 +85,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
   .popover-demo-content {
     padding: 5px;
     width: 65px;
@@ -100,23 +103,20 @@ export default {
     /*display: inline-block;*/
   }
   .iconfont{
-    position: absolute;
-    margin-left: 23%;
-    font-size: 16px;
     color: #fff;
-    z-index: 100;
-    font-weight: bold;
+    margin-right: 6px;
   }
   .first_dialog{
     position: absolute;
-    top: 1px;
-    left: 90%;
+    top: 0;
+    right: 4px;
+    padding: 0 10px;
+    color: #f3f3f3;
   }
   .second_screen_title {
-    width: 89%;
-    position: absolute;
     font-size: 15px;
     z-index: 100;
+    padding-right: 90px;
   }
   .add_score{
     font-size: 14px;
@@ -124,7 +124,6 @@ export default {
     /*font-weight: bold;*/
   }
   .second_screen_title >>> .vux-popup-picker-select {
-    width: 70%;
     position: relative;
   }
   /*.open-len {*/
@@ -143,5 +142,30 @@ export default {
   .second_screen_title >>> .vux-popup-picker-value {
     display: inline-block;
     color: #fff;
+  }
+</style>
+<style lang="scss">
+  .second_screen_xiala {
+    .vux-popup-picker-select {
+      text-align: left !important;
+    }
+    .vux-cell-primary,
+    .vux-popup-picker-select,
+    .vux-popup-picker-value {
+      max-width: 100%;
+    }
+    .vux-popup-picker-value {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      &:after {
+        font-family: 'iconfont';
+        content: '\e600';
+        margin-left: 10px;
+      }
+    }
+    .weui-cell__ft {
+      display: none;
+    }
   }
 </style>

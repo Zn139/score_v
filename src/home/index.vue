@@ -45,7 +45,7 @@ export default {
      height: calc(100% - 50px);
      overflow: hidden;
      flex: 1;
-     background: RGB(238,238,238);
+     background: #f8f8f8;
      /*background: #fff;*/
    }
 </style>

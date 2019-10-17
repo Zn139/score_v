@@ -50,7 +50,6 @@ export default {
 </script>
 <style scoped lang="scss">
   .recommend{
-    font-weight: bold;
     font-size: 15px;
     height: 40px;
     width: 100%;
