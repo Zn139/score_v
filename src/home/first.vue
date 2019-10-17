@@ -43,7 +43,7 @@ export default {
       getAllExam().then(res => {
         const content = res.data.data
         this.exam[0] = content[content.length - 1].examName
-        console.log('1111111111111', this.exam[0])
+        // console.log('1111111111111', this.exam[0])
         // this.$store.commit('SET_EXAM_NAME', content[content.length - 1].examName)
         this.$store.commit('SET_EXAM_NAME', this.exam[0])
         for (const item in content) {

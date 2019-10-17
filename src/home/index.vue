@@ -14,7 +14,6 @@ import menus from './menus'
 import hotRecommend from './hotRecommend'
 import sunChart from './sunChart'
 import first from './first'
-import { mapState } from 'vuex'
 export default {
   components: { menus, hotRecommend, sunChart, first },
   name: 'home',
@@ -25,11 +24,11 @@ export default {
       key: ''
     }
   },
-  computed: {
-    ...mapState({
-      link: state => state.sunchart.link
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     link: state => state.sunchart.link
+  //   })
+  // },
   mounted () {
     // this.$store.commit('SET_ShowLink', true)
     // console.log(this.$store.state.exam.link)

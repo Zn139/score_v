@@ -278,9 +278,6 @@ export default {
     examname () {
       return this.$store.state.exam.exam_name
     }
-    // ...mapGetters([
-    //   return this.$store.state.exam.exam_name
-    // ])
   },
   watch: {
     examname (newVal, oldVal) {
