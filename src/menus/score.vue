@@ -61,6 +61,11 @@ export default {
       schoolRank: [{value: 0, name: '年排'}]
     }
   },
+  computed: {
+    examname () {
+      return this.$store.state.exam.exam_name
+    }
+  },
   mounted () {
     // this.clickAll()
     // this.drawYiBLang()
@@ -74,7 +79,8 @@ export default {
     getAllScore () {
       getScoreReport({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        examType: this.examname
+        // examType: '19年3月考试'
       }).then(res => {
         this.three = res.data.data[0].map
         this.allNumber[0].value = parseInt(res.data.data[0].totalScore)

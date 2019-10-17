@@ -96,12 +96,12 @@ export default {
     /*padding-bottom: 3px;*/
     line-height: 50px;
     border-radius: 50%;
-    border: 0 #fff dashed;
+    /*border: 0 #fff dashed;*/
     /*background-color: #fff;*/
     /*background-image: url('../assets/img/icon.png');*/
     /*background-size: 35px;*/
-    /*box-shadow: 1px 1px 4px 0px rgba(0,0,0,0.5);*/
-    box-shadow: 0px 1px 6px 1px rgba(88, 88, 88, 0.35);
+    box-shadow: 0px 0px 3px 0px #42b982;
+    /*box-shadow: 0 0px 0px 5px rgba(0, 0, 0, 0.8);*/
   }
   /*.iconfont icon_lulujiahao-tianchong{*/
   /*  font-size: 20px;*/

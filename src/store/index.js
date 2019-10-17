@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import sunchart from './sunchart'
+import exam from './exam'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    sunchart
+    exam
   }
 })
 

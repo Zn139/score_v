@@ -244,7 +244,7 @@ export default {
   },
   mounted () {
     // this.$store.commit('SET_ShowLink', true)
-    // console.log(this.$store.state.sunchart.link)
+    // console.log(this.$store.state.exam.link)
     this.getData()
     this.getThree()
     // this.getSix()
@@ -416,7 +416,7 @@ export default {
           //   // that.showLink = true
           //   // this.$store.commit('SET_ShowLink', this.showLink)
           //   that.$store.commit('SET_ShowLink', true)
-          //   console.log('store:', that.$store.state.sunchart.link)
+          //   console.log('store:', that.$store.state.exam.link)
           //   // console.log('1111111111', that.showLink)
           // })
         } else if (param.name === '综合') {
@@ -502,8 +502,8 @@ export default {
         // }
         // that.showLink = true
         // this.$store.commit('SET_ShowLink', this.showLink)
-        this.$store.commit('SET_ShowLink', true)
-        console.log('store:', this.$store.state.sunchart.link)
+        this.$store.commit('SET_EXAM_NAME', true)
+        console.log('store:', this.$store.state.exam.exam_name)
         // console.log('1111111111', that.showLink)
       })
     }),

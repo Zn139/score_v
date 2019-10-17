@@ -32,7 +32,7 @@ export default {
   },
   mounted () {
     // this.$store.commit('SET_ShowLink', true)
-    // console.log(this.$store.state.sunchart.link)
+    // console.log(this.$store.state.exam.link)
     this.$nextTick(() => {
       this.homeScroll = new BScroll(this.$refs.homeWrapper, {
         click: true

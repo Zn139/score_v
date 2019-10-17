@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     onSwiperItemIndexChange (index) {
-      console.log('demo item change', index)
+      // console.log('demo item change', index)
     }
   }
 }

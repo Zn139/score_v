@@ -69,6 +69,7 @@
                 <p class="second_screen_title">名次变化</p>
                 <!--              <p class="second_screen_content"><span class="content-label">班排:</span><span class="content-value">{{item.examCoversionTotal.classIndex}}</span></p>-->
                 <!--              <p class="second_screen_content"><span class="content-label">校排:</span><span class="content-value">{{item.examCoversionTotal.schoolIndex}}</span></p>-->
+                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{total}}</span></p>
                 <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.waveClass}}</span></p>
                 <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.waveGrade}}</span></p>
               </div>
@@ -79,8 +80,8 @@
                 <!--              <p class="second_screen_title">综合</p>-->
                 <p class="second_screen_title">名次变化</p>
                 <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.comprehensive}}</span></p>
-                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.complexClassRank}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.complexGradeRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.complexWaveClass}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.complexWaveGrade}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -89,8 +90,8 @@
                 <p class="second_screen_title">名次变化</p>
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>-->
                 <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.threeSubject}}</span></p>
-                <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.classRank}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.gradeRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.threeWaveClass}}</span></p>
+                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.threeWaveGrade}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -98,7 +99,7 @@
                 <!--              <p class="second_screen_title">{{project}}</p>-->
                 <p class="second_screen_title">名次变化</p>
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>-->
-                <!--              <p class="second_screen_content"><span class="content-label">分数:</span><span class="content-value">{{item.score}}</span></p>-->
+                <p class="second_screen_content"><span class="content-label">分数:</span><span class="content-value">{{item.score}}</span></p>
                 <!--              <p class="second_screen_content"><span class="content-label">班排:</span><span class="content-value">{{item.classRank}}</span></p>-->
                 <!--              <p class="second_screen_content"><span class="content-label">年排:</span><span class="content-value">{{item.gradeRank}}</span></p>-->
                 <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.waveClass}}</span></p>
@@ -114,6 +115,7 @@
 <script>
 import { getScoreAnalysis, getThree, getSingle, getAllRate } from '@/api/index'
 import _ from 'underscore'
+// import {mapGetters} from 'vuex'
 // import { PopupPicker } from 'vux'
 export default {
   // components: { PopupPicker },
@@ -272,35 +274,52 @@ export default {
       ]
     }
   },
+  computed: {
+    examname () {
+      return this.$store.state.exam.exam_name
+    }
+    // ...mapGetters([
+    //   return this.$store.state.exam.exam_name
+    // ])
+  },
+  watch: {
+    examname (newVal, oldVal) {
+      console.log('监听：', newVal, oldVal)
+      if (this.examname !== '') {
+        this.getData()
+        this.getThree()
+        this.getClickData()
+      }
+    }
+  },
   mounted () {
-    // this.$store.commit('SET_ShowLink', true)
-    // console.log(this.$store.state.sunchart.link)
-    this.getData()
-    this.getThree()
-    this.getClickData()
+    if (this.examname !== '') {
+      this.getData()
+      this.getThree()
+      this.getClickData()
+    }
     // this.getSix()
-    // this.$nextTick(() => {
-    //   this.homeScroll = new BScroll(this.$refs.homeWrapper, {
-    //     click: true
-    //   })
-    // })
+  // this.$nextTick(() => {
+  //   this.homeScroll = new BScroll(this.$refs.homeWrapper, {
+  //     click: true
+  //   })
+  // })
   },
   updated () {
     this.getChartUpdate()
   },
   methods: {
     getSix (three) {
-      // this.getThree()
-      // console.log(this.three)
-      console.log('six')
+      console.log('随机：', this.examname)
       getAllRate({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        // examType: '19年3月考试'
+        examType: this.examname
       }).then(res => {
         console.log(res.data.data)
         this.sixRate = res.data.data[0]
         // console.log(this.sixRate.allSubjectRateMap.keys())
-        var subj = three
+        const subj = three
         for (const item in subj) {
           console.log('safd', subj[item])
           if (subj[item] === '物理') {
@@ -332,7 +351,7 @@ export default {
         // console.log(this.zhList[0])
         // console.log(this.zhEngList[0])
         // console.log(typeof this.sixRate.allSubjectRateMap[this.zhEngList[0]])
-        console.log('sdafds', parseInt(this.sixRate.allSubjectRateMap.english))
+        // console.log('sdafds', parseInt(this.sixRate.allSubjectRateMap.english))
         this.sunData[0].children[1].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[0]] * 100) + parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[1]] * 100) + parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[2]] * 100)
         this.sunData[0].children[0].value = parseInt(this.sixRate.allSubjectRateMap.language * 100) + parseInt(this.sixRate.allSubjectRateMap.math * 100) + parseInt(this.sixRate.allSubjectRateMap.english * 100)
         this.sunData[0].value = this.sunData[0].children[1].value + this.sunData[0].children[0].value
@@ -345,17 +364,18 @@ export default {
         this.sunData[0].children[1].children[0].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[0]] * 100)
         this.sunData[0].children[1].children[1].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[1]] * 100)
         this.sunData[0].children[1].children[2].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[2]] * 100)
-        console.log('data:', this.sunData)
+        // console.log('data:', this.sunData)
         this.drawSunburst()
       })
     },
     getThree () {
       getThree({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        // examType: '19年3月考试'
+        examType: this.examname
       }).then(res => {
         this.three = res.data.data[0].list
-        console.log(this.three)
+        // console.log(this.three)
         this.getSix(this.three)
       })
     },
@@ -424,8 +444,8 @@ export default {
     getChartUpdate: _.debounce(function () {
       const that = this
       this.sunCharts.on('click', function (param) {
-        console.log('param.value:', param.value)
-        console.log('param.name:', param.name)
+        // console.log('param.value:', param.value)
+        // console.log('param.name:', param.name)
         if (param.value === 356) {
           that.project = '总分'
           that.getClickData()
@@ -466,24 +486,27 @@ export default {
       })
     }),
     getData () {
-      this.$store.commit('SET_ShowLink', false)
+      console.log('初始；', this.examname)
       getScoreAnalysis({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        // examType: '19年3月考试'
+        examType: this.examname
       }).then(res => {
         this.coversionTotalList = res.data.data
         for (let item in this.coversionTotalList) {
           this.sunData[0].name = this.coversionTotalList[item].examCoversionTotal.coversionTotal
-          console.log('成绩：', this.coversionTotalList[item].examCoversionTotal)
+          // console.log('成绩：', this.coversionTotalList[item].examCoversionTotal)
           this.total = this.coversionTotalList[item].examCoversionTotal.coversionTotal
         }
         this.drawSunburst()
       })
     },
     getClickData: _.debounce(function () {
+      // console.log('随机：', this.examname)
       getScoreAnalysis({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        // examType: '19年3月考试'
+        examType: this.examname
       }).then(res => {
         this.clickCTList = res.data.data
         // this.docState = 'allScore'
@@ -491,16 +514,14 @@ export default {
           this.list[a] = false
           this.list.showLink = true
         }
-        // that.showLink = true
-        // this.$store.commit('SET_ShowLink', this.showLink)
-        this.$store.commit('SET_ShowLink', true)
-        console.log('store:', this.$store.state.sunchart.link)
       })
     }),
     getClickThreeZ: _.debounce(function () {
+      // console.log('随机：', this.examname)
       getThree({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        // examType: '19年3月考试'
+        examType: this.examname
       }).then(res => {
         this.zonghe = res.data.data
         // this.docState = 'zong_he'
@@ -513,7 +534,8 @@ export default {
     getClickThreeS: _.debounce(function () {
       getThree({
         stuNumber: '08047737',
-        examType: '19年3月考试'
+        // examType: '19年3月考试'
+        examType: this.examname
       }).then(res => {
         this.threeProject = res.data.data
         // this.docState = 'san_ke'
@@ -527,7 +549,8 @@ export default {
       this.subList = []
       getSingle({
         stuNumber: '08047737',
-        examType: '19年3月考试',
+        // examType: '19年3月考试',
+        examType: this.examname,
         subject: project
       }).then(res => {
         this.subList = res.data.data

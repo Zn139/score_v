@@ -5,7 +5,7 @@
 <!--      <i class="iconfont icon_luluadd" @click="add"></i>-->
 <!--      <span class="title" v-if="exam[0]">{{exam[0]}}</span>-->
       <div class="second_screen_title" >
-        <popup-picker class="second_screen_xiala" :data="[examList]" v-model="exam" @on-show="showExam" placeholder="2019年期中考试" @on-hide="hideExam"></popup-picker>
+        <popup-picker class="second_screen_xiala" :data="[examList]" v-model="exam" @on-change="showChange" @on-show="showExam" :placeholder="exam[0]" @on-hide="hideExam"></popup-picker>
       </div>
       <div>
         <popover placement="bottom" @on-show="onShow" @on-hide="onHide" class="first_dialog">
@@ -35,13 +35,21 @@ export default {
   mounted () {
     this.getAllExam()
   },
+  // created () {
+  //   this.exam = this.examList[0].examName
+  // },
   methods: {
     getAllExam () {
       getAllExam().then(res => {
         const content = res.data.data
+        this.exam[0] = content[content.length - 1].examName
+        console.log('1111111111111', this.exam[0])
+        // this.$store.commit('SET_EXAM_NAME', content[content.length - 1].examName)
+        this.$store.commit('SET_EXAM_NAME', this.exam[0])
         for (const item in content) {
           this.examList.push(content[item].examName)
         }
+        console.log(this.examList)
       })
     },
     showExam () {
@@ -49,6 +57,12 @@ export default {
     },
     hideExam () {
       console.log('hou:', this.exam[0])
+      console.log(this.$store.state.exam.exam_name)
+    },
+    showChange () {
+      console.log('改变', this.exam[0])
+      this.$store.commit('SET_EXAM_NAME', this.exam[0])
+      // console.log('改变', a)
     },
     onShow () {
       console.log('on show')
@@ -109,10 +123,25 @@ export default {
     text-align: center;
     /*font-weight: bold;*/
   }
+  .second_screen_title >>> .vux-popup-picker-select {
+    width: 70%;
+    position: relative;
+  }
   /*.open-len {*/
   /*  width: 100px;*/
   /*}*/
   /*.close-len {*/
   /*  width: 50px;*/
   /*}*/
+  .second_screen_title >>> .vux-popup-picker-placeholder {
+    color: #fff;
+  }
+  .second_screen_title >>> .weui-cell {
+    padding: 0 15px;
+    display: flex;
+  }
+  .second_screen_title >>> .vux-popup-picker-value {
+    display: inline-block;
+    color: #fff;
+  }
 </style>
