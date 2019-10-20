@@ -430,14 +430,14 @@ export default {
           highlightPolicy: 'ancestor',
           data: this.sunData,
           radius: [0, '90%'],
-          // itemStyle: {
-          //   // 设置扇形的阴影
-          //   borderWidth: 0,
-          //   boshadowBlur: 60,
-          //   shadowColor: 'rgba(66, 185, 130, 0.3)',
-          //   shadowOffsetX: 0,
-          //   shadowOffsetY: 6
-          // }
+          itemStyle: {
+            // 设置扇形的阴影
+            borderWidth: 0,
+            boshadowBlur: 60,
+            shadowColor: 'rgba(66, 185, 130, 0.3)',
+            shadowOffsetX: 0,
+            shadowOffsetY: 6
+          }
           // textStyle: {
           //   fontSize: 5
           // }
