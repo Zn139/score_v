@@ -60,7 +60,9 @@
               </div>
             </transition>
           </div>
-          <div ref="sunChart" class="second_chart"></div>
+<!--          <div class="second_screen_a">-->
+            <div ref="sunChart" class="second_chart"></div>
+<!--          </div>-->
           <div class="second_screen" style="text-align: right">
             <!--        <div class="second_screen" :class="{'second_screen&#45;&#45;single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">-->
             <transition name="fade" mode="out-in">
@@ -178,7 +180,7 @@ export default {
               name: '数学',
               value: 10,
               itemStyle: {
-                color: '#F1E1FF'
+                color: '#FF95CA'
               }
               // children: [{
               //   name: '高分率',
@@ -427,7 +429,15 @@ export default {
           type: 'sunburst',
           highlightPolicy: 'ancestor',
           data: this.sunData,
-          radius: [0, '90%']
+          radius: [0, '90%'],
+          // itemStyle: {
+          //   // 设置扇形的阴影
+          //   borderWidth: 0,
+          //   boshadowBlur: 60,
+          //   shadowColor: 'rgba(66, 185, 130, 0.3)',
+          //   shadowOffsetX: 0,
+          //   shadowOffsetY: 6
+          // }
           // textStyle: {
           //   fontSize: 5
           // }
@@ -569,12 +579,22 @@ export default {
     /*font-size: 0;*/
     background: #fff;
     text-align: center;
+    /*margin: 10px 8px 0;*/
+    /*border-radius: 10px;*/
+    /*box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);*/
   }
   .second_info{
     height: 200px;
     /*display: inline-block;*/
     font-size: 0;
     /*margin-top: -18px;*/
+  }
+  .second_screen_a {
+    margin-top: 20px;
+    display: inline-block;
+    width: 50%;
+    box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);
+    border-radius: 150px;
   }
   .second_screen{
     /*border: 1px rgba(66, 185, 130, 0.5) dashed;*/
@@ -603,17 +623,16 @@ export default {
     font-weight: bold;
   }
   .second_chart{
-    /*text-align: center;*/
     height: 200px;
-    /*padding: 0 auto;*/
     width: 50%;
     display: inline-block;
+    /*border-radius: 150px;*/
+    /*box-shadow: 0 10px 9px rgba(66, 185, 130, 0.3);*/
   }
   .fade-enter-active{
     transition: opacity 2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
   .fade-enter{
-    /*animation-fill-mode: none;*/
     opacity: 0;
   }
   /*.fade-leave-active {*/

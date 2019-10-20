@@ -32,7 +32,7 @@ export default {
         link: 'add',
         value: 'add',
         // name: '加号',
-        icon: 'iconiconfont7'
+        icon: 'icon_lulutianjia'
       },
       {
         link: 'lineCourse',
@@ -111,21 +111,18 @@ export default {
       text-align: center;
     }
   }
-  .d-icon_lulujiahao-tianchong:before {
+  /*.d-icon_lulujiahao-tianchong:before {
     color: #42b982;
     font-size: 42px;
     margin-left: -10px;
-    /*padding-bottom: 3px;*/
+    padding-bottom: 3px;
     line-height: 50px;
     border-radius: 50%;
-    /*border: 0 #fff dashed;*/
+    border: 0 #fff dashed;
     background-color: #fff;
-    /*background-image: url('../assets/img/icon.png');*/
-    /*background-size: 35px;*/
+    background-image: url('../assets/img/icon.png');
+    background-size: 35px;
     box-shadow: 0px 0px 3px 0px #42b982;
-    /*box-shadow: 0 0px 0px 5px rgba(0, 0, 0, 0.8);*/
-  }
-  /*.iconfont icon_lulujiahao-tianchong{*/
-  /*  font-size: 20px;*/
-  /*}*/
+    box-shadow: 0 0px 0px 5px rgba(0, 0, 0, 0.8);
+  }*/
 </style>
