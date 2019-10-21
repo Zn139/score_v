@@ -211,8 +211,9 @@ export default {
     color: #fff;
     &:after {
       font-family: 'iconfont';
-      content: '\e74b';
-      margin-left: 3px;
+      content: '\e695';
+      margin-left: 5px;
+      font-weight: bold;
     }
   }
   .second_screen_title >>> .weui-cell {
@@ -240,8 +241,9 @@ export default {
       overflow: hidden;
       &:after {
         font-family: 'iconfont';
-        content: '\e74b';
-        margin-left: 3px;
+        font-weight: bold;
+        content: '\e695';
+        margin-left: 5px;
       }
     }
     .weui-cell__ft {

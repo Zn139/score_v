@@ -34,7 +34,7 @@
                 <!--              <p class="second_screen_title">综合</p>-->
                 <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.comprehensive}}</span></p>
                 <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.complexClassRank}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.complexGradeRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校排：</span><span class="content-value">{{item.complexGradeRank}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -44,7 +44,7 @@
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>-->
                 <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.threeSubject}}</span></p>
                 <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.classRank}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.gradeRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校排：</span><span class="content-value">{{item.gradeRank}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -54,7 +54,7 @@
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>-->
                 <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.score}}</span></p>
                 <p class="second_screen_content"><span class="content-label">班排：</span><span class="content-value">{{item.classRank}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年排：</span><span class="content-value">{{item.gradeRank}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校排：</span><span class="content-value">{{item.gradeRank}}</span></p>
                 <!--              <p class="second_screen_content"><span class="content-label">班进:</span><span class="content-value">{{item.waveClass}}</span></p>-->
                 <!--              <p class="second_screen_content"><span class="content-label">年进:</span><span class="content-value">{{item.waveGrade}}</span></p>-->
               </div>
@@ -71,9 +71,9 @@
                 <p class="second_screen_title">名次变化</p>
                 <!--              <p class="second_screen_content"><span class="content-label">班排:</span><span class="content-value">{{item.examCoversionTotal.classIndex}}</span></p>-->
                 <!--              <p class="second_screen_content"><span class="content-label">校排:</span><span class="content-value">{{item.examCoversionTotal.schoolIndex}}</span></p>-->
-                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{total}}</span></p>
+<!--                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{total}}</span></p>-->
                 <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.waveClass}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.waveGrade}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校进：</span><span class="content-value">{{item.waveGrade}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -81,9 +81,9 @@
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>综合</p>-->
                 <!--              <p class="second_screen_title">综合</p>-->
                 <p class="second_screen_title">名次变化</p>
-                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.comprehensive}}</span></p>
+<!--                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.comprehensive}}</span></p>-->
                 <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.complexWaveClass}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.complexWaveGrade}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校进：</span><span class="content-value">{{item.complexWaveGrade}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -91,9 +91,9 @@
                 <!--              <p class="second_screen_title">三科</p>-->
                 <p class="second_screen_title">名次变化</p>
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>三科</p>-->
-                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.threeSubject}}</span></p>
+<!--                <p class="second_screen_content"><span class="content-label">分数：</span><span class="content-value">{{item.threeSubject}}</span></p>-->
                 <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.threeWaveClass}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.threeWaveGrade}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校进：</span><span class="content-value">{{item.threeWaveGrade}}</span></p>
               </div>
             </transition>
             <transition name="fade" mode="out-in">
@@ -101,11 +101,11 @@
                 <!--              <p class="second_screen_title">{{project}}</p>-->
                 <p class="second_screen_title">名次变化</p>
                 <!--              <p class="second_screen_title"><i class="iconfont iconfangkuai"></i>{{project}}</p>-->
-                <p class="second_screen_content"><span class="content-label">分数:</span><span class="content-value">{{item.score}}</span></p>
+<!--                <p class="second_screen_content"><span class="content-label">分数:</span><span class="content-value">{{item.score}}</span></p>-->
                 <!--              <p class="second_screen_content"><span class="content-label">班排:</span><span class="content-value">{{item.classRank}}</span></p>-->
                 <!--              <p class="second_screen_content"><span class="content-label">年排:</span><span class="content-value">{{item.gradeRank}}</span></p>-->
                 <p class="second_screen_content"><span class="content-label">班进：</span><span class="content-value">{{item.waveClass}}</span></p>
-                <p class="second_screen_content"><span class="content-label">年进：</span><span class="content-value">{{item.waveGrade}}</span></p>
+                <p class="second_screen_content"><span class="content-label">校进：</span><span class="content-value">{{item.waveGrade}}</span></p>
               </div>
             </transition>
           </div>
@@ -160,7 +160,10 @@ export default {
             name: '三科',
             value: 22,
             itemStyle: {
-              color: '#01B468'
+              // color: '#FF8000'
+              color: '#FF8F59'
+              // color: '#C4C400'
+              // color: '#ffaad5'
             },
             children: [{
               name: '语文',
@@ -460,24 +463,25 @@ export default {
           }, {
             // 外环
             r0: '66%',
-            r: '99%',
+            r: '99%'
             // label: {
             // position: 'outside',
             // padding: -3,
             // silent: false,
             // color: 'black'
             // },
-            itemStyle: {
-              // show: true,
-              // borderWidth: 1,
-              // padding: -20,
-              // marginWidth: -120,
-              // shadowOffsetY: 1,
-              // shadowOffsetX: 1,
-              shadowBlur: 4,
-              shadowColor: 'rgba(66, 185, 130, 0.6)'
-              // shadowOffsetX: 6
-            }
+            // itemStyle: {
+            // show: true,
+            // borderWidth: 1,
+            // padding: -20,
+            // marginWidth: -120,
+            // shadowOffsetY: 1,
+            // shadowOffsetX: 1,
+            // borderRadius: '50%',
+            // shadowBlur: 50,
+            // shadowColor: 'rgba(66, 185, 130, 0.6)'
+            // shadowOffsetX: 6
+            // }
           }]
           // textStyle: {
           //   fontSize: 5
@@ -634,14 +638,14 @@ export default {
     margin-top: 20px;
     display: inline-block;
     width: 50%;
-    box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);
-    border-radius: 150px;
+    box-shadow: 0 0 4px 5px rgba(66, 185, 130, 0.3);
+    border-radius: 50%;
   }
   .second_screen{
     /*border: 1px rgba(66, 185, 130, 0.5) dashed;*/
     /*border-radius: 10px;*/
-    margin-top: 120px;
-    transform: translateY(-50%);
+    margin-top: 30px;
+    /*transform: translateY(-50%);*/
     /*position: absolute;*/
     padding: 5px 0;
     width: 25%;
@@ -695,11 +699,11 @@ export default {
     /*color: #fff;*/
   }
   .second_screen_info{
-    margin-top: -4px;
+    margin-top: 20px;
     /*margin-left: 10px;*/
     /*padding: 5px 0;*/
-    top: 50%;
-    transform: translateY(-50%);
+    /*top: 50%;*/
+    /*transform: translateY(-50%);*/
     position: relative;
     .iconfont {
       color: #42b982;
@@ -707,7 +711,7 @@ export default {
   }
   .score-overview {
     font-size: 0;
-    box-shadow: 0px 1px 5px 0px rgba(66, 185, 130, 0.3);
+    box-shadow: 0px 1px 5px 0px rgba(100, 185, 130, 0.3);
     padding: 6px 0;
     margin-bottom: 10px;
   }
