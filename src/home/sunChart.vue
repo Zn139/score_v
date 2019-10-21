@@ -60,9 +60,9 @@
               </div>
             </transition>
           </div>
-<!--          <div class="second_screen_a">-->
+          <div class="second_screen_a">
             <div ref="sunChart" class="second_chart"></div>
-<!--          </div>-->
+          </div>
           <div class="second_screen" style="text-align: right">
             <!--        <div class="second_screen" :class="{'second_screen&#45;&#45;single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">-->
             <transition name="fade" mode="out-in">
@@ -160,7 +160,7 @@ export default {
             name: '三科',
             value: 22,
             itemStyle: {
-              color: '#FFAAD5'
+              color: '#01B468'
             },
             children: [{
               name: '语文',
@@ -180,7 +180,7 @@ export default {
               name: '数学',
               value: 10,
               itemStyle: {
-                color: '#FF95CA'
+                color: '#73BF00'
               }
               // children: [{
               //   name: '高分率',
@@ -212,7 +212,7 @@ export default {
               name: '英语',
               value: 7,
               itemStyle: {
-                color: '#A6A6D2'
+                color: '#CA8EC2'
               }
               // children: [{
               //   name: '高分率',
@@ -420,24 +420,65 @@ export default {
           show: false,
           // type: 'continuous',
           min: 0,
-          max: 10,
+          // max: 10,
           inRange: {
+            show: false,
             color: ['#2D5F73', '#538EA6', '#F28C8C']
           }
         },
         series: {
           type: 'sunburst',
-          highlightPolicy: 'ancestor',
+          // highlightPolicy: 'ancestor',
           data: this.sunData,
           radius: [0, '90%'],
-          itemStyle: {
-            // 设置扇形的阴影
-            borderWidth: 0,
-            boshadowBlur: 60,
-            shadowColor: 'rgba(66, 185, 130, 0.3)',
-            shadowOffsetX: 0,
-            shadowOffsetY: 6
-          }
+          // itemStyle: {
+          //   // 设置扇形的阴影
+          //   borderWidth: 0,
+          //   boshadowBlur: 60,
+          //   // shadowColor: 'rgba(255,255,255, 0.3)',
+          //   shadowColor: 'rgba(66, 185, 130, 0.3)',
+          //   shadowOffsetX: 0,
+          //   shadowOffsetY: 6
+          // }
+          levels: [{}, {
+            // 内环
+            r0: '0',
+            r: '33%'
+            // itemStyle: {
+            //   borderWidth: 2
+            // },
+            // label: {
+            //   rotate: 'tangential'
+            // }
+          }, {
+            // // 中环
+            r0: '33%',
+            r: '66%'
+            // label: {
+            //   align: 'right'
+            // }
+          }, {
+            // 外环
+            r0: '66%',
+            r: '99%',
+            // label: {
+            // position: 'outside',
+            // padding: -3,
+            // silent: false,
+            // color: 'black'
+            // },
+            itemStyle: {
+              // show: true,
+              // borderWidth: 1,
+              // padding: -20,
+              // marginWidth: -120,
+              // shadowOffsetY: 1,
+              // shadowOffsetX: 1,
+              shadowBlur: 4,
+              shadowColor: 'rgba(66, 185, 130, 0.6)'
+              // shadowOffsetX: 6
+            }
+          }]
           // textStyle: {
           //   fontSize: 5
           // }
@@ -623,8 +664,8 @@ export default {
     font-weight: bold;
   }
   .second_chart{
-    height: 200px;
-    width: 50%;
+    height: 160px;
+    width: 100%;
     display: inline-block;
     /*border-radius: 150px;*/
     /*box-shadow: 0 10px 9px rgba(66, 185, 130, 0.3);*/

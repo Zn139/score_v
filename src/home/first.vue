@@ -212,7 +212,7 @@ export default {
     &:after {
       font-family: 'iconfont';
       content: '\e74b';
-      margin-left: 10px;
+      margin-left: 3px;
     }
   }
   .second_screen_title >>> .weui-cell {
@@ -241,7 +241,7 @@ export default {
       &:after {
         font-family: 'iconfont';
         content: '\e74b';
-        margin-left: 10px;
+        margin-left: 3px;
       }
     }
     .weui-cell__ft {
