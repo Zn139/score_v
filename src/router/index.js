@@ -19,6 +19,8 @@ const classSchedule = () => import('@/menus/classSchedule')
 const schoolInquire = () => import('@/menus/schoolInquire')
 const more = () => import('@/menus/more')
 const addScore = () => import('@/home/addScore')
+const share = () => import('@/share/index')
+const ewm = () => import('@/components/EWeiM')
 
 export default new Router({
   routes: [
@@ -137,6 +139,24 @@ export default new Router({
       },
       name: 'more',
       meta: { tab: 'more', title: 'more' }
+    },
+    {
+      path: '/share',
+      // path: '/share/:exam_name',
+      components: {
+        default: share
+      },
+      name: 'share',
+      meta: { tab: 'share', title: 'share' }
+    },
+    {
+      path: '/ewm',
+      // path: '/share/:exam_name',
+      components: {
+        default: ewm
+      },
+      name: 'ewm',
+      meta: { tab: 'ewm', title: 'ewm' }
     }
   ]
 })

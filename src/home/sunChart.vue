@@ -60,9 +60,11 @@
               </div>
             </transition>
           </div>
-          <div class="second_screen_a">
-            <div ref="sunChart" class="second_chart"></div>
-          </div>
+<!--          <transition name="fade">-->
+            <div class="second_screen_a">
+              <div ref="sunChart" class="second_chart"></div>
+            </div>
+<!--          </transition>-->
           <div class="second_screen" style="text-align: right">
             <!--        <div class="second_screen" :class="{'second_screen&#45;&#45;single': !list.showLink && !list.showZongHe && !list.showThree && !list.showPro}">-->
             <transition name="fade" mode="out-in">
@@ -151,7 +153,7 @@ export default {
       id: 0,
       sunData: [
         {
-          name: '',
+          name: '全科',
           value: 44,
           itemStyle: {
             color: 'RGB(76,131,101)'
@@ -288,7 +290,7 @@ export default {
     examname (newVal, oldVal) {
       console.log('监听：', newVal, oldVal)
       if (this.examname !== '') {
-        this.getData()
+        // this.getData()
         this.getThree()
         this.getClickData()
       }
@@ -296,7 +298,7 @@ export default {
   },
   mounted () {
     if (this.examname !== '') {
-      this.getData()
+      // this.getData()
       this.getThree()
       this.getClickData()
     }
@@ -377,6 +379,7 @@ export default {
         examType: this.examname
       }).then(res => {
         this.three = res.data.data[0].list
+        this.total = res.data.data[0].examCoversionTotal.coversionTotal
         // console.log(this.three)
         this.getSix(this.three)
       })
@@ -498,10 +501,11 @@ export default {
       this.sunCharts.on('click', function (param) {
         // console.log('param.value:', param.value)
         // console.log('param.name:', param.name)
-        if (param.value === 356) {
-          that.project = '总分'
-          that.getClickData()
-        } else if (param.name === '综合') {
+        // if (param.value === 356) {
+        //   that.project = '总分'
+        //   that.getClickData()
+        // } else
+        if (param.name === '综合') {
           that.project = '综合'
           that.getClickThreeZ()
         } else if (param.name === '三科') {
@@ -675,7 +679,7 @@ export default {
     /*box-shadow: 0 10px 9px rgba(66, 185, 130, 0.3);*/
   }
   .fade-enter-active{
-    transition: opacity 2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    transition: opacity 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
   .fade-enter{
     opacity: 0;
@@ -735,21 +739,21 @@ export default {
   .second_screen_xiala {
     margin-top: -2px;
   }
-  /*.second_deafult {*/
-  /*  animation: twinkling 2s 1 ease-in-out;*/
-  /*}*/
-  /*.animated {*/
-  /*  animation-duration: 2s;*/
-  /*  animation-fill-mode: both;*/
-  /*}*/
-  /*@keyframes twinkling {*/
-  /*  0% {*/
-  /*    opacity: 0;*/
-  /*  }*/
-  /*  100% {*/
-  /*    opacity: 1;*/
-  /*  }*/
-  /*}*/
+  .second_screen_a {
+    animation: twinkling 1s 1 ease-in-out;
+  }
+  .animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+  }
+  @keyframes twinkling {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
   /*.second_deafult{   !* 从下往上渐现 *!*/
   /*  animation: animate 5s ease infinite;*/
   /*  overflow: hidden;*/

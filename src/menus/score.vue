@@ -1,639 +1,214 @@
 <template>
-  <div>
+  <div class="score_info">
+<!--  <div class="score_info" style="height: 100%;width: 100%;display:flex;flex-direction: column;">-->
     <div class="score_header">
       <div class="return__icon" @click="returnBack">
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">成绩单</div>
-<!--      <tab v-model="index01" :line-width="1" bar-active-color="#668599">-->
-<!--        <tab-item selected @on-item-click="clickAll">总评</tab-item>-->
-<!--        <tab-item @on-item-click="clickLanguage">语文</tab-item>-->
-<!--        <tab-item @on-item-click="onItemClick">数学</tab-item>-->
-<!--        <tab-item @on-item-click="onItemClick">英语</tab-item>-->
-<!--        <tab-item @on-item-click="onItemClick">物理</tab-item>-->
-<!--        <tab-item @on-item-click="onItemClick">化学</tab-item>-->
-<!--        <tab-item @on-item-click="onItemClick">生物</tab-item>-->
-<!--      </tab>-->
     </div>
-    <div class="score_second">
-        <div ref="yiBiaoChart" class="second_chart"></div>
+    <div class="second_choice">
+<!--      <popup-picker :data="choiceList" :columns="3" v-model="choice" ref="picker3" @on-change="showChange()" show-name :placeholder="examname"></popup-picker>-->
+      <popup-picker :data="choiceList" :title="examname" :columns="3" v-model="choice" ref="picker3" @on-change="showChange()" show-name ></popup-picker>
+
+<!--      <popup-picker :title="examname" :data="choiceList" :columns="3" v-model="choice" ref="picker3"></popup-picker>-->
     </div>
-<!--    <div class="score_second" v-show="drawYBLang">-->
-<!--      <div ref="langYiBChart" class="second_chart"></div>-->
-<!--    </div>-->
     <div class="third">
-      <div class="third_second">
-        <div class="third_second_p" v-for="(item, value, index) in three" :key="index">
-<!--          {{item}}-&#45;&#45;{{value}}-&#45;&#45;{{index}}-->
-          <span class="third_project">{{item.title}}</span><strong>{{item.score}}</strong><span class="itald">/</span>{{item.fullscoreStandard}}
-<!--          <div v-if="index > 2" class="third_score"><span class="third_project">{{item.title}}</span><strong>{{item.score}}</strong><span class="itald">/</span>{{item.fullscoreStandard}}</div>-->
-<!--          <div v-else class="third_score_index"><span class="third_project">{{item.title}}</span><strong>{{item.score}}</strong><span class="itald">/</span>{{item.fullscoreStandard}}</div>-->
-        </div>
+<!--      <load-more tip="content-bordered=false" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+
+      <x-table class="third_table">
+        <thead>
+        <tr class="third_table_thead">
+          <th>学科</th>
+          <th>分数</th>
+          <th>平均分</th>
+          <th>班级排名</th>
+          <th>学校排名</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>全部学科</td>
+          <td>{{totalInfo.totalScore}}</td>
+          <td>{{totalInfo.totalAverage}}</td>
+          <td>{{totalInfo.totalScoreClassRank}}</td>
+          <td>{{totalInfo.totalScoreGradeRank}}</td>
+        </tr>
+        <tr v-for="(item, value, index) in three" :key="index">
+          <td>{{item.title}}</td>
+          <td>{{item.score}}</td>
+          <td>{{item.subjectAvg}}</td>
+          <td>{{item.classRank}}</td>
+          <td>{{item.gradeRank}}</td>
+        </tr>
+        </tbody>
+      </x-table>
+    </div>
+    <div class="four">
+      <h3>分享</h3>
+      <div id="qrCode">
+<!--        <div id='code'></div>-->
+        <canvas id="canvas"></canvas>
       </div>
+<!--      <QRCode></QRCode>-->
     </div>
   </div>
 </template>
 <script>
-import { Tab, TabItem } from 'vux'
-import { getScoreReport } from '@/api/index'
+import { Tab, TabItem, PopupPicker, XTable, LoadMore } from 'vux'
+import { getScoreReport, getAllExam } from '@/api/index'
+// import QRCode from '@/components/QRCode'
+import QRCode from 'qrcode'
 
 export default {
-  components: {Tab, TabItem},
+  components: {Tab, TabItem, PopupPicker, XTable, LoadMore, QRCode},
   data () {
     return {
-      drawYB: true,
-      // drawYBLang: true,
-      index01: 0,
+      choiceList: [],
+      choice: [],
       three: [],
-      yiBChart: '',
-      lYiBChart: '',
-      language: 13,
-      math: 20,
-      english: 15,
-      geography: 24,
-      physics: 30,
-      chemistry: 26,
-      schoolNum: 0,
-      classNum: 0,
-      scoreNum: 0,
-      allNumber: [{value: 0, name: '总分'}],
-      classRank: [{value: 0, name: '班排'}],
-      schoolRank: [{value: 0, name: '年排'}]
+      totalInfo: [],
+      scoreName: ''
     }
   },
   computed: {
     examname () {
-      return this.$store.state.exam.exam_name
+      if (this.$store.state.exam.exam_name !== '') {
+        // console.log(1111111111111111)
+        return this.$store.state.exam.exam_name
+      } else if (localStorage.SET_EXAM_NAME !== '') {
+        return localStorage.SET_EXAM_NAME
+      } else {
+        return this.$route.params.exam_name
+      }
     }
   },
   mounted () {
-    // this.clickAll()
-    // this.drawYiBLang()
     this.getAllScore()
-    // this.clickLanguage()
+    this.getAllExam()
   },
   methods: {
     returnBack () {
       this.$router.go(-1)
     },
+    getAllExam () {
+      getAllExam().then(res => {
+        this.choiceList = []
+        let i = 0
+        this.content = res.data.data
+        // this.exam[0] = this.content[this.content.length - 1].examName
+        // this.$store.commit('SET_EXAM_NAME', this.content[this.content.length - 1].examName)
+        // localStorage.setItem('SET_EXAM_NAME', this.content[this.content.length - 1].examName)
+        for (i = 0; i < this.content.length; i++) {
+          const allExam = this.content[i].examName
+          // console.log('~~~~~', this.allExam)
+          const yearList = allExam.split('年')
+          const monthList = yearList[1].split('月')
+          if (monthList.length === 3) {
+            monthList[1] = '月考'
+          }
+          // console.log('月：', monthList)
+          const year = {
+            name: yearList[0] + '年',
+            value: yearList[0] + '年',
+            parent: 0
+          }
+          // const year1 = {
+          //   // name: yearList[0] + '年',
+          //   value: this.content[i].id + ',' + yearList[0] + '年',
+          //   // parent: 0
+          // }
+          // const year1 = {}
+          const month = {
+            name: monthList[0] + '月',
+            value: monthList[0] + '月',
+            parent: yearList[0] + '年'
+          }
+          const title = {
+            name: monthList[1],
+            value: monthList[1],
+            parent: monthList[0] + '月'
+          }
+          if (JSON.stringify(this.choiceList).indexOf(JSON.stringify(year)) === -1) {
+            // this.list31.push(year1)
+            this.choiceList.push(year)
+          }
+          if (JSON.stringify(this.choiceList).indexOf(JSON.stringify(month)) === -1) {
+            this.choiceList.push(month)
+          }
+          if (JSON.stringify(this.choiceList).indexOf(JSON.stringify(title)) === -1) {
+            this.choiceList.push(title)
+          }
+        }
+        // console.log('list:', this.choiceList)
+      })
+    },
     getAllScore () {
+      console.log('choice:', this.choice)
+      this.scoreName = this.examname
+      this.$store.commit('SET_SCORE_NAME', this.examname)
+      localStorage.setItem('SET_SCORE_NAME', this.examname)
+      console.log('choice1:', this.scoreName)
       getScoreReport({
         stuNumber: '08047737',
         examType: this.examname
         // examType: '19年3月考试'
       }).then(res => {
         this.three = res.data.data[0].map
-        this.allNumber[0].value = parseInt(res.data.data[0].totalScore)
-        this.classRank[0].value = parseInt(res.data.data[0].totalScoreClassRank)
-        this.schoolRank[0].value = parseInt(res.data.data[0].totalScoreGradeRank)
-        this.scoreNum = parseInt(res.data.data[0].totalScoreStandard)
-        this.schoolNum = parseInt(res.data.data[0].totalGradeNumber)
-        this.classNum = parseInt(res.data.data[0].totalClassNumber)
-        console.log(this.three)
-        this.drawYiBiao()
+        this.totalInfo = res.data.data[0]
       })
+      this.useqrcode()
     },
-    // clickAll () {
-    //   this.drawYBLang = false
-    //   this.drawYB = true
-    //   this.drawYiBiao()
-    //   // this.drawYB = true
-    // },
-    // clickLanguage () {
-    //   this.drawYB = false
-    //   this.drawYBLang = true
-    //   this.drawYiBLang()
-    // },
-    // onItemClick (index) {
-    //   console.log('on item click:', index)
-    // },
-    drawYiBiao () {
-      this.yiBChart = this.echarts.init(this.$refs.yiBiaoChart)
-      this.yiBChart.setOption({
-        // tooltip: {
-        // formatter: '{a} <br/>{c} {b}'
-        // },
-        // toolbox: {
-        // show: true,
-        // feature: {
-        //   restore: {show: true},
-        //   saveAsImage: {show: true}
-        // }
-        // },
-        series: [
-          {
-            name: '总分',
-            type: 'gauge',
-            // z: 1,
-            center: ['50%', '30%'],
-            min: 0,
-            max: this.scoreNum, // 总分
-            splitNumber: 5,
-            radius: '55%',
-            axisLine: { // 坐标轴线
-              lineStyle: { // 属性lineStyle控制线条样式
-                width: 6,
-                color: [[0.2, 'RGB(13,222,155)'], [0.8, 'RGB(13,222,155)'], [1, 'RGB(13,222,155)']]
-                // color: 'RGB(13,222,155)'
-              }
-            },
-            axisTick: { // 坐标轴小标记
-              length: 5, // 属性length控制线长
-              lineStyle: { // 属性lineStyle控制线条样式
-                color: '#fff'
-              }
-            },
-            splitLine: { // 分隔线
-              length: 10, // 属性length控制线长
-              lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-                color: 'auto'
-              }
-            },
-            pointer: {
-              width: 5,
-              length: '50%'
-            },
-            // axisLabel: {  //表盘字体样式
-            // backgroundColor: 'auto',
-            // borderRadius: 2,
-            // color: '#eee',
-            // padding: 3,
-            // textShadowBlur: 2,
-            // textShadowOffsetX: 1,
-            // textShadowOffsetY: 1,
-            // textShadowColor: '#222'
-            // },
-            title: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              fontWeight: 'bolder',
-              fontSize: 14,
-              fontStyle: 'italic',
-              color: '#adadad'
-            },
-            detail: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              // formatter: function (value) {
-              //   value = (value + '').split('.')
-              //   value.length < 2 && (value.push('00'))
-              //   return ('00' + value[0]).slice(-2) +
-              //     '.' + (value[1] + '00').slice(0, 2)
-              // },
-              offsetCenter: ['0', '35%'], // 实际值位置
-              fontWeight: 'bolder',
-              // borderRadius: 3,
-              // backgroundColor: '#A6FFA6',
-              // backgroundColor: '#444',
-              // borderColor: '#aaa',
-              // shadowBlur: 5,
-              // shadowColor: '#333',
-              // shadowOffsetX: 0,
-              // shadowOffsetY: 3,
-              // borderWidth: 2,
-              // textBorderColor: 'RGB(13,222,155)',
-              // textBorderColor: '#000',
-              // textBorderWidth: 2,
-              // textShadowBlur: 2,
-              // textShadowColor: 'RGB(13,222,155)',
-              // textShadowOffsetX: 0,
-              // textShadowOffsetY: 0,
-              fontFamily: 'Arial',
-              width: 80,
-              color: 'RGB(13,222,155)',
-              rich: {}
-            },
-            // data: [{value: 401.5, name: '总分'}]
-            data: this.allNumber
-          },
-          {
-            name: '班级排名',
-            type: 'gauge',
-            center: ['25%', '70%'],
-            // z: 1,
-            min: 0,
-            max: this.classNum, // 班级总人数
-            splitNumber: 1,
-            radius: '38%',
-            axisLine: { // 坐标轴线
-              lineStyle: { // 属性lineStyle控制线条样式
-                width: 6,
-                color: [[0.2, 'RGB(13,222,155)'], [0.8, 'RGB(13,222,155)'], [1, 'RGB(13,222,155)']]
-              }
-            },
-            axisTick: { // 坐标轴小标记
-              length: 5, // 属性length控制线长
-              lineStyle: { // 属性lineStyle控制线条样式
-                color: 'auto'
-              }
-            },
-            splitLine: { // 分隔线
-              length: 5, // 属性length控制线长
-              lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-                color: 'auto'
-              }
-            },
-            pointer: {
-              width: 5,
-              length: '50%'
-            },
-            // axisLabel: {  //表盘字体样式
-            // backgroundColor: 'auto',
-            // borderRadius: 2,
-            // color: '#eee',
-            // padding: 3,
-            // textShadowBlur: 2,
-            // textShadowOffsetX: 1,
-            // textShadowOffsetY: 1,
-            // textShadowColor: '#222'
-            // },
-            title: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              fontWeight: 'bold',
-              fontSize: 14,
-              fontStyle: 'italic',
-              color: '#adadad'
-            },
-            detail: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              // formatter: function (value) {
-              //   value = (value + '').split('.')
-              //   value.length < 2 && (value.push('00'))
-              //   return ('00' + value[0]).slice(-2) +
-              //     '.' + (value[1] + '00').slice(0, 2)
-              // },
-              offsetCenter: ['0', '35%'],
-              fontWeight: 'bold',
-              // fontSize: '24',
-              // borderRadius: 3,
-              // backgroundColor: '#A6FFA6',
-              // backgroundColor: '#444',
-              // borderColor: '#aaa',
-              // shadowBlur: 5,
-              // shadowColor: '#333',
-              // shadowOffsetX: 0,
-              // shadowOffsetY: 3,
-              // borderWidth: 2,
-              // textBorderColor: '#000',
-              // textBorderWidth: 2,
-              // textShadowBlur: 2,
-              // textShadowColor: '#fff',
-              // textShadowOffsetX: 0,
-              // textShadowOffsetY: 0,
-              fontFamily: 'Arial',
-              // width: 10,
-              // color: '#eee',
-              rich: {}
-            },
-            // data: [{value: 13, name: '班排'}]
-            data: this.classRank
-          },
-          {
-            name: '年级排名',
-            type: 'gauge',
-            center: ['75%', '70%'],
-            // z: 1,
-            min: 0,
-            max: this.schoolNum, // nian级总人数
-            splitNumber: 1,
-            radius: '38%',
-            axisLine: { // 坐标轴线
-              lineStyle: { // 属性lineStyle控制线条样式
-                width: 6,
-                color: [[0.2, 'RGB(13,222,155)'], [0.8, 'RGB(13,222,155)'], [1, 'RGB(13,222,155)']]
-              }
-            },
-            axisTick: { // 坐标轴小标记
-              length: 5, // 属性length控制线长
-              lineStyle: { // 属性lineStyle控制线条样式
-                color: 'auto'
-              }
-            },
-            splitLine: { // 分隔线
-              length: 5, // 属性length控制线长
-              lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-                color: 'auto'
-              }
-            },
-            pointer: {
-              width: 5,
-              length: '50%'
-            },
-            // axisLabel: {  //表盘字体样式
-            // backgroundColor: 'auto',
-            // borderRadius: 2,
-            // color: '#eee',
-            // padding: 3,
-            // textShadowBlur: 2,
-            // textShadowOffsetX: 1,
-            // textShadowOffsetY: 1,
-            // textShadowColor: '#222'
-            // },
-            title: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              fontWeight: 'bold',
-              fontSize: 14,
-              fontStyle: 'italic',
-              color: '#adadad'
-            },
-            detail: {
-              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-              // formatter: function (value) {
-              //   value = (value + '').split('.')
-              //   value.length < 2 && (value.push('00'))
-              //   return ('00' + value[0]).slice(-2) +
-              //     '.' + (value[1] + '00').slice(0, 2)
-              // },
-              offsetCenter: ['-5%', '32%'],
-              fontWeight: 'bold',
-              fontSize: '24',
-              // borderRadius: 3,
-              // backgroundColor: '#A6FFA6',
-              // backgroundColor: '#444',
-              // borderColor: '#aaa',
-              // shadowBlur: 5,
-              // shadowColor: '#333',
-              // shadowOffsetX: 0,
-              // shadowOffsetY: 3,
-              // borderWidth: 2,
-              // textBorderColor: '#000',
-              // textBorderWidth: 2,
-              // textShadowBlur: 2,
-              // textShadowColor: '#fff',
-              // textShadowOffsetX: 0,
-              // textShadowOffsetY: 0,
-              fontFamily: 'Arial',
-              // width: 10,
-              // color: '#eee',
-              rich: {}
-            },
-            // data: [{value: 13, name: '年排'}]
-            data: this.schoolRank
-          }
-        ]
+    showExam () {
+      console.log('qian:', this.choice)
+    },
+    hideExam () {
+      console.log('hou:', this.choice)
+      // console.log(this.$store.state.exam.exam_name)
+    },
+    showChange () {
+      console.log(this.choice)
+      this.scoreName = ''
+      for (const item in this.choice) {
+        this.scoreName += this.choice[item]
+      }
+      console.log('hahah', this.scoreName)
+      getScoreReport({
+        stuNumber: '08047737',
+        examType: this.scoreName
+        // examType: '19年3月考试'
+      }).then(res => {
+        this.three = res.data.data[0].map
+        this.totalInfo = res.data.data[0]
       })
+      this.useqrcode()
+      this.$store.commit('SET_SCORE_NAME', this.scoreName)
+      localStorage.setItem('SET_SCORE_NAME', this.scoreName)
+    },
+    useqrcode () {
+      const canvas = document.getElementById('canvas')
+      QRCode.toCanvas(canvas,
+        'http://zhongkeruitong.top/score_analysis/index.html#/share?examname=' + this.scoreName, {colorDark: '#999', colorLight: 'red'}
+        // {url: 'http://zhongkeruitong.top/score_analysis/index.html#/share?examname=' + this.scoreName,
+        // colorDark: '#666', // 二维码颜色
+        // colorLight: '#000'} // 二维码背景色
+        , function (error) {
+          if (error) console.error(error)
+          console.log('QRCode success!')
+        })
     }
-    // drawYiBLang () {
-    //   this.lYiBChart = this.echarts.init(this.$refs.langYiBChart)
-    //   this.lYiBChart.setOption({
-    //     // tooltip: {
-    //     // formatter: '{a} <br/>{c} {b}'
-    //     // },
-    //     // toolbox: {
-    //     // show: true,
-    //     // feature: {
-    //     //   restore: {show: true},
-    //     //   saveAsImage: {show: true}
-    //     // }
-    //     // },
-    //     series: [
-    //       {
-    //         name: '考分',
-    //         type: 'gauge',
-    //         // z: 1,
-    //         center: ['50%', '30%'],
-    //         min: 0,
-    //         max: 500,
-    //         splitNumber: 5,
-    //         radius: '55%',
-    //         axisLine: { // 坐标轴线
-    //           lineStyle: { // 属性lineStyle控制线条样式
-    //             width: 6,
-    //             color: [[0.2, 'RGB(13,222,155)'], [0.8, 'RGB(13,222,155)'], [1, 'RGB(13,222,155)']]
-    //             // color: 'RGB(13,222,155)'
-    //           }
-    //         },
-    //         axisTick: { // 坐标轴小标记
-    //           length: 5, // 属性length控制线长
-    //           lineStyle: { // 属性lineStyle控制线条样式
-    //             color: '#fff'
-    //           }
-    //         },
-    //         splitLine: { // 分隔线
-    //           length: 10, // 属性length控制线长
-    //           lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-    //             color: 'auto'
-    //           }
-    //         },
-    //         pointer: {
-    //           width: 5,
-    //           length: '50%'
-    //         },
-    //         // axisLabel: {  //表盘字体样式
-    //         // backgroundColor: 'auto',
-    //         // borderRadius: 2,
-    //         // color: '#eee',
-    //         // padding: 3,
-    //         // textShadowBlur: 2,
-    //         // textShadowOffsetX: 1,
-    //         // textShadowOffsetY: 1,
-    //         // textShadowColor: '#222'
-    //         // },
-    //         title: {
-    //           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    //           fontWeight: 'bolder',
-    //           fontSize: 14,
-    //           fontStyle: 'italic',
-    //           color: '#adadad'
-    //         },
-    //         detail: {
-    //           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    //           // formatter: function (value) {
-    //           //   value = (value + '').split('.')
-    //           //   value.length < 2 && (value.push('00'))
-    //           //   return ('00' + value[0]).slice(-2) +
-    //           //     '.' + (value[1] + '00').slice(0, 2)
-    //           // },
-    //           offsetCenter: ['0', '35%'], // 实际值位置
-    //           fontWeight: 'bolder',
-    //           // borderRadius: 3,
-    //           // backgroundColor: '#A6FFA6',
-    //           // backgroundColor: '#444',
-    //           // borderColor: '#aaa',
-    //           // shadowBlur: 5,
-    //           // shadowColor: '#333',
-    //           // shadowOffsetX: 0,
-    //           // shadowOffsetY: 3,
-    //           // borderWidth: 2,
-    //           // textBorderColor: 'RGB(13,222,155)',
-    //           // textBorderColor: '#000',
-    //           // textBorderWidth: 2,
-    //           // textShadowBlur: 2,
-    //           // textShadowColor: 'RGB(13,222,155)',
-    //           // textShadowOffsetX: 0,
-    //           // textShadowOffsetY: 0,
-    //           fontFamily: 'Arial',
-    //           width: 80,
-    //           color: 'RGB(13,222,155)',
-    //           rich: {}
-    //         },
-    //         data: [{value: 401.5, name: '考分'}]
-    //       },
-    //       {
-    //         name: '班级排名',
-    //         type: 'gauge',
-    //         center: ['25%', '70%'],
-    //         // z: 1,
-    //         min: 0,
-    //         max: 58, // 班级总人数
-    //         splitNumber: 1,
-    //         radius: '35%',
-    //         axisLine: { // 坐标轴线
-    //           lineStyle: { // 属性lineStyle控制线条样式
-    //             width: 6,
-    //             color: [[0.2, 'RGB(13,222,155)'], [0.8, 'RGB(13,222,155)'], [1, 'RGB(13,222,155)']]
-    //           }
-    //         },
-    //         axisTick: { // 坐标轴小标记
-    //           length: 5, // 属性length控制线长
-    //           lineStyle: { // 属性lineStyle控制线条样式
-    //             color: 'auto'
-    //           }
-    //         },
-    //         splitLine: { // 分隔线
-    //           length: 5, // 属性length控制线长
-    //           lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-    //             color: 'auto'
-    //           }
-    //         },
-    //         pointer: {
-    //           width: 5,
-    //           length: '50%'
-    //         },
-    //         // axisLabel: {  //表盘字体样式
-    //         // backgroundColor: 'auto',
-    //         // borderRadius: 2,
-    //         // color: '#eee',
-    //         // padding: 3,
-    //         // textShadowBlur: 2,
-    //         // textShadowOffsetX: 1,
-    //         // textShadowOffsetY: 1,
-    //         // textShadowColor: '#222'
-    //         // },
-    //         title: {
-    //           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    //           fontWeight: 'bold',
-    //           fontSize: 14,
-    //           fontStyle: 'italic',
-    //           color: '#adadad'
-    //         },
-    //         detail: {
-    //           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    //           // formatter: function (value) {
-    //           //   value = (value + '').split('.')
-    //           //   value.length < 2 && (value.push('00'))
-    //           //   return ('00' + value[0]).slice(-2) +
-    //           //     '.' + (value[1] + '00').slice(0, 2)
-    //           // },
-    //           offsetCenter: ['0', '35%'],
-    //           fontWeight: 'bold',
-    //           // borderRadius: 3,
-    //           // backgroundColor: '#A6FFA6',
-    //           // backgroundColor: '#444',
-    //           // borderColor: '#aaa',
-    //           // shadowBlur: 5,
-    //           // shadowColor: '#333',
-    //           // shadowOffsetX: 0,
-    //           // shadowOffsetY: 3,
-    //           // borderWidth: 2,
-    //           // textBorderColor: '#000',
-    //           // textBorderWidth: 2,
-    //           // textShadowBlur: 2,
-    //           // textShadowColor: '#fff',
-    //           // textShadowOffsetX: 0,
-    //           // textShadowOffsetY: 0,
-    //           fontFamily: 'Arial',
-    //           // width: 10,
-    //           // color: '#eee',
-    //           rich: {}
-    //         },
-    //         data: [{value: 13, name: '班排'}]
-    //       },
-    //       {
-    //         name: '年级排名',
-    //         type: 'gauge',
-    //         center: ['75%', '70%'],
-    //         // z: 1,
-    //         min: 0,
-    //         max: 58, // 班级总人数
-    //         splitNumber: 1,
-    //         radius: '35%',
-    //         axisLine: { // 坐标轴线
-    //           lineStyle: { // 属性lineStyle控制线条样式
-    //             width: 6,
-    //             color: [[0.2, 'RGB(13,222,155)'], [0.8, 'RGB(13,222,155)'], [1, 'RGB(13,222,155)']]
-    //           }
-    //         },
-    //         axisTick: { // 坐标轴小标记
-    //           length: 5, // 属性length控制线长
-    //           lineStyle: { // 属性lineStyle控制线条样式
-    //             color: 'auto'
-    //           }
-    //         },
-    //         splitLine: { // 分隔线
-    //           length: 5, // 属性length控制线长
-    //           lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-    //             color: 'auto'
-    //           }
-    //         },
-    //         pointer: {
-    //           width: 5,
-    //           length: '50%'
-    //         },
-    //         // axisLabel: {  //表盘字体样式
-    //         // backgroundColor: 'auto',
-    //         // borderRadius: 2,
-    //         // color: '#eee',
-    //         // padding: 3,
-    //         // textShadowBlur: 2,
-    //         // textShadowOffsetX: 1,
-    //         // textShadowOffsetY: 1,
-    //         // textShadowColor: '#222'
-    //         // },
-    //         title: {
-    //           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    //           fontWeight: 'bold',
-    //           fontSize: 14,
-    //           fontStyle: 'italic',
-    //           color: '#adadad'
-    //         },
-    //         detail: {
-    //           // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    //           // formatter: function (value) {
-    //           //   value = (value + '').split('.')
-    //           //   value.length < 2 && (value.push('00'))
-    //           //   return ('00' + value[0]).slice(-2) +
-    //           //     '.' + (value[1] + '00').slice(0, 2)
-    //           // },
-    //           offsetCenter: ['0', '35%'],
-    //           fontWeight: 'bold',
-    //           // borderRadius: 3,
-    //           // backgroundColor: '#A6FFA6',
-    //           // backgroundColor: '#444',
-    //           // borderColor: '#aaa',
-    //           // shadowBlur: 5,
-    //           // shadowColor: '#333',
-    //           // shadowOffsetX: 0,
-    //           // shadowOffsetY: 3,
-    //           // borderWidth: 2,
-    //           // textBorderColor: '#000',
-    //           // textBorderWidth: 2,
-    //           // textShadowBlur: 2,
-    //           // textShadowColor: '#fff',
-    //           // textShadowOffsetX: 0,
-    //           // textShadowOffsetY: 0,
-    //           fontFamily: 'Arial',
-    //           // width: 10,
-    //           // color: '#eee',
-    //           rich: {}
-    //         },
-    //         data: [{value: 13, name: '年排'}]
-    //       }
-    //     ]
-    //   })
-    // }
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
+  .score_info {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /*height: calc(100% - 50px);*/
+    /*flex: 1;*/
+    background: #f8f8f8;
+  }
   .score_header {
     /*padding: 0;*/
     font-size: 16px;
@@ -663,16 +238,20 @@ export default {
     margin-left: 35%;
     transform: translateX(-45%);
   }
-.score_second{
-  height: 330px;
-  /*background-color: #f0f0f0;*/
-  /*margin-top: 10px;*/
-  padding-top: 5px;
-}
-  .second_chart{
-    height: 330px;
-    margin-top: 10px;
+  .second_choice {
+    /*height: 55px;*/
+    background-color: #fff;
+    /*line-height: 55px;*/
+    border-bottom: 1px solid #c8c8cd;
   }
+  .second_choice >>>  .vux-cell-box .weui-cell_access {
+    color: #999;
+    /*color: #3c3c3c;*/
+  }
+  .second_choice >>> .vux-popup-picker-select .vux-cell-value{
+    display: none;
+  }
+
   .third_second {
     /*text-align: center;*/
     /*margin-left: 25%;*/
@@ -680,23 +259,47 @@ export default {
     /*transform: translate(-50%);*/
     display: inline-block;
   }
-  .third_second_p{
-    color: #8e8e8e;
-    /*margin-left: 45%;*/
-    /*transform: translate(-50%);*/
-    margin-bottom: 15px;
-    margin-right: 20px;
-    margin-left: 17px;
-    display: inline-block;
-  }
+  /*.third_second_p{*/
+  /*  color: #8e8e8e;*/
+  /*  !*margin-left: 45%;*!*/
+  /*  !*transform: translate(-50%);*!*/
+  /*  margin-bottom: 15px;*/
+  /*  margin-right: 20px;*/
+  /*  margin-left: 17px;*/
+  /*  display: inline-block;*/
+  /*}*/
   .third {
+    margin: 35px 4px;
     text-align: center;
     border-radius: 10px;
     /*padding-left: 15px;*/
-    background-color: #f7f7f7;
-    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
-    border: 1px rgba(66,185,130,0.4) dashed;
-    margin: 5px 20px;
+    background-color: #fff;
+    /*box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);*/
+    /*border: 1px rgba(66,185,130,0.4) dashed;*/
+    /*margin: 5px 20px;*/
+  }
+  /*.third_table {*/
+  /*  border: 1px solid red;*/
+  /*}*/
+  .third_table_thead {
+    /*background-color: #f7f7f7;*/
+    /*font-size: 14px;*/
+  }
+  tbody tr:nth-child(2n + 1) {
+    /*background-color: rgb(229,253,239);*/
+    background-color: rgba(66,185,130,0.2);
+  }
+  tbody tr td {
+    border: 1px solid rgba(66,185,130,0.2);
+    font-size: 13px;
+  }
+  thead tr th {
+    border: 1px solid rgba(66,185,130,0.2);
+    font-weight: bold;
+    font-size: 14px;
+  }
+  table.vux-table.third_table {
+    line-height: 33px;
   }
   .third_project {
     padding: 1px 5px 1px 0;
@@ -704,5 +307,24 @@ export default {
   }
   .itald {
     margin: 0 5px;
+  }
+  .four{
+    background-color: #fff;
+    margin: 0 10px;
+    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
+    border: 5px rgba(66,185,130,0.4) dashed;
+    /*border: 5px rgba(66,185,130,0.4) dotted;*/
+    border-radius: 10px;
+  }
+  h3 {
+    margin-left: 15px;
+  }
+  #qrCode {
+    text-align: center;
+    #canvas {
+      /*background-color: #c9c9c9!important;*/
+      width: 150px!important;
+      height: 150px!important;
+    }
   }
 </style>

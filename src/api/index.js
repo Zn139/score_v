@@ -35,6 +35,13 @@ export function getScoreReport (req) {
     params: req
   })
 }
+export function getSubjectAnalysisInfo (req) {
+  return request({
+    url: 'score/getSubjectAnalysisInfo',
+    method: 'get',
+    params: req
+  })
+}
 export function getAllExam () {
   return request({
     url: 'score/getListExamInfols',

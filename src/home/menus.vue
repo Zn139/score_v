@@ -10,7 +10,7 @@
     </div>
     <div class="menu-icon_1" @click="gotoPage('comAnalysis')">
       <i class="iconfont icon_luluduibi"></i>
-      <div class="icon-text">对比分析</div>
+      <div class="icon-text">定位对比</div>
     </div>
     <div class="menu-icon_1" @click="gotoPage('hisAnalysis')">
 <!--      <div class="icon-bac">-->
