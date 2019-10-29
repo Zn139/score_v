@@ -21,6 +21,7 @@ const more = () => import('@/menus/more')
 const addScore = () => import('@/home/addScore')
 const share = () => import('@/share/index')
 const ewm = () => import('@/components/EWeiM')
+const test = () => import('@/menus/test')
 
 export default new Router({
   routes: [
@@ -157,6 +158,15 @@ export default new Router({
       },
       name: 'ewm',
       meta: { tab: 'ewm', title: 'ewm' }
+    },
+    {
+      path: '/test',
+      // path: '/share/:exam_name',
+      components: {
+        default: test
+      },
+      name: 'test',
+      meta: { tab: 'test', title: 'test' }
     }
   ]
 })

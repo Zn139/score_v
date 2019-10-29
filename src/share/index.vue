@@ -53,10 +53,7 @@ export default {
   },
   computed: {
     examname () {
-      // if (this.$store.state.exam.exam_name !== '') {
-      //   console.log()
-      //   return this.$store.state.exam.exam_name
-      // } else if (localStorage.SET_SCORE_NAME !== '') {
+      // else if (localStorage.SET_SCORE_NAME !== '') {
       //   return localStorage.SET_SCORE_NAME
       // }
       return decodeURIComponent(this.$route.fullPath.split('?')[1].split('=')[1])
@@ -68,6 +65,7 @@ export default {
   },
   methods: {
     getAllScore () {
+      console.log(this.examname)
       getScoreReport({
         stuNumber: '08047737',
         examType: this.examname

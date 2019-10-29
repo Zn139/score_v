@@ -191,12 +191,12 @@ export default {
     margin-right: 6px;
   }
   .first_dialog{
-    position: absolute;
-    top: 0;
-    right: 4px;
-    padding: 0 10px;
-    color: #f3f3f3;
-  }
+     position: absolute;
+     top: 0;
+     right: 4px;
+     padding: 0 10px;
+     color: #f3f3f3;
+   }
   .second_screen_title {
     font-size: 15px;
     z-index: 100;
@@ -208,8 +208,8 @@ export default {
     /*font-weight: bold;*/
   }
   .second_screen_title >>> .vux-popup-picker-select {
-    position: relative;
-    width: 60%;
+    /*width: 60%;*/
+    text-align: left !important;
   }
   .second_screen_title >>> .weui-cell__ft {
     display: none;
@@ -222,17 +222,18 @@ export default {
   /*}*/
   .second_screen_title >>> .vux-popup-picker-placeholder {
     color: #fff;
+    margin-left: 15px;
     &:before {
       font-family: 'iconfont';
       content: '\e619';
       /*content: '\e60d';*/
       margin-right: 5px;
-      margin-left: 10px;
+      /*margin-left: 10px;*/
       font-weight: bold;
     }
   }
   .second_screen_title >>> .weui-cell {
-    padding: 0 7px;
+    padding: 0 1px;
     display: flex;
   }
   .second_screen_title >>> .vux-popup-picker-value {
@@ -243,8 +244,9 @@ export default {
     font-family: 'iconfont';
     font-size: 15px;
     font-weight: bold;
-    content: '\e7c6';
-    margin-right : 5px;
+    content: '\e619';
+    margin-left : 15px;
+    margin-right: 5px;
   }
   /*.second_screen_xiala >>> .vux-popup-picker-select-box {*/
   /*  width: 140px;*/
@@ -258,6 +260,7 @@ export default {
     .vux-cell-primary,
     .vux-popup-picker-select,
     .vux-popup-picker-value {
+      /*margin-right: 10px;*/
       /*max-width: 100%;*/
     }
     /*.vux-popup-picker-value {*/

@@ -1,5 +1,9 @@
 <template>
   <div class="subAna_info">
+<!--    <button-tab>-->
+<!--      <button-tab-item selected>周</button-tab-item>-->
+<!--      <button-tab-item><span class="vux-reddot-s">末</span></button-tab-item>-->
+<!--    </button-tab>-->
     <div class="score_header">
       <div class="return__icon" @click="returnBack">
         <i class="iconfont icon_lulufanhui"></i>
@@ -8,27 +12,83 @@
     </div>
     <div class="subAna_second_choice">
       <popup-picker :data="choiceList" :title="examname" :columns="3" v-model="choice" ref="picker3" @on-change="showChange()" show-name ></popup-picker>
-
     </div>
-    <div class="subAna_third">
-      <h3 class="subAna_third_title">学科贡献率</h3>
-      <div ref="subAna_third_chart" class="subAna_third_chart"></div>
+    <div>
+      <tab>
+        <tab-item selected @on-item-click="onItemClick">贡献率</tab-item>
+        <tab-item @on-item-click="onItemClick">均衡分析</tab-item>
+<!--        <tab-item @on-item-click="onItemClick">全部订单</tab-item>-->
+      </tab>
+    </div>
+    <div v-show="showSelect === 'contribute'">
+      <div class="subAna_third">
+        <h4 class="subAna_third_title">学科贡献率</h4>
+        <div ref="subAna_third_chart" class="subAna_third_chart"></div>
+      </div>
+      <div class="subAna_four">
+        <h4 class="subAna_four_title">各次考试学科贡献率</h4>
+        <!--      <load-more tip="各次考试学科贡献率" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+        <x-table class="subAna_four_table">
+          <thead>
+          <tr class="subAna_four_table_thead">
+            <th>学科</th>
+            <th>本次</th>
+            <th>上次</th>
+            <th>前三次平均</th>
+            <th>贡献率提升</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item, value, index) in subTable" :key="index" v-if="item.length = 5">
+            <td>{{item.title || '未公开'}}</td>
+            <td>{{item.currentRate || '未公开'}}</td>
+            <td>{{item.lastRate || '未公开'}}</td>
+            <td>{{item.averageRate || '未公开'}}</td>
+            <td v-if="item.rateDifference > 0" style="color: green;"><i class="iconfont icon_lulu-xiangshangjiantou "></i>{{item.rateDifference || '未公开'}}</td>
+            <td v-else style="color: red"><i class="iconfont icon_luluarrow-"></i>{{item.rateDifference || '未公开'}}</td>
+          </tr>
+          </tbody>
+        </x-table>
+      </div>
+    </div>
+    <div v-show="showSelect === 'balanced'">
+      <div class="subAna_third">
+        <h4 class="subAna_third_title">学科均衡分析</h4>
+        <div ref="balance_chart" class="subAna_balance_chart"></div>
+      </div>
+      <div class="subAna_balance_tip">
+        <h4>说明：</h4>
+        <p>绿色代表该科目年级排名高于学生总分年级排名;</p>
+        <p>红色代表科目年级排名名低于学生总分年级排名;</p>
+        <p>柱形偏高总分排名越远，说明学生学科间发展越不均衡。</p>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { Tab, TabItem, XTable, LoadMore, ButtonTab, ButtonTabItem } from 'vux'
 import {getSubjectAnalysisInfo, getAllExam} from '@/api/index'
 export default {
+  components: {XTable, LoadMore, ButtonTab, ButtonTabItem, Tab, TabItem},
   data () {
     return {
       pieChart: '',
+      contiChart: '',
       titleList: [],
       dataList: [],
       choice: [],
       choiceList: [],
       scoreName: '',
       totalScore: [],
-      countScore: 0
+      countScore: 0,
+      content: [],
+      subTable: [],
+      // showSelect: 'balanced',
+      differen: [],
+      differenName: [],
+      continuList: [],
+      differenNameRight: [],
+      showSelect: 'contribute'
     }
   },
   computed: {
@@ -44,13 +104,28 @@ export default {
     }
   },
   mounted () {
+    // this.drawContinuous()
     this.getSubAnalyInfo()
     this.getAllExam()
-    // this.drawPie()
   },
   methods: {
     returnBack () {
       this.$router.go(-1)
+    },
+    onItemClick (item) {
+      console.log(item)
+      var _this = this
+      if (item === 0) {
+        _this.showSelect = 'contribute'
+        // console.log('contribute')
+        // this.getSubAnalyInfo()
+      } else if (item === 1) {
+        _this.showSelect = 'balanced'
+        setTimeout(function () {
+          _this.drawContinuous()
+        }, 300)
+        // this.drawContinuous()
+      }
     },
     getAllExam () {
       getAllExam().then(res => {
@@ -113,11 +188,13 @@ export default {
     },
     showChange () {
       console.log(this.choice)
+      this.continuList = []
+      this.differenNameRight = []
       this.scoreName = ''
       for (const item in this.choice) {
         this.scoreName += this.choice[item]
       }
-      console.log('hahah', this.scoreName)
+      // console.log('hahah', this.scoreName)
       getSubjectAnalysisInfo({
         stuNumber: '08047737',
         examType: this.scoreName
@@ -125,6 +202,19 @@ export default {
       }).then(res => {
         this.countScore = res.data.data[0].examCoversionTotal.coversionTotal
         this.totalScore = res.data.data[0]['contributionRate']
+        this.differen = res.data.data[0]['equilibriumDifference']
+        // console.log('differ;', Object.keys(this.differen))
+        this.differenName = Object.keys(this.differen)
+        for (const i in this.differenName) {
+          this.differenNameRight.push(this.differenName[i].split('差值')[0])
+        }
+        // console.log(this.differenNameRight)
+        for (const j in this.differen) {
+          // this.continuList.push({name: j, value: this.differen[j]})
+          this.continuList.push(this.differen[j])
+        }
+        this.subTable = res.data.data[0].map
+        console.log('subTable:', this.subTable)
         this.titleList = Object.keys(this.totalScore)
         this.dataList = []
         for (const item in this.totalScore) {
@@ -133,20 +223,40 @@ export default {
           // console.log(item)
           // console.log(Object.keys(this.totalScore)[0])
         }
-        console.log(this.dataList)
+        // console.log(this.dataList)
         this.drawPie()
+        this.drawContinuous()
       })
       this.$store.commit('SET_SCORE_NAME', this.scoreName)
       localStorage.setItem('SET_SCORE_NAME', this.scoreName)
     },
     getSubAnalyInfo () {
+      this.dataList = []
+      this.continuList = []
+      this.differenNameRight = []
       getSubjectAnalysisInfo({
         stuNumber: '08047737',
         examType: this.examname
         // examType: '19年3月考试'
       }).then(res => {
+        this.content = res.data.data[0]
+        console.log(this.content)
         this.countScore = res.data.data[0].examCoversionTotal.coversionTotal
         this.totalScore = res.data.data[0]['contributionRate']
+        this.differen = res.data.data[0]['equilibriumDifference']
+        // console.log('differ;', Object.keys(this.differen))
+        this.differenName = Object.keys(this.differen)
+        for (const i in this.differenName) {
+          // console.log('i', i)
+          this.differenNameRight.push(this.differenName[i].split('差值')[0])
+        }
+        // console.log(this.differenNameRight)
+        for (const j in this.differen) {
+          // this.continuList.push({name: j, value: this.differen[j]})
+          this.continuList.push(this.differen[j])
+        }
+        this.subTable = res.data.data[0].map
+        console.log('subTable:', this.subTable)
         this.titleList = Object.keys(this.totalScore)
         for (const item in this.totalScore) {
           // this.dataList.push(Object.keys(this.totalScore)[item])
@@ -154,7 +264,7 @@ export default {
           // console.log(item)
           // console.log(Object.keys(this.totalScore)[0])
         }
-        console.log(this.dataList)
+        // console.log(this.dataList)
         this.drawPie()
       })
     },
@@ -178,10 +288,10 @@ export default {
           style: {
             text: '总分',
             textAlign: 'center',
-            fill: '#42b983', // 文字的颜色
+            fill: '#AE8F00', // 文字的颜色
             width: 30,
             height: 30,
-            fontSize: 17,
+            fontSize: 16,
             fontFamily: 'Microsoft YaHei'
           }
         }, {
@@ -235,7 +345,7 @@ export default {
             label: {
               normal: {
                 formatter: '{b}:\n{d}%',
-                backgroundColor: '#eee',
+                // backgroundColor: '#eee',
                 // borderColor: '#aaa',
                 borderWidth: 1,
                 padding: 4,
@@ -263,7 +373,7 @@ export default {
             },
             labelLine: {
               normal: {
-                length: 5, // 指示线长度
+                length: 7, // 指示线长度
                 lineStyle: {
                   color: 'rgba(66,185,130,0.4)'
                 }
@@ -281,6 +391,86 @@ export default {
             // {value: 234, name: '联盟广告'},
             // {value: 135, name: '视频广告'},
             // {value: 1548, name: '搜索引擎'}
+            // ]
+          }
+        ]
+      })
+    },
+    drawContinuous () {
+      // const labelRight = {
+      //   normal: {
+      //     position: 'right'
+      //   }
+      // }
+      // console.log('continuous')
+      // this.contiChart = this.echarts.init(document.getElementById('balance_chart'))
+      this.contiChart = this.echarts.init(this.$refs.balance_chart)
+      this.contiChart.setOption({
+        // title: {
+        //   text: '交错正负轴标签',
+        //   subtext: 'From ExcelHome',
+        //   sublink: 'http://e.weibo.com/1341556070/AjwF2AgQm'
+        // },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        grid: {
+          top: 10,
+          bottom: 30,
+          right: '3%'
+        },
+        yAxis: {
+          type: 'value',
+          position: 'top',
+          splitLine: {lineStyle: {type: 'dashed'}}
+        },
+        xAxis: {
+          type: 'category',
+          axisLine: {show: false},
+          axisLabel: {show: false},
+          axisTick: {show: false},
+          splitLine: {show: true},
+          data: this.differenNameRight
+          // data: ['ten', 'nine', 'eight', 'seven', 'six', 'five', 'four', 'three', 'two', 'one']
+        },
+        series: [
+          {
+            name: '差值',
+            type: 'bar',
+            stack: '总量',
+            barWidth: 15, // 柱图宽度
+            label: {
+              normal: {
+                show: true,
+                formatter: '{b}'.split('差值')[0]
+              }
+            },
+            data: this.continuList,
+            itemStyle: {
+              normal: {
+                color: function (params) {
+                  if (params.data > 0) {
+                    // return 'rgba(66,185,130,0.6)'
+                    return 'rgb(67,183,131)'
+                  } else {
+                    return 'rgb(253,116,120)'
+                  }
+                }
+              }
+            }
+            // data: [
+            // {value: -0.07, label: labelRight},
+            // {value: -0.09},
+            // // 0.2, 0.44,
+            // {value: 0.23},
+            // // 0.08,
+            // {value: 0.47},
+            // // 0.47,
+            // {value: -0.36, label: labelRight}
+            // 0.18
             // ]
           }
         ]
@@ -320,6 +510,9 @@ export default {
     margin-top: 10px;
     font-size: 20px;
   }
+  .icon_luluarrow- {
+    font-weight: bold;
+  }
   .title {
     display: inline-block;
     margin-left: 35%;
@@ -327,7 +520,12 @@ export default {
   }
   .subAna_second_choice {
     background-color: #fff;
-    border-bottom: 1px solid #c8c8cd;
+    border-bottom: 1px solid #d9d9d9;
+  }
+  .subAna_second_choice >>> .vux-cell-box .weui-cell_access {
+    color: #999;
+    /*width: 35%;*/
+    /*color: #3c3c3c;*/
   }
   .subAna_second_choice >>> .vux-popup-picker-select .vux-cell-value{
     display: none;
@@ -336,6 +534,7 @@ export default {
     margin: 25px 10px;
     padding: 5px;
     box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
+    border-radius: 10px;
     border: 1px rgba(66,185,130,0.4) dashed;
   }
   .subAna_third_title {
@@ -345,5 +544,46 @@ export default {
   .subAna_third_chart {
     margin-top: 8px;
     height: 190px;
+  }
+  .subAna_balance_chart {
+    margin-top: 8px;
+    height: 190px;
+  }
+  .subAna_four {
+    margin: 0 1px 40px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+  .subAna_four_title {
+    margin: 5px 0 15px;
+  }
+  tbody tr:nth-child(2n + 1) {
+    /*background-color: rgb(229,253,239);*/
+    background-color: rgba(66,185,130,0.2);
+  }
+  tbody tr td {
+    border: 1px solid rgba(66,185,130,0.2);
+    font-size: 13px;
+  }
+  thead tr th {
+    border: 1px solid rgba(66,185,130,0.2);
+    font-weight: bold;
+    font-size: 14px;
+  }
+  table.vux-table.subAna_four_table {
+    line-height: 35px;
+  }
+  .subAna_balance_tip {
+    /*border: 1px solid green;*/
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
+    padding: 5px 5px 10px;
+    margin: 0 15px 15px;
+  }
+  p {
+    text-indent: 2em;
+    font-size: 15px;
   }
 </style>
