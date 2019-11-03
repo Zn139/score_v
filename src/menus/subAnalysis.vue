@@ -27,7 +27,7 @@
       </div>
       <div class="subAna_four">
         <h4 class="subAna_four_title">各次考试学科贡献率</h4>
-        <!--      <load-more tip="各次考试学科贡献率" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--        <load-more tip="各次考试学科贡献率" :show-loading="false" background-color="#fbf9fe"></load-more>-->
         <x-table class="subAna_four_table">
           <thead>
           <tr class="subAna_four_table_thead">
@@ -49,6 +49,10 @@
           </tr>
           </tbody>
         </x-table>
+        <div class="subAna_four_tip">
+          <p>贡献率提升：学科本次贡献率和前三次平均贡献率相比的提升率。</p>
+          <p>未公开：是表示当前系统中录入成绩不够四次，不能进行贡献率的计算，及提升。</p>
+        </div>
       </div>
     </div>
     <div v-show="showSelect === 'balanced'">
@@ -347,8 +351,8 @@ export default {
                 formatter: '{b}:\n{d}%',
                 // backgroundColor: '#eee',
                 // borderColor: '#aaa',
-                borderWidth: 1,
-                padding: 4,
+                // borderWidth: 2,
+                // padding: 4,
                 // borderRadius: 4,
                 rich: {
                   b: {
@@ -374,8 +378,11 @@ export default {
             labelLine: {
               normal: {
                 length: 7, // 指示线长度
+                length2: 9,
+                smooth: 0.1,
                 lineStyle: {
-                  color: 'rgba(66,185,130,0.4)'
+                  color: 'rgba(66,185,130,0.4)',
+                  fontWeight: 'bolder'
                 }
               }
             },
@@ -432,7 +439,13 @@ export default {
           axisLine: {show: false},
           axisLabel: {show: false},
           axisTick: {show: false},
-          splitLine: {show: true},
+          splitLine: {
+            show: true
+            // lineStyle: {
+            //   color: '#00ff00',
+            //   width: 2
+            // }
+          },
           data: this.differenNameRight
           // data: ['ten', 'nine', 'eight', 'seven', 'six', 'five', 'four', 'three', 'two', 'one']
         },
@@ -445,7 +458,13 @@ export default {
             label: {
               normal: {
                 show: true,
-                formatter: '{b}'.split('差值')[0]
+                formatter: '{b}',
+                position: 'top',
+                textStyle: {
+                  fontWeight: 'bold',
+                  fontSize: '12'
+                  // color: '#234'
+                }
               }
             },
             data: this.continuList,
@@ -460,6 +479,21 @@ export default {
                   }
                 }
               }
+            },
+            markLine: { // 辅助线
+              symbol: 'none', // 去掉警戒线最后面的箭头
+              label: {
+                position: 'start' // 将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
+              },
+              data: [{
+                silent: false, // 鼠标悬停事件  true没有，false有
+                lineStyle: { // 警戒线的样式  ，虚实  颜色
+                  type: 'solid',
+                  color: 'rgb(204, 204, 204)',
+                  width: 3
+                },
+                yAxis: 0 // 警戒线的标注值，可以有多个yAxis,多条警示线   或者采用   {type : 'average', name: '平均值'}，type值有  max  min  average，分为最大，最小，平均值
+              }]
             }
             // data: [
             // {value: -0.07, label: labelRight},
@@ -535,7 +569,7 @@ export default {
     padding: 5px;
     box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
     border-radius: 10px;
-    border: 1px rgba(66,185,130,0.4) dashed;
+    /*border: 1px rgba(66,185,130,0.4) dashed;*/
   }
   .subAna_third_title {
     /*margin-top: 10px;*/
@@ -552,12 +586,13 @@ export default {
   .subAna_four {
     margin: 0 1px 40px;
     padding: 10px;
-    text-align: center;
+    /*text-align: center;*/
     border-radius: 10px;
     background-color: #fff;
   }
   .subAna_four_title {
     margin: 5px 0 15px;
+    text-align: center;
   }
   tbody tr:nth-child(2n + 1) {
     /*background-color: rgb(229,253,239);*/
@@ -576,7 +611,7 @@ export default {
     line-height: 35px;
   }
   .subAna_balance_tip {
-    /*border: 1px solid green;*/
+    border: 4px dashed rgba(66,185,130,0.4);
     border-radius: 10px;
     box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
     padding: 5px 5px 10px;
@@ -584,6 +619,13 @@ export default {
   }
   p {
     text-indent: 2em;
-    font-size: 15px;
+    font-size: 14px;
+  }
+  .subAna_four_tip {
+    margin: 20px 2px;
+    padding: 5px 3px;
+    border: 3px rgba(66,185,130,0.4) dashed;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
   }
 </style>

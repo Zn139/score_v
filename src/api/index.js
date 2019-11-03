@@ -48,3 +48,10 @@ export function getAllExam () {
     method: 'get'
   })
 }
+export function enterGrade (req) { // 录入成绩
+  return request({
+    url: 'scoreTwo/save',
+    method: 'post',
+    params: req
+  })
+}

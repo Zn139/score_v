@@ -18,9 +18,10 @@ const question = () => import('@/menus/question')
 const classSchedule = () => import('@/menus/classSchedule')
 const schoolInquire = () => import('@/menus/schoolInquire')
 const more = () => import('@/menus/more')
-const addScore = () => import('@/home/addScore')
+const addScore = () => import('@/enterGrade/index')
 const share = () => import('@/share/index')
 const ewm = () => import('@/components/EWeiM')
+const record = () => import('@/enterGrade/record')
 const test = () => import('@/menus/test')
 
 export default new Router({
@@ -44,6 +45,14 @@ export default new Router({
       },
       name: 'addScore',
       meta: { tab: 'addScore', title: 'addScore' }
+    },
+    {
+      path: '/record',
+      components: {
+        default: record
+      },
+      name: 'record',
+      meta: { tab: 'record', title: 'record' }
     },
     {
       path: '/my',

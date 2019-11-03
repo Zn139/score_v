@@ -322,7 +322,7 @@ export default {
       }).then(res => {
         console.log(res.data.data)
         this.sixRate = res.data.data[0]
-        // console.log(this.sixRate.allSubjectRateMap.keys())
+        console.log('............', this.sixRate)
         const subj = three
         for (const item in subj) {
           console.log('safd', subj[item])
@@ -352,7 +352,7 @@ export default {
             this.zhList.push('政治')
           }
         }
-        // console.log(this.zhList[0])
+        console.log('sanke', this.zhList)
         // console.log(this.zhEngList[0])
         // console.log(typeof this.sixRate.allSubjectRateMap[this.zhEngList[0]])
         // console.log('sdafds', parseInt(this.sixRate.allSubjectRateMap.english))
@@ -368,7 +368,7 @@ export default {
         this.sunData[0].children[1].children[0].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[0]] * 100)
         this.sunData[0].children[1].children[1].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[1]] * 100)
         this.sunData[0].children[1].children[2].value = parseInt(this.sixRate.allSubjectRateMap[this.zhEngList[2]] * 100)
-        // console.log('data:', this.sunData)
+        console.log('data:', this.sunData)
         this.drawSunburst()
       })
     },
@@ -380,7 +380,7 @@ export default {
       }).then(res => {
         this.three = res.data.data[0].list
         this.total = res.data.data[0].examCoversionTotal.coversionTotal
-        // console.log(this.three)
+        console.log('sdfsfsdfsdfdsfdsfsdfsdf', this.three)
         this.getSix(this.three)
       })
     },
@@ -449,13 +449,14 @@ export default {
           levels: [{}, {
             // 内环
             r0: '0',
-            r: '33%'
+            r: '33%',
             // itemStyle: {
             //   borderWidth: 2
             // },
-            // label: {
-            //   rotate: 'tangential'
-            // }
+            label: {
+              // rotate: 'radial'  // 放射显示
+              rotate: 'tangential' // 切向显示
+            }
           }, {
             // // 中环
             r0: '33%',

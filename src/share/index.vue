@@ -54,7 +54,7 @@ export default {
   computed: {
     examname () {
       // else if (localStorage.SET_SCORE_NAME !== '') {
-      //   return localStorage.SET_SCORE_NAME
+      //   return localStorage.SET_SCORE_NAME // 我扫描有数据，明奇没有
       // }
       return decodeURIComponent(this.$route.fullPath.split('?')[1].split('=')[1])
       // return this.$route.params.exam_name
