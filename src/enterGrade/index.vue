@@ -51,7 +51,7 @@
           <td>{{item.score}}</td>
           <td>{{item.classRank}}</td>
           <td>{{item.gradeRank}}</td>
-          <td><span class="enter_action" @click="delData">删除</span></td>
+          <td><span class="enter_action" @click="delData(item)">删除</span></td>
           <td><span class="enter_action" @click="editData">编辑</span></td>
         </tr>
         <tr style="background-color:#fff;">
@@ -101,8 +101,10 @@ export default {
     returnBack () {
       this.$router.go(-1)
     },
-    delData () { // 删除操作
-      console.log('删除')
+    delData (item) { // 删除操作
+      console.log(item)
+      console.log('indexof:', this.content.indexOf(item))
+      this.content.splice(this.content.indexOf(item), 1)
     },
     editData () { // 编辑操作
       console.log('编辑')

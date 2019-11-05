@@ -283,6 +283,7 @@ export default {
   },
   computed: {
     examname () {
+      console.log('变了么：', this.$store.state.exam.exam_name)
       return this.$store.state.exam.exam_name
     }
   },

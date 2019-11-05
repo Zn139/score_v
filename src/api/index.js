@@ -7,7 +7,7 @@ export function getScoreAnalysis (req) {
     params: req
   })
 }
-export function getThree (req) {
+export function getThree (req) { // 自选的三科
   return request({
     url: 'score/getExamCoversionTotalSectionInfo',
     method: 'get',
@@ -52,6 +52,20 @@ export function enterGrade (req) { // 录入成绩
   return request({
     url: 'scoreTwo/save',
     method: 'post',
+    params: req
+  })
+}
+export function hisCountAnal (req) { // 历史分析--总分分析
+  return request({
+    url: 'score/getHistoricalAnalysisTotalInfo',
+    method: 'get',
+    params: req
+  })
+}
+export function hisSingleAnal (req) { // 历史分析--单科分析
+  return request({
+    url: 'score/getHistoricalAnalysisSingleInfo',
+    method: 'get',
     params: req
   })
 }

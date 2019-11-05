@@ -125,7 +125,6 @@ export default {
   computed: {
     examname () {
       if (this.$store.state.exam.exam_name !== '') {
-        // console.log(1111111111111111)
         return this.$store.state.exam.exam_name
       } else if (localStorage.SET_EXAM_NAME !== '') {
         return localStorage.SET_EXAM_NAME
@@ -396,9 +395,6 @@ export default {
     border-radius: 10px;
     background-color: #fff;
   }
-  /*.third_table {*/
-  /*  border: 1px solid red;*/
-  /*}*/
   tbody tr:nth-child(2n + 1) {
     /*background-color: rgb(229,253,239);*/
     background-color: rgba(66,185,130,0.2);

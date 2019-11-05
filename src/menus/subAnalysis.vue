@@ -109,6 +109,9 @@ export default {
   },
   mounted () {
     // this.drawContinuous()
+    // setTimeout(function () {
+    //   this.getSubAnalyInfo()
+    // }, 300)
     this.getSubAnalyInfo()
     this.getAllExam()
   },
@@ -121,8 +124,9 @@ export default {
       var _this = this
       if (item === 0) {
         _this.showSelect = 'contribute'
-        // console.log('contribute')
-        // this.getSubAnalyInfo()
+        setTimeout(function () {
+          _this.getSubAnalyInfo()
+        }, 300)
       } else if (item === 1) {
         _this.showSelect = 'balanced'
         setTimeout(function () {

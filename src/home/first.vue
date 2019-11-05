@@ -7,7 +7,8 @@
 <!--      <div class="second_screen_title">-->
       <div class="second_screen_title" v-if="list3.length > 0">
         <popup-picker class="second_screen_xiala" :data="list3" :columns="3" v-model="exam" ref="picker3" @on-change="showChange()" show-name :placeholder="allExam"></popup-picker>
-<!--        <popup-picker class="second_screen_xiala" :data="[examList]" v-model="exam" @on-change="showChange" @on-show="showExam" :placeholder="exam[0]" @on-hide="hideExam"></popup-picker>-->
+<!--        <popup-picker :data="list3" :title="examname" :columns="3" v-model="exam" ref="picker3" @on-change="showChange()" show-name ></popup-picker>-->
+        <!--        <popup-picker class="second_screen_xiala" :data="[examList]" v-model="exam" @on-change="showChange" @on-show="showExam" :placeholder="exam[0]" @on-hide="hideExam"></popup-picker>-->
       </div>
       <div class="first_dialog">
         <span class="add_score" @click="addScore">
@@ -47,6 +48,17 @@ export default {
       yearNew: ''
     }
   },
+  computed: {
+    examname () {
+      if (this.$store.state.exam.exam_name !== '') {
+        return this.$store.state.exam.exam_name
+      } else if (localStorage.SET_EXAM_NAME !== '') {
+        return localStorage.SET_EXAM_NAME
+      } else {
+        return this.$route.params.exam_name
+      }
+    }
+  },
   mounted () {
     this.getAllExam()
   },
@@ -83,6 +95,7 @@ export default {
         localStorage.setItem('SET_EXAM_NAME', this.content[this.content.length - 1].examName)
         for (i = 0; i < this.content.length; i++) {
           this.allExam = this.content[i].examName
+          // this.allExam = this.content[i].examName
           // console.log('~~~~~', this.allExam)
           const yearList = this.allExam.split('年')
           const monthList = yearList[1].split('月')
