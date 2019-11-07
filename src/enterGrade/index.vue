@@ -46,13 +46,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(item, index) in content" :key = index>
-          <td>{{item.subjectName}}</td>
+        <tr v-for="(item, index) in submitList" :key = index>
+          <td>{{item.subject}}</td>
           <td>{{item.score}}</td>
-          <td>{{item.classRank}}</td>
-          <td>{{item.gradeRank}}</td>
+          <td>{{item.class_rank}}</td>
+          <td>{{item.grade_rank}}</td>
           <td><span class="enter_action" @click="delData(item)">删除</span></td>
-          <td><span class="enter_action" @click="editData">编辑</span></td>
+          <td><span class="enter_action" @click="editData(item)">编辑</span></td>
         </tr>
         <tr style="background-color:#fff;">
           <td colspan="6" @click="addNew"><i class="iconfont icon_lulutianjia"></i></td>
@@ -60,7 +60,7 @@
         </tbody>
       </x-table>
     </div>
-    <x-button class="enter_submit">提交</x-button>
+    <x-button class="enter_submit" @click.native="submitTranscript">提交</x-button> <!--提交成绩单-->
     <x-dialog :show.sync="addscore" :hide-on-blur="true" class="enter_grade_dialog">
       <group title="科目信息">
         <selector placeholder="请选择科目" v-model="subkemu" title="科目" name="district" :options="list1" @on-change="onChange"></selector>
@@ -73,45 +73,107 @@
         <x-button text="取消" @click.native="addscore = false" class="report-btns_text"></x-button>
       </div>
     </x-dialog>
+    <x-dialog v-model="showEdit" :hide-on-blur="true" class="enter_grade_dialog">
+      <x-input title="科目" v-model="edit.subject" disabled></x-input>
+      <x-input title="分数" v-model="edit.score"></x-input>
+      <x-input title="班排" v-model="edit.banpai"></x-input>
+      <x-input title="年排" v-model="edit.nianpai"></x-input>
+      <div class="report-btns">
+        <x-button text="提交" @click.native="sendEdit(edit.subject, edit.score, edit.banpai, edit.nianpai)" class="report-btns_text"></x-button>
+        <x-button text="取消" @click.native="showEdit = false" class="report-btns_text"></x-button>
+      </div>
+    </x-dialog> <!--点击编辑按钮弹出-->
+    <toast v-model="showToast" :time="1000">录入成功</toast>
+    <confirm v-model="showDel"
+             title="删除提示"
+             @on-cancel="onCancel"
+             @on-confirm="onConfirm">
+      <p style="text-align:center;">确定删除吗？</p>
+    </confirm>
   </div>
 </template>
 <script>
-import { XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, TransferDomDirective as TransferDom, Selector, Group } from 'vux'
-import {enterGrade} from '@/api/index'
+import { XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, Selector, Group } from 'vux'
+import {enterGradeList} from '@/api/index'
 export default {
-  directives: {TransferDom},
+  // directives: {TransferDom},
   components: {XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, Selector, Group},
   data () {
     return {
+      showEdit: false,
+      showToast: false,
+      showDel: false,
+      delItem: '', // 删除项
+      editItem: [],
       examname: '',
       examTime: '',
       addscore: false,
       addscore1: false,
       list: [{key: '语文', value: '语文'}, {key: '数学', value: '数学'}, {key: '英语', value: '英语'}, {key: '物理', value: '物理'},
         {key: '化学', value: '化学'}, {key: '生物', value: '生物'}, {key: '历史', value: '历史'}, {key: '地理', value: '地理'}, {key: '政治', value: '政治'}],
-      list1: [ '语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治'],
+      list1: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治'],
       subkemu: '',
       score: '',
       classPai: '',
       schoolPai: '',
-      content: []
+      edit: {
+        subject: '',
+        score: '',
+        banpai: '',
+        nianpai: ''
+      },
+      content: [],
+      submitList: [],
+      submitList1: []
     }
   },
   methods: {
     returnBack () {
       this.$router.go(-1)
     },
-    delData (item) { // 删除操作
-      console.log(item)
-      console.log('indexof:', this.content.indexOf(item))
-      this.content.splice(this.content.indexOf(item), 1)
+    onCancel () { // 点击取消触发
+      this.showDel = false
     },
-    editData () { // 编辑操作
-      console.log('编辑')
+    onConfirm () {
+      this.submitList.splice(this.submitList.indexOf(this.delItem), 1)
+      console.log('剩余的科目：', this.list1)
+      this.list1.push(this.delItem.subject)
+      console.log('剩余的科目2：', this.list1)
+    },
+    delData (item) { // 删除操作
+      this.showDel = true
+      this.delItem = item
+      // console.log(item)
+      // console.log('indexof:', this.submitList.indexOf(item))
+      // this.submitList.splice(this.submitList.indexOf(item), 1)
+    },
+    editData (item) { // 编辑操作
+      this.edit.subject = item.subject
+      this.edit.score = item.score
+      this.edit.banpai = item.class_rank
+      this.edit.nianpai = item.grade_rank
+      console.log(this.edit)
+      // setTimeout(function () {
+      this.showEdit = true
+      // }, 200)
+      // console.log('编辑', item)
+    },
+    sendEdit (kemu, score, classPai, schoolPai) { // 确认编辑
+      this.showEdit = false
+      console.log('编辑：', kemu, score, classPai, schoolPai)
+      // console.log('编辑：', this.editItem.subject, this.editItem.score, this.editItem.class_rank, this.editItem.grade_rank)
+      const a = {'wechat_openid': '121', 'student_number': '111', 'subject': kemu, 'score': score, 'class_rank': classPai, 'grade_rank': schoolPai, 'exam_name': this.examTime + this.examname}
+      console.log(a)
+      for (const item in this.submitList) {
+        if (this.submitList[item].subject === kemu) {
+          console.log('shiji', item)
+          this.submitList.splice(item, 1, a)
+        }
+      }
+      console.log(this.submitList)
     },
     gotoRecord () {
-      // eslint-disable-next-line standard/object-curly-even-spacing
-      this.$router.push({ path: '/record'})
+      this.$router.push({path: '/record'})
     },
     addNew () {
       this.addscore = true
@@ -121,29 +183,44 @@ export default {
       console.log(this.subkemu)
     },
     sendSubmit () {
+      // this.submitList = []
       this.addscore = false
       console.log(this.examname, this.examTime, this.subkemu, this.score, this.classPai, this.schoolPai)
-      enterGrade({
-        wechat_openid: '111',
-        student_number: '111',
-        subject: this.subkemu,
-        score: this.score,
-        class_rank: this.classPai,
-        grade_rank: this.schoolPai,
-        exam_name: this.examTime + this.examname
-      }).then(res => {
-        this.content.push(res.data.data)
-        console.log('indexof:', this.list1.indexOf(this.subkemu))
-        this.list1.splice(this.list1.indexOf(this.subkemu), 1)
-        // for (const a in this.list) {
-        //   if (a === this.subkemu) {
-        //
-        //   }
-        //   console.log('a', a)
-        // }
-        // this.list.pop(this.subkemu)
-        console.log(this.list1)
-        console.log(this.content)
+      const grade = {'wechat_openid': '121', 'student_number': '111', 'subject': this.subkemu, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examTime + this.examname}
+      this.submitList.push(grade)
+      // this.submitList.push(grade)
+      // this.submitList1.push(JSON.stringify(grade))
+      // enterGrade({
+      //   wechat_openid: '111',
+      //   student_number: '111',
+      //   subject: this.subkemu,
+      //   score: this.score,
+      //   class_rank: this.classPai,
+      //   grade_rank: this.schoolPai,
+      //   exam_name: this.examTime + this.examname
+      // }).then(res => {
+      //   this.content.push(res.data.data)
+      console.log('indexof:', this.list1.indexOf(this.subkemu))
+      this.list1.splice(this.list1.indexOf(this.subkemu), 1)
+      // for (const a in this.list) {
+      //   if (a === this.subkemu) {
+      //
+      //   }
+      //   console.log('a', a)
+      // }
+      // this.list.pop(this.subkemu)
+      // console.log(this.list1)
+      // console.log(this.content)
+      // })
+    },
+    submitTranscript () {
+      console.log('提交了：', this.submitList)
+      enterGradeList(this.submitList).then(res => {
+        if (res.data.code === 0) {
+          this.showToast = true
+        }
+        const a = res.data.data
+        console.log('aaaaaaaaa', a)
       })
     }
   }

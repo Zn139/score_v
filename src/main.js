@@ -7,7 +7,7 @@ import VueRouter from 'vue-router'
 import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
-import { ToastPlugin, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, Toast, PopupPicker, Tab, TabItem, ConfigPlugin } from 'vux'
+import { ToastPlugin, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 
 Vue.use(VueRouter)
@@ -15,7 +15,7 @@ Vue.use(vueTap)
 Vue.use(ConfigPlugin, {
   $layout: 'VIEW_BOX'
 })
-
+Vue.component('confirm', Confirm)
 Vue.component('tab', Tab)
 Vue.component('tab-item', TabItem)
 Vue.component('toast', Toast)

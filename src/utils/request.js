@@ -8,6 +8,7 @@ const service = axios.create({
 })
 // request拦截器
 service.interceptors.request.use(config => {
+  // config['headers']['Content-Type'] = 'application/json'
   config['headers']['Content-Type'] = 'application/x-www-form-urlencoded'
   if (config.method === 'POST' || config.method === 'post') {
     config.data = qs.stringify(config.data)

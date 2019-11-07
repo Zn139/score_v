@@ -25,20 +25,21 @@
 </template>
 <script>
 import QRCode from 'qrcode'
-import logo from '@/assets/img/14.jpg'
+import logo from '@/assets/img/18.jpg'
 export default {
   // name: "AQrcode",
   props: {
-    bQrUrl: {
-      type: String,
-      default: "http://www.baidu.com/"
-    },
+    exname: 'exname',
+    // bQrUrl: {
+    //   type: String,
+    //   default: 'http://www.baidu.com/'
+    // },
     qrSize: {
       type: Number,
-      default: 300
+      default: 160
     },
     qrText: {
-      default: "百度一下，也不知道"
+      default: '分享一下~~~'
     },
     qrLogo: {
       type: String,
@@ -46,17 +47,17 @@ export default {
     },
     qrLogoSize: {
       type: Number,
-      default: 60
+      default: 40
     },
     qrTextSize: {
       type: Number,
-      default: 14
+      default: 13
     }
   },
   data () {
     return {
-      qrUrl:"http://www.baidu.com/"
-    };
+      qrUrl: 'http://zhongkeruitong.top/score_analysis/index.html#/share?examname='
+    }
   },
   methods: {
     /**
@@ -67,38 +68,42 @@ export default {
      * @argument qrLogo       二维码中间显示图片
      * @argument qrLogoSize   二维码中间显示图片大小(默认为80)
      */
-    handleQrcodeToDataUrl() {
-      let qrcode_canvas = this.$refs.qrcode_canvas;
-      let qrcode_logo = this.$refs.qrcode_logo;
-      let canvas = this.$refs.canvas;
-      const that = this;
+    inita () {
+      console.log('sdfsdfwd', this.exname)
+    },
+    handleQrcodeToDataUrl () {
+      let qrcode_canvas = this.$refs.qrcode_canvas
+      let qrcode_logo = this.$refs.qrcode_logo
+      let canvas = this.$refs.canvas
+      const that = this
       QRCode.toDataURL(
-        that.qrUrl,
-        { errorCorrectionLevel: "H" },
+        that.qrUrl + this.exname,
+        { errorCorrectionLevel: 'H' },
         (err, url) => {
-          qrcode_canvas.src = url;
-          let ctx = canvas.getContext("2d");
+          qrcode_canvas.src = url
+          let ctx = canvas.getContext('2d')
 
           setTimeout(() => {
-            ctx.drawImage(qrcode_canvas, 0, 0, that.qrSize, that.qrSize);
+            ctx.drawImage(qrcode_canvas, 0, 0, that.qrSize, that.qrSize)
             if (that.qrLogo) {
-              //设置logo大小
-              //设置获取的logo将其变为圆角以及添加白色背景
-              ctx.fillStyle = "#fff";
-              ctx.beginPath();
-              let logoPosition = (that.qrSize - that.qrLogoSize) / 2; //logo相对于canvas居中定位
-              let h = that.qrLogoSize + 6; //圆角高 10为基数(logo四周白色背景为10/2)
-              let w = that.qrLogoSize + 6; //圆角宽
-              let x = logoPosition - 3;
-              let y = logoPosition - 3;
-              let r = 5; //圆角半径
-              ctx.moveTo(x + r, y);
-              ctx.arcTo(x + w, y, x + w, y + h, r);
-              ctx.arcTo(x + w, y + h, x, y + h, r);
-              ctx.arcTo(x, y + h, x, y, r);
-              ctx.arcTo(x, y, x + w, y, r);
-              ctx.closePath();
-              ctx.fill();
+              // 设置logo大小
+              // 设置获取的logo将其变为圆角以及添加白色背景
+              // ctx.fillStyle = '#fff'
+              ctx.fillStyle = 'red'
+              ctx.beginPath()
+              let logoPosition = (that.qrSize - that.qrLogoSize) / 2 // logo相对于canvas居中定位
+              let h = that.qrLogoSize + 6 // 圆角高 10为基数(logo四周白色背景为10/2)
+              let w = that.qrLogoSize + 6 // 圆角宽
+              let x = logoPosition - 3
+              let y = logoPosition - 3
+              let r = 5 // 圆角半径
+              ctx.moveTo(x + r, y)
+              ctx.arcTo(x + w, y, x + w, y + h, r)
+              ctx.arcTo(x + w, y + h, x, y + h, r)
+              ctx.arcTo(x, y + h, x, y, r)
+              ctx.arcTo(x, y, x + w, y, r)
+              ctx.closePath()
+              ctx.fill()
               ctx.drawImage(
                 qrcode_logo,
                 logoPosition,
@@ -110,7 +115,7 @@ export default {
             if (that.qrText) {
               // 设置字体
               let fpadd = 10 // 规定内间距
-              ctx.font = 'bold ' + that.qrTextSize + 'px Arial';
+              ctx.font = 'bold ' + that.qrTextSize + 'px Arial'
               let tw = ctx.measureText(that.qrText).width // 文字真实宽度
               let ftop = that.qrSize - that.qrTextSize // 根据字体大小计算文字top
               let fleft = (that.qrSize - tw) / 2 // 根据字体大小计算文字left
@@ -136,6 +141,7 @@ export default {
   },
   mounted () {
     this.handleQrcodeToDataUrl()
+    this.inita()
   },
   updated () {
     this.handleQrcodeToDataUrl()
