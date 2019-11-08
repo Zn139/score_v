@@ -96,3 +96,31 @@ export function hisSingleAnal (req) { // 历史分析--单科分析
     params: req
   })
 }
+export function getYears (req) { // 录入成绩--录入统计--年
+  return request({
+    url: 'scoreTwo/getYearList',
+    method: 'get',
+    params: req
+  })
+}
+export function getMonths (req) { // 录入成绩--录入统计--月
+  return request({
+    url: 'scoreTwo/getMonthByYearList',
+    method: 'get',
+    params: req
+  })
+}
+export function getExamName (req) { // 录入成绩--录入统计--获取名称
+  return request({
+    url: 'scoreTwo/getExamNameByYearMonthList',
+    method: 'get',
+    params: req
+  })
+}
+export function getExamInfo (req) { // 录入成绩--录入统计--获取一条信息
+  return request({
+    url: 'scoreTwo/findAll',
+    method: 'get',
+    params: req
+  })
+}

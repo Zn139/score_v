@@ -22,6 +22,7 @@ const addScore = () => import('@/enterGrade/index')
 const share = () => import('@/share/index')
 const ewm = () => import('@/components/EWeiM')
 const record = () => import('@/enterGrade/record')
+const examInfo = () => import('@/enterGrade/examInfo')
 const test = () => import('@/menus/test')
 
 export default new Router({
@@ -53,6 +54,14 @@ export default new Router({
       },
       name: 'record',
       meta: { tab: 'record', title: 'record' }
+    },
+    {
+      path: '/examInfo:examName',
+      components: {
+        default: examInfo
+      },
+      name: 'examInfo',
+      meta: { tab: 'examInfo', title: 'examInfo' }
     },
     {
       path: '/my',

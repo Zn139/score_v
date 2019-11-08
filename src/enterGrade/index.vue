@@ -124,7 +124,8 @@ export default {
       },
       content: [],
       submitList: [],
-      submitList1: []
+      rightTimeList: [],
+      rightT: ''
     }
   },
   methods: {
@@ -162,7 +163,7 @@ export default {
       this.showEdit = false
       console.log('编辑：', kemu, score, classPai, schoolPai)
       // console.log('编辑：', this.editItem.subject, this.editItem.score, this.editItem.class_rank, this.editItem.grade_rank)
-      const a = {'wechat_openid': '121', 'student_number': '111', 'subject': kemu, 'score': score, 'class_rank': classPai, 'grade_rank': schoolPai, 'exam_name': this.examTime + this.examname}
+      const a = {'wechat_openid': '121', 'student_number': '111', 'subject': kemu, 'score': score, 'class_rank': classPai, 'grade_rank': schoolPai, 'exam_name': this.rightT + this.examname}
       console.log(a)
       for (const item in this.submitList) {
         if (this.submitList[item].subject === kemu) {
@@ -183,10 +184,12 @@ export default {
       console.log(this.subkemu)
     },
     sendSubmit () {
+      this.rightTimeList = this.examTime.split('-')
+      this.rightT = this.rightTimeList[0] + '年' + this.rightTimeList[1] + '月'
       // this.submitList = []
       this.addscore = false
-      console.log(this.examname, this.examTime, this.subkemu, this.score, this.classPai, this.schoolPai)
-      const grade = {'wechat_openid': '121', 'student_number': '111', 'subject': this.subkemu, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examTime + this.examname}
+      console.log(this.examname, this.rightT, this.subkemu, this.score, this.classPai, this.schoolPai)
+      const grade = {'wechat_openid': '121', 'student_number': '111', 'subject': this.subkemu, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.rightT + this.examname}
       this.submitList.push(grade)
       // this.submitList.push(grade)
       // this.submitList1.push(JSON.stringify(grade))
