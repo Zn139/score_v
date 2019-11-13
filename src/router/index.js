@@ -5,7 +5,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const home = () => import('@/home/index')
-const my = () => import('@/home/my')
+const my = () => import('@/my/index')
 const study = () => import('@/home/study')
 const lineCourse = () => import('@/home/lineCourse')
 const add = () => import('@/home/add')
@@ -23,6 +23,9 @@ const share = () => import('@/share/index')
 const ewm = () => import('@/components/EWeiM')
 const record = () => import('@/enterGrade/record')
 const examInfo = () => import('@/enterGrade/examInfo')
+const collect = () => import('@/my/collect') // 我的--收藏
+const commonQuestion = () => import('@/my/question') // 我的--常见问题
+const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
 const test = () => import('@/menus/test')
 
 export default new Router({
@@ -62,6 +65,30 @@ export default new Router({
       },
       name: 'examInfo',
       meta: { tab: 'examInfo', title: 'examInfo' }
+    },
+    {
+      path: '/collect',
+      components: {
+        default: collect
+      },
+      name: 'collect',
+      meta: { tab: 'collect', title: 'collect' }
+    },
+    {
+      path: '/commonQuestion', // 我的--常见问题
+      components: {
+        default: commonQuestion
+      },
+      name: 'commonQuestion',
+      meta: { tab: 'commonQuestion', title: 'commonQuestion' }
+    },
+    {
+      path: '/ideaFeedback', // 我的--意见反馈
+      components: {
+        default: ideaFeedback
+      },
+      name: 'ideaFeedback',
+      meta: { tab: 'ideaFeedback', title: 'ideaFeedback' }
     },
     {
       path: '/my',

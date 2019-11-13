@@ -1,5 +1,5 @@
 <template>
-  <div>添加成绩</div>
+  <div>问题</div>
 </template>
 <script>
 </script>

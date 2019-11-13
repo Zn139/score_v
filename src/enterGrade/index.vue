@@ -6,7 +6,7 @@
       </div>
       <div class="title">录入成绩</div>
       <div @click="gotoRecord()" class="add_record">
-        <i class="iconfont icon_lulushizhong"></i>
+<!--        <i class="iconfont icon_lulushizhong"></i>-->
         <i class="iconfont icon_luludian"></i>
       </div>
     </div>
@@ -260,7 +260,7 @@ export default {
     transform: translateX(-45%);
   }
   .add_record {
-    right: 5px;
+    right: 10px;
     position: absolute;
     top: -5px;
     padding: 8px 6px;

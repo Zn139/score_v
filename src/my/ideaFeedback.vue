@@ -1,8 +1,7 @@
 <template>
-  <div>我的</div>
+  <div>意见反馈</div>
 </template>
 <script>
 </script>
 <style scoped>
-
 </style>

@@ -24,10 +24,10 @@
     <div class="history_third">
       <div ref="history_chart" class="history_chart"></div>
       <div class="history_four_tip">
-        <h4>说明：</h4>
-        <p>X轴表示各次考试名称；</p>
-        <p>Y轴表示考试的排名所占百分比；</p>
-        <p>排名是折线图越低越好，分数折线图是越高越好。</p>
+<!--        <h4>说明：</h4>-->
+        <li>X轴表示各次考试名称；</li>
+        <li>Y轴表示考试的排名所占百分比；</li>
+        <li>排名是折线图越低越好，分数折线图是越高越好。</li>
       </div>
     </div>
     <div class="his_third_table">
@@ -182,7 +182,7 @@ export default {
         subject: this.sub_name_list[this.index01 - 1].key
       }).then(res => {
         // this.hisSingleContent = res.data.data[0]['map']
-        this.hisCountcontent = res.data.data[0]['map']
+        this.hisCountcontent = res.data.data[0]['mapTotal']
         // for (const item in this.hisSingleContent) {
         //   this.countList.push(parseInt(this.hisSingleContent[item]['singleScorePercentage'] * 100) / 100)
         //   this.classPaiList.push(parseInt(this.hisSingleContent[item]['classPercentage'] * 100) / 100)
@@ -206,7 +206,7 @@ export default {
         }
         const a = this.minLine.join(',').split(',')
         // console.log('最小：', Math.min.apply(null, a))
-        this.minShu = parseInt((Math.min.apply(null, a) - 0.1) * 100) / 100
+        this.minShu = parseInt((Math.min.apply(null, a) - 0.05) * 100) / 100
         // console.log('kedu:', this.minShu)
         this.drawLine()
         // console.log('单科：', this.hisCountcontent)
@@ -225,7 +225,7 @@ export default {
         examType: this.examname,
         openid: '123456'
       }).then(res => {
-        this.hisCountcontent = res.data.data[0]['map']
+        this.hisCountcontent = res.data.data[0]['mapTotal']
         for (const item in this.hisCountcontent) {
           // console.log(this.hisCountcontent[item])
           this.classPaiList.push(parseInt(this.hisCountcontent[item]['classPercentage'] * 100) / 100)
@@ -269,7 +269,7 @@ export default {
           examType: this.scoreName,
           openid: '123456'
         }).then(res => {
-          this.hisCountcontent = res.data.data[0]['map']
+          this.hisCountcontent = res.data.data[0]['mapTotal']
           for (const item in this.hisCountcontent) {
             console.log(this.hisCountcontent[item])
             this.classPaiList.push(parseInt(this.hisCountcontent[item]['classPercentage'] * 100) / 100)
@@ -297,7 +297,7 @@ export default {
           subject: this.sub_name_list[this.index01 - 1].key
         }).then(res => {
           // this.hisSingleContent = res.data.data[0]['map']
-          this.hisCountcontent = res.data.data[0]['map']
+          this.hisCountcontent = res.data.data[0]['mapTotal']
           // for (const item in this.hisSingleContent) {
           //   this.countList.push(parseInt(this.hisSingleContent[item]['singleScorePercentage'] * 100) / 100)
           //   this.classPaiList.push(parseInt(this.hisSingleContent[item]['classPercentage'] * 100) / 100)
@@ -355,13 +355,15 @@ export default {
       this.lineChart = this.echarts.init(this.$refs.history_chart)
       this.lineChart.setOption({
         title: {
-          text: '历史分析'
+          text: '历史分析',
+          itemGap: 15
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
           // x: 'right',
+          y: '5%', // 图里的位置
           icon: 'diamond', // 形状  类型包括 circle，rect,line，roundRect，triangle，diamond，pin，arrow，none
           itemWidth: 10, // 设置宽度
           itemHeight: 10, // 设置高度
@@ -370,6 +372,7 @@ export default {
           data: ['班排', '年排', '总分', '班平均分', '年平均分']
         },
         grid: {
+          top: '38%',
           left: '3%',
           right: '9%',
           bottom: '3%',
@@ -493,6 +496,7 @@ export default {
   }
   .history_chart {
     height: 200px;
+    padding: 10px 0;
   }
   .his_third_table {
     margin: 10px 1px 40px;
@@ -522,15 +526,15 @@ export default {
     line-height: 33px;
   }
   .history_four_tip {
-    border: 4px dashed rgba(66,185,130,0.4);
+    /*border: 4px dashed rgba(66,185,130,0.4);*/
     border-radius: 10px;
-    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
-    padding: 5px 5px 10px;
-    margin: 15px 15px 15px;
+    /*box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);*/
+    padding: 0 5px 10px;
+    margin: 3px 15px 15px;
   }
-  p {
-    text-indent: 2em;
-    font-size: 14px;
+  li {
+    /*text-indent: 2em;*/
+    font-size: 12px;
     line-height: 26px;
   }
 </style>

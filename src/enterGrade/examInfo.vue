@@ -6,7 +6,7 @@
       </div>
       <div class="title">成绩详情</div>
     </div>
-    <div class="exam_info_second">
+    <div class="exam_info_second" v-if="content.length > 0">
 <!--      {{content}}-->
       <h4>{{content[0].examName}}</h4>
       <x-table class="third_table">
@@ -40,12 +40,12 @@ export default {
       content: []
     }
   },
-  computed: {
-    fullName () {
-      console.log(this.$route.params.examName)
-      return this.$route.params.examName
-    }
-  },
+  // computed: {
+  //   fullName () {
+  //     console.log(this.$route.params.examName)
+  //     return this.$route.params.examName
+  //   }
+  // },
   created () {
     this.selectExamInfo()
   },
@@ -56,7 +56,8 @@ export default {
     selectExamInfo () {
       getExamInfo({
         openid: '111',
-        examName: this.fullName
+        // examName: this.fullName
+        examName: this.$route.params.examName
       }).then(res => {
         this.content = res.data.data
         console.log(this.content)
