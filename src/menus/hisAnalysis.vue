@@ -534,6 +534,7 @@ export default {
   }
   li {
     /*text-indent: 2em;*/
+    color: #9c9c9c;
     font-size: 12px;
     line-height: 26px;
   }

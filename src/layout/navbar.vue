@@ -29,7 +29,8 @@ export default {
         icon: 'icon_luluziyuan'
       },
       {
-        link: 'add',
+        // link: 'add',
+        link: 'addScore',
         value: 'add',
         // name: '加号',
         icon: 'icon_lulutianjia'

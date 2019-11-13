@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div class="enter_index_info">
     <div class="score_header">
       <div class="return__icon" @click="returnBack">
         <i class="iconfont icon_lulufanhui"></i>
@@ -10,96 +10,101 @@
         <i class="iconfont icon_luludian"></i>
       </div>
     </div>
-    <div class="addScore_form">
-<!--      <group title="set is-type=china-name">-->
-      <datetime
-        v-model="examTime"
-        title="考试时间"
-      ></datetime>
-      <x-input title="考试名称" name="username" placeholder="请输入考试名称" text-align="right" placeholder-align="right" v-model="examname"></x-input>
-<!--      </group>-->
-      <load-more tip="成绩信息" :show-loading="false" background-color="#fbf9fe"></load-more>
-<!--      <div class="addnew" v-if="addscore1">-->
-<!--        <group title="with placeholder">-->
-<!--          <selector placeholder="请选择科目" v-model="demo01" title="科目" name="district" :options="list" @on-change="onChange"></selector>-->
+    <div class="enter_grade_second" ref="enter_grade_second">
+      <div>
+        <h4 class="enter_grade_title_info">中关村中学2019级07班</h4>
+        <div class="addScore_form">
+<!--          <p>学校：</p>-->
+<!--          <p>班级：</p>-->
+          <!--      <group title="set is-type=china-name">-->
+          <datetime
+            v-model="examTime"
+            title="考试时间"
+            class="enter_grade_time"
+          ></datetime>
+          <!--      <h4 class="enter_grade_title">考试名称</h4>-->
+          <p class="enter_grade_title">考试名称</p>
+          <!--      <x-input title="考试名称" name="username" placeholder="请输入考试名称" text-align="right" placeholder-align="right" v-model="examname"></x-input>-->
+          <x-input name="username"  text-align="left" placeholder="请在此输入考试名称，如：期中" placeholder-align="left" v-model="examname" class="enter_grade_input"></x-input>
+          <!--      </group>-->
+        </div>
+        <div class="enter_grade_scoreForm">
+          <p class="enter_grade_title">成绩信息</p>
+          <x-table style="background-color:#fff;" full-bordered class="enter_grade_table">
+            <thead>
+            <tr>
+              <th>科目</th>
+              <th>分数</th>
+              <th>班排</th>
+              <th>年排</th>
+              <th colspan="2">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item, index) in submitList" :key = index>
+              <td>{{item.subject}}</td>
+              <td>{{item.score}}</td>
+              <td>{{item.class_rank}}</td>
+              <td>{{item.grade_rank}}</td>
+              <td><span class="enter_action" @click="delData(item)">删除</span></td>
+              <td><span class="enter_action" @click="editData(item)">编辑</span></td>
+            </tr>
+            <tr style="background-color:#fff;">
+              <td colspan="6" @click="addNew" style="height: 90px">
+                <div class="tabbar-add-btn">
+                  <i class="iconfont icon_lulutianjia"></i>
+                </div>
+              </td>
+              <!--          <td colspan="6" @click="addNew"><i class="iconfont icon_lulutianjia"></i></td>-->
+            </tr>
+            </tbody>
+          </x-table>
+        </div>
 
-<!--          <x-input title="分数"></x-input>-->
-<!--          <x-input title="班排"></x-input>-->
-<!--          <x-input title="年排"></x-input>-->
-<!--        </group>-->
-<!--        &lt;!&ndash;              <div @click="show=false">&ndash;&gt;-->
-<!--        &lt;!&ndash;                <span class="vux-close"></span>&ndash;&gt;-->
-<!--        &lt;!&ndash;              </div>&ndash;&gt;-->
-<!--        <div class="report-btns">-->
-<!--          <x-button type="default" text="提交" @click.native="sendRep"></x-button>-->
-<!--          <x-button type="default" text="取消" @click.native="addscore = false"></x-button>-->
-<!--        </div>-->
-<!--      </div>-->
-      <x-table style="background-color:#fff;" full-bordered>
-        <thead>
-        <tr>
-          <th>科目</th>
-          <th>分数</th>
-          <th>班排</th>
-          <th>年排</th>
-          <th colspan="2">操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item, index) in submitList" :key = index>
-          <td>{{item.subject}}</td>
-          <td>{{item.score}}</td>
-          <td>{{item.class_rank}}</td>
-          <td>{{item.grade_rank}}</td>
-          <td><span class="enter_action" @click="delData(item)">删除</span></td>
-          <td><span class="enter_action" @click="editData(item)">编辑</span></td>
-        </tr>
-        <tr style="background-color:#fff;">
-          <td colspan="6" @click="addNew"><i class="iconfont icon_lulutianjia"></i></td>
-        </tr>
-        </tbody>
-      </x-table>
+        <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitList.length > 0">提交</x-button> <!--提交成绩单-->
+        <x-dialog :show.sync="addscore" :hide-on-blur="true" class="enter_grade_dialog">
+          <group title="科目信息">
+            <selector placeholder="请选择科目" v-model="subkemu" title="科目" name="district" :options="list1" @on-change="onChange"></selector>
+          </group>
+          <x-input title="分数" required v-model="score"></x-input>
+          <x-input title="班排" v-model="classPai"></x-input>
+          <x-input title="年排" v-model="schoolPai"></x-input>
+          <div class="report-btns">
+            <x-button text="提交" @click.native="sendSubmit" class="report-btns_text"></x-button>
+            <x-button text="取消" @click.native="addscore = false" class="report-btns_text"></x-button>
+          </div>
+        </x-dialog>
+        <x-dialog v-model="showEdit" :hide-on-blur="true" class="enter_grade_dialog">
+          <x-input title="科目" v-model="edit.subject" disabled></x-input>
+          <x-input title="分数" v-model="edit.score"></x-input>
+          <x-input title="班排" v-model="edit.banpai"></x-input>
+          <x-input title="年排" v-model="edit.nianpai"></x-input>
+          <div class="report-btns">
+            <x-button text="提交" @click.native="sendEdit(edit.subject, edit.score, edit.banpai, edit.nianpai)" class="report-btns_text"></x-button>
+            <x-button text="取消" @click.native="showEdit = false" class="report-btns_text"></x-button>
+          </div>
+        </x-dialog> <!--点击编辑按钮弹出-->
+        <toast v-model="showToast" :time="1000">录入成功</toast>
+        <confirm v-model="showDel"
+                 title="删除提示"
+                 @on-cancel="onCancel"
+                 @on-confirm="onConfirm">
+          <p style="text-align:center;">确定删除吗？</p>
+        </confirm>
+      </div>
     </div>
-    <x-button class="enter_submit" @click.native="submitTranscript">提交</x-button> <!--提交成绩单-->
-    <x-dialog :show.sync="addscore" :hide-on-blur="true" class="enter_grade_dialog">
-      <group title="科目信息">
-        <selector placeholder="请选择科目" v-model="subkemu" title="科目" name="district" :options="list1" @on-change="onChange"></selector>
-      </group>
-      <x-input title="分数" required v-model="score"></x-input>
-      <x-input title="班排" v-model="classPai"></x-input>
-      <x-input title="年排" v-model="schoolPai"></x-input>
-      <div class="report-btns">
-        <x-button text="提交" @click.native="sendSubmit" class="report-btns_text"></x-button>
-        <x-button text="取消" @click.native="addscore = false" class="report-btns_text"></x-button>
-      </div>
-    </x-dialog>
-    <x-dialog v-model="showEdit" :hide-on-blur="true" class="enter_grade_dialog">
-      <x-input title="科目" v-model="edit.subject" disabled></x-input>
-      <x-input title="分数" v-model="edit.score"></x-input>
-      <x-input title="班排" v-model="edit.banpai"></x-input>
-      <x-input title="年排" v-model="edit.nianpai"></x-input>
-      <div class="report-btns">
-        <x-button text="提交" @click.native="sendEdit(edit.subject, edit.score, edit.banpai, edit.nianpai)" class="report-btns_text"></x-button>
-        <x-button text="取消" @click.native="showEdit = false" class="report-btns_text"></x-button>
-      </div>
-    </x-dialog> <!--点击编辑按钮弹出-->
-    <toast v-model="showToast" :time="1000">录入成功</toast>
-    <confirm v-model="showDel"
-             title="删除提示"
-             @on-cancel="onCancel"
-             @on-confirm="onConfirm">
-      <p style="text-align:center;">确定删除吗？</p>
-    </confirm>
   </div>
 </template>
 <script>
 import { XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, Selector, Group } from 'vux'
 import {enterGradeList} from '@/api/index'
+import BScroll from 'better-scroll'
 export default {
   // directives: {TransferDom},
   components: {XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, Selector, Group},
   data () {
     return {
+      scoreScroll: null,
       showEdit: false,
       showToast: false,
       showDel: false,
@@ -128,7 +133,17 @@ export default {
       rightT: ''
     }
   },
+  mounted () { // 或者created也可以
+    this.init()
+  },
   methods: {
+    init () {
+      this.$nextTick(() => {
+        this.scoreScroll = new BScroll(this.$refs.enter_grade_second, {
+          click: true
+        })
+      })
+    },
     returnBack () {
       this.$router.go(-1)
     },
@@ -230,6 +245,13 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+  .enter_index_info {
+    height: 100%;
+    /*width: 100%;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    background: #f8f8f8;
+  }
   .score_header {
     /*padding: 0;*/
     font-size: 16px;
@@ -259,6 +281,13 @@ export default {
     margin-left: 35%;
     transform: translateX(-45%);
   }
+  .enter_grade_second {
+    position: relative;
+    background: #fbf9fe;
+    overflow: hidden;
+    padding: 10px 0;
+    height: calc(100% - 76px);
+  }
   .add_record {
     right: 10px;
     position: absolute;
@@ -270,8 +299,46 @@ export default {
   .iconfont {
     font-size: 18px;
   }
+  .enter_grade_time {
+    border-bottom:  1px solid #e5e5e5;
+    /*background-color: #fff;*/
+  }
+  .enter_grade_title_info {
+    padding: 10px 25px 0;
+    margin-top: 5px;
+  }
+  .enter_grade_title {
+    padding: 10px 15px 0;
+    margin-top: 5px;
+  }
+  .enter_grade_input {
+    border-bottom: 1px solid #42b983;
+  }
+  .addScore_form >>> .weui-cell:before{
+    border-top: 0;
+  }
+  .addScore_form >>> .vux-x-input .weui-input {
+    font-size: 13px;
+  }
+  .enter_grade_table {
+    margin-top: 15px;
+  }
   .addScore_form {
-    margin: 15px 10px;
+    margin-top: 5%;
+    padding: 0 10px 15px;
+    background-color: #fff;
+  }
+  .enter_grade_scoreForm {
+    background-color: #fff;
+    margin-top: 13px;
+    padding: 0 10px;
+  }
+  .enter_grade_split {
+    margin-top: 15px;
+    height: 15px;
+    /*position: absolute;*/
+    width: 100%;
+    background-color: #dcdcdc;
   }
   .vux-selector.weui-cell_select-after {
     padding-left: 25px;
@@ -301,14 +368,31 @@ export default {
   /*  font-size: 22px;*/
   /*  border: #333333 1px solid;*/
   /*}*/
-  .icon_lulutianjia {
-    font-size: 25px;
-    color: #c7c7c7;
-    /*color: #42b982;*/
-    /*border: 1px dashed #42b982;*/
+  .tabbar-add-btn {
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #42b982;
     border-radius: 100px;
+    margin-top: 5px;
+    /*margin: -5px auto 0;*/
     box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);
+    .iconfont {
+      font-size: 28px;
+      color: #fff;
+      line-height: 50px;
+      text-align: center;
+    }
   }
+  /*.icon_lulutianjia {*/
+  /*  font-size: 25px;*/
+  /*  color: #c7c7c7;*/
+  /*  !*color: #42b982;*!*/
+  /*  !*border: 1px dashed #42b982;*!*/
+  /*  border-radius: 100px;*/
+  /*  box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);*/
+  /*}*/
   tbody tr:nth-child(2n + 1) {
     /*background-color: rgb(229,253,239);*/
     background-color: rgba(66,185,130,0.2);
@@ -330,10 +414,13 @@ export default {
     color: #72b7e4;
   }
   .enter_submit {
-    width: 25%;
+    width: 95%;
+    color: #fff;
     font-size: 16px;
-    margin-left: 50%;
+    /*margin-left: 70%;*/
     margin-top: 45px;
-    background-color: rgba(66, 185, 130, 0.3);
+    background-color: #42b982;
+    /*opacity: 0.8;*/
+    /*background-color: rgba(66, 185, 130, 0.3);*/
   }
 </style>

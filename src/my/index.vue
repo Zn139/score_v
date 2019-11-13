@@ -42,13 +42,23 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.my_info {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  /*background: #fff url("../../src/assets/img/20.jpg") no-repeat;*/
+  .my_info {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+.my_info:after { // 实现背景图片的透明度为0.8
+  content: '';
   background: #fff url("../../src/assets/img/28.jpg") no-repeat;
+  opacity: 0.8;
   background-size: 100% 190px;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
 }
 .icon_luluxiaoxitongzhi1 {
   font-size: 18px;
