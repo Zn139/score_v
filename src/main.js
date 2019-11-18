@@ -7,7 +7,8 @@ import VueRouter from 'vue-router'
 import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
-import { ToastPlugin, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
+import axios from 'axios'
+import { Alert, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 
 Vue.use(VueRouter)
@@ -15,7 +16,10 @@ Vue.use(vueTap)
 Vue.use(ConfigPlugin, {
   $layout: 'VIEW_BOX'
 })
+Vue.component('alert', Alert)
+Vue.component('x-button', XButton)
 Vue.component('x-table', XTable)
+Vue.component('x-input', XInput)
 Vue.component('confirm', Confirm)
 Vue.component('tab', Tab)
 Vue.component('tab-item', TabItem)
@@ -26,6 +30,8 @@ Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(DatetimePlugin)
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+Vue.prototype.$axios = axios
 Vue.prototype.echarts = echarts
 FastClick.attach(document.body)
 Vue.config.productionTip = false

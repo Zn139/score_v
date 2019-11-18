@@ -19,7 +19,65 @@ export default {
       isRouterAlive: true
     }
   },
+  computed: {
+    openid () {
+      return this.$store.state.exam.openid
+    }
+  },
+  watch: {
+    '$route': function () {
+      this.checkRedict()
+    }
+  },
+  mounted () {
+    console.log('空吗：', localStorage.openid)
+    // console.log('空吗2：', localStorage.SET_OPENID)
+    document.documentElement.style.fontSize = 14 * document.documentElement.clientWidth / 320 + 'px'
+    if (localStorage.openid !== '') {
+      this.$store.commit('SET_OPENID', localStorage.openid)
+      console.log('openid', localStorage.openid)
+    }
+    // this.setWxjs()
+  },
   methods: {
+    checkRedict () {
+      this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid
+        // this.$axios(
+        //   {
+        // method: 'get',
+        // url: 'http://www.kgai.tech//getAllInfoByWechatId',
+        // wechatId: this.openid
+        // }
+      ).then(res => {
+        console.log('成功：', res.data.errno)
+        console.log('成功码类型：', typeof res.data.errno)
+        if (res.data.errno === 0) {
+          this.$store.commit('SET_USER_NAME', res.data.userLogin.userName)
+          this.$store.commit('SET_USER_IMG', res.data.userLogin.headimg)
+          console.log('name :', res.data.userLogin.userName)
+          console.log('img: :', res.data.userLogin.headimg)
+          // if (this.$route.name !== 'my') {
+          //   setTimeout(() => {
+          //     this.$router.push({ path: '/my' })
+          //   }, 3000)
+          // }
+        }
+        // else {
+        //   if (this.$route.name !== 'my') {
+        //     setTimeout(() => {
+        //       this.$router.push({ path: '/my' })
+        //     }, 3000)
+        //   }
+        // }
+      })
+      //   .catch(res => {
+      //   if (this.$route.name !== 'my') {
+      //     setTimeout(() => {
+      //       this.$router.push({ path: '/my' })
+      //     }, 3000)
+      //   }
+      // })
+    },
     reload () {
       this.isRouterAlive = false
       this.$nextTick(function () {

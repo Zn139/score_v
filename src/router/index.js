@@ -26,6 +26,8 @@ const examInfo = () => import('@/enterGrade/examInfo')
 const collect = () => import('@/my/collect') // 我的--收藏
 const commonQuestion = () => import('@/my/question') // 我的--常见问题
 const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
+const myBBS = () => import('@/my/myBBS') // 我的--圈子
+const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
 const test = () => import('@/menus/test')
 
 export default new Router({
@@ -73,6 +75,22 @@ export default new Router({
       },
       name: 'collect',
       meta: { tab: 'collect', title: 'collect' }
+    },
+    {
+      path: '/bindAccount', // 我的--绑定账号
+      components: {
+        default: bindAccount
+      },
+      name: 'bindAccount',
+      meta: { tab: 'bindAccount', title: 'bindAccount' }
+    },
+    {
+      path: '/myBBS', // 我的--圈子
+      components: {
+        default: myBBS
+      },
+      name: 'myBBS',
+      meta: { tab: 'myBBS', title: 'myBBS' }
     },
     {
       path: '/commonQuestion', // 我的--常见问题

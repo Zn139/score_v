@@ -24,7 +24,8 @@
     "vuex": "^3.1.1",
     "vux": "^2.9.4",
     "webpack-dev-server": "^2.11.5",
-    "weixin-js-sdk": "^1.4.0-test"
+    "weixin-js-sdk": "^1.4.0-test",
+    "axios": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
