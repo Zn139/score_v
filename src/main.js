@@ -8,9 +8,10 @@ import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
 import axios from 'axios'
-import { Alert, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
+import { Alert, AlertPlugin, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 
+Vue.use(AlertPlugin)
 Vue.use(VueRouter)
 Vue.use(vueTap)
 Vue.use(ConfigPlugin, {

@@ -24,7 +24,8 @@ const ewm = () => import('@/components/EWeiM')
 const record = () => import('@/enterGrade/record')
 const examInfo = () => import('@/enterGrade/examInfo')
 const collect = () => import('@/my/collect') // 我的--收藏
-const commonQuestion = () => import('@/my/question') // 我的--常见问题
+const setInfo = () => import('@/my/setInfo') // 我的--设置
+const myInfoDetail = () => import('@/my/myInfoDetail') // 我的--我的详情
 const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
 const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
@@ -93,12 +94,20 @@ export default new Router({
       meta: { tab: 'myBBS', title: 'myBBS' }
     },
     {
-      path: '/commonQuestion', // 我的--常见问题
+      path: '/setInfo', // 我的--设置
       components: {
-        default: commonQuestion
+        default: setInfo
       },
-      name: 'commonQuestion',
-      meta: { tab: 'commonQuestion', title: 'commonQuestion' }
+      name: 'setInfo',
+      meta: { tab: 'setInfo', title: 'setInfo' }
+    },
+    {
+      path: '/myInfoDetail', // 我的--我的详情
+      components: {
+        default: myInfoDetail
+      },
+      name: 'myInfoDetail',
+      meta: { tab: 'myInfoDetail', title: 'myInfoDetail' }
     },
     {
       path: '/ideaFeedback', // 我的--意见反馈

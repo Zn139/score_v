@@ -1,5 +1,5 @@
 <template>
-  <div>问题</div>
+  <div>我的详情</div>
 </template>
 <script>
 </script>

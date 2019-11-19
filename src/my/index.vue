@@ -4,7 +4,7 @@
       <i class="iconfont icon_luluxiaoxitongzhi1"></i>
 <!--    </div>-->
     <div class="my_info_first">
-      <div class="my_info_first_info">
+      <div class="my_info_first_info" @click="myInfoDetail">
         <div class="user-basic">
           <img class="user-logo" :src="myInfo.userImg"/>
         </div>
@@ -22,7 +22,7 @@
       <div class="my_info_first_item" @click="myBBS"><i class="iconfont icon_luluiconquanzinor"></i>我的圈子<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
       <div class="my_info_first_item" @click="collect"><i class="iconfont icon_lulushoucang1"></i>我的收藏<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
       <div class="my_info_first_item" @click="suggestFeedback"><i class="iconfont icon_lulufankui1"></i>意见反馈<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="my_info_first_item" @click="question"><i class="iconfont icon_luluchangjianwenti"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>
+      <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>
     </div>
   </div>
 </template>
@@ -53,19 +53,23 @@ export default {
       //   wechatId: this.openid
       // }
       ).then(res => {
-        this.myInfo.userName = res.data.userLogin.userName
-        this.myInfo.userImg = res.data.userLogin.headimg
+        // this.myInfo.userName = res.data.userLogin.userName
+        this.myInfo.userName = res.data.nickname
+        this.myInfo.userImg = res.data.userLogin.headimgurl
       })
     },
     collect () {
       this.$router.push({path: '/collect'})
       // this.$router.push('/collect')
     },
-    question () {
-      this.$router.push('/commonQuestion')
+    setInfo () {
+      this.$router.push('/setInfo')
     },
     bindAccount () {
       this.$router.push('/bindAccount')
+    },
+    myInfoDetail () {
+      this.$router.push('/myInfoDetail')
     },
     myBBS () {
       this.$router.push('/myBBS')
@@ -106,7 +110,7 @@ export default {
 }
   .my_info_first {
     margin-top: 30%;
-    margin-left: 20px;
+    /*padding-left: 20px;*/
     font-size: 15px;
     .iconfont {
       font-size: 17px;
@@ -115,6 +119,7 @@ export default {
   }
   .my_info_first_info {
     /*line-height: 30px;*/
+    padding-left: 20px;
     height: 60px;
     margin-bottom: 30px;
     .iconfont {
@@ -130,8 +135,9 @@ export default {
   .user-basic {
     height: 60px;
     width: 60px;
+    float: left;
     /*line-height: 70px;*/
-    display: inline-block;
+    /*display: inline-block;*/
   }
   .user-logo {
     height: 100%;
@@ -144,17 +150,22 @@ export default {
   }
   .user_name_info {
     height: 60px;
-    /*width: 60px;*/
+    width: 60px;
+    margin-top: 10px;
+    float: left;
     /*position: relative;*/
     /*height: 70px;*/
     /*border: 1px solid red;*/
     margin-left: 15px;
-    display: inline-block;
+    /*display: inline-block;*/
     /*line-height: 35px;*/
   }
   .user_iconfont {
-    display: inline-block;
-    margin-left: 40%;
+    /*display: inline-block;*/
+    float: left;
+    margin-top: 8px;
+    margin-left: 49%;
+    transform: translateX(-51%);
     line-height: 60px;
   }
   .user-name {
@@ -171,8 +182,18 @@ export default {
     border-radius: 4px;
   }
   .my_info_first_item {
+    padding-left: 20px;
+    background-color: #fff;
     height: 50px;
-    line-height: 60px;
+    line-height: 50px;
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .my_info_first_set {
+    padding-left: 20px;
+    background-color: #fff;
+    margin-top: 13px;
+    height: 50px;
+    line-height: 50px;
     border-bottom: 1px solid #dcdcdc;
   }
   .my_info_first_item i:nth-child(2) {
@@ -190,12 +211,12 @@ export default {
     color: red;
     margin-right: 8px;
   }
-  .icon_luluchangjianwenti {
+  .icon_lulushezhi3 {
     color: #42b983;
-    margin-right: 7px;
+    margin-right: 8px;
   }
   .icon_lulufankui1 {
     color: #ffbe00;
-    margin-right: 7px;
+    margin-right: 8px;
   }
 </style>

@@ -7,10 +7,12 @@
       <div class="title">功能异常</div>
     </div>
     <div class="feedBack_second">
-      <group title="反馈">
-        <x-input placeholder="请输入大概功能问题"></x-input>
-        <x-textarea :max="20" name="description" placeholder="具体描述" autosize="true"></x-textarea>
-      </group>
+<!--      <group title="反馈">-->
+        <x-input placeholder="请输入功能点：如录入成绩" class="feedBack_second_input"></x-input>
+        <x-textarea placeholder="请描述具体问题" :show-counter="false" :rows="5" autosize class="feedBack_second_input"></x-textarea>
+        <x-button plain class="bind_school_button" @click.native="submitFeedBack">提交</x-button>
+<!--        <x-textarea :max="200" name="description" placeholder="具体描述" :autosize="true"></x-textarea>-->
+<!--      </group>-->
     </div>
   </div>
 </template>
@@ -27,6 +29,9 @@ export default {
     returnBack () {
       this.$router.go(-1)
     },
+    submitFeedBack () {
+      console.log('提交')
+    }
   }
 }
 </script>
@@ -35,6 +40,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    /*background: #fff;*/
     background: #f8f8f8;
   }
   .score_header {
@@ -65,5 +71,23 @@ export default {
     display: inline-block;
     margin-left: 35%;
     transform: translateX(-45%);
+  }
+  .feedBack_second {
+    margin-top: 20px;
+    /*border: 1px solid red;*/
+  }
+  .feedBack_second_input {
+    padding-top: 25px;
+  }
+  .bind_school_button {
+    margin-top: 25px;
+    width: 85%;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 99px;
+    border-color: rgba(66,185,130, 0.9);
+    /*background-color: #42b982;*/
+    background-color: rgba(66,185,130, 0.9);
+    color: #fff;
   }
 </style>

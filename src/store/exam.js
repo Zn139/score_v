@@ -5,7 +5,8 @@ const exam = {
     openid: '',
     // openid: 'o_pfhwpP_2R_kK4gzKw5SuDG0LXo',
     userImg: '',
-    userName: ''
+    userName: '',
+    schoolNum: '' // 学号
   },
   mutations: {
     SET_EXAM_NAME: (state, name) => {
@@ -16,6 +17,9 @@ const exam = {
     },
     SET_OPENID: (state, id) => {
       state.openid = id
+    },
+    SET_SCHOOLNUM: (state, num) => {
+      state.schoolNum = num
     },
     SET_USER_IMG: (state, img) => {
       state.userImg = img

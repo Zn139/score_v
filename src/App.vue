@@ -52,10 +52,11 @@ export default {
         console.log('成功：', res.data.errno)
         console.log('成功码类型：', typeof res.data.errno)
         if (res.data.errno === 0) {
-          this.$store.commit('SET_USER_NAME', res.data.userLogin.userName)
-          this.$store.commit('SET_USER_IMG', res.data.userLogin.headimg)
-          console.log('name :', res.data.userLogin.userName)
-          console.log('img: :', res.data.userLogin.headimg)
+          // this.$store.commit('SET_USER_NAME', res.data.userLogin.userName)
+          this.$store.commit('SET_USER_NAME', res.data.nickname)
+          this.$store.commit('SET_USER_IMG', res.data.userLogin.headimgurl)
+          console.log('name :', res.data.nickname)
+          console.log('img: :', res.data.userLogin.headimgurl)
           // if (this.$route.name !== 'my') {
           //   setTimeout(() => {
           //     this.$router.push({ path: '/my' })
