@@ -6,28 +6,43 @@
       </div>
       <div class="title">绑定账号</div>
     </div>
-    <div class="bind_account_second">
-      <x-input class="bind_school" title="学号" placeholder="请输入学号" text-align="right" placeholder-align="right" v-model="schoolNum" @on-change="changeSchoolNum"></x-input>
-<!--      <x-button plain class="bind_school_button">确定</x-button>-->
+    <div v-if="flag === 0">
+      <div class="bind_account_second">
+        <x-input class="bind_school" title="学号" placeholder="请输入学号" text-align="right" placeholder-align="right" v-model="schoolNum" @on-change="changeSchoolNum"></x-input>
+        <!--      <x-button plain class="bind_school_button">确定</x-button>-->
+      </div>
+      <div v-if="schoolMember === 0">
+        <popup-picker class="bind_school" title="选择学校" :data="[schoolList]" v-model="schoolValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="输入学校名称"></popup-picker>
+        <popup-picker class="bind_school" title="选择阶段" :data="[levelList]" v-model="levelValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="选择学习阶段"></popup-picker>
+        <calendar class="bind_school" v-model="startYear" title="入学年份"></calendar>
+        <x-input class="bind_school" title="所在班级" placeholder="请输入班级名称" text-align="right" placeholder-align="right" v-model="className"></x-input>
+        <div class="bind_school_tip">请设置密码，以便其他人登录</div>
+        <x-input class="bind_school" type="password" title="设置密码" placeholder="请输入密码" text-align="right" placeholder-align="right" v-model="passwd"></x-input>
+        <x-input class="bind_school" type="password" title="确认密码" placeholder="再次输入密码" text-align="right" placeholder-align="right" v-model="passwod" @on-blur="confirmPassword"></x-input>
+        <x-button plain class="bind_school_button" @click.native="bindOutUser">完成</x-button>
+      </div>
+      <div class="bind_school_tip" v-if="schoolMember === 1">
+        <!--      <alert title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>-->
+        <alert v-model="schVerify" title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>
+        <!--      若为学校购买服务器用户，提示验证初始密码-->
+      </div>
+      <div v-if="schoolMember === 2">
+        <x-input class="bind_school" title="验证初始密码" placeholder="请输入初始密码" text-align="right" placeholder-align="right" v-model="schoolPasswod" ></x-input>
+        <x-button plain class="bind_school_button" @click.native="bindUser">完成</x-button>
+      </div>
     </div>
-    <div v-if="schoolMember === 0">
-      <popup-picker class="bind_school" title="选择学校" :data="[schoolList]" v-model="schoolValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="输入学校名称"></popup-picker>
-      <popup-picker class="bind_school" title="选择阶段" :data="[levelList]" v-model="levelValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="选择学习阶段"></popup-picker>
-      <calendar class="bind_school" v-model="startYear" title="入学年份"></calendar>
-      <x-input class="bind_school" title="所在班级" placeholder="请输入班级名称" text-align="right" placeholder-align="right" v-model="className"></x-input>
-      <div class="bind_school_tip">请设置密码，以便其他人登录</div>
-      <x-input class="bind_school" type="password" title="设置密码" placeholder="请输入密码" text-align="right" placeholder-align="right" v-model="passwd"></x-input>
-      <x-input class="bind_school" type="password" title="确认密码" placeholder="再次输入密码" text-align="right" placeholder-align="right" v-model="passwod" @on-blur="confirmPassword"></x-input>
-      <x-button plain class="bind_school_button" @click.native="bindOutUser">完成</x-button>
-    </div>
-    <div class="bind_school_tip" v-if="schoolMember === 1">
-<!--      <alert title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>-->
-      <alert v-model="schVerify" title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>
-<!--      若为学校购买服务器用户，提示验证初始密码-->
-    </div>
-    <div v-if="schoolMember === 2">
-      <x-input class="bind_school" title="验证初始密码" placeholder="请输入初始密码" text-align="right" placeholder-align="right" v-model="schoolPasswod" ></x-input>
-      <x-button plain class="bind_school_button" @click.native="bindUser">完成</x-button>
+    <div v-if="flag === 1">
+      <div class="bind_account_second">
+        <div class="bind_account_second">
+          <x-input class="bind_school" title="学号" placeholder="请输入学号" text-align="right" placeholder-align="right" v-model="stuInfoContent.diyid" disabled></x-input>
+        </div>
+        <div class="bind_school_tip">以下是绑定信息</div>
+        <popup-picker class="bind_school" title="学校" disabled v-model="myInfo.schoolValue" placeholder="输入学校名称"></popup-picker>
+        <popup-picker class="bind_school" title="阶段" disabled v-model="myInfo.levelValue"  placeholder="选择学习阶段"></popup-picker>
+        <div class="my_info_first_item" >年级<div class="city">{{myInfo.grade}}<i v-if="myInfo.grade === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>
+        <div class="my_info_first_item" >班级<div class="city">{{myInfo.class}}<i v-if="myInfo.class === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>
+<!--        <div class="my_info_first_item" >学号<div class="city">{{myInfo.schoolNum}}<i v-if="myInfo.schoolNum === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>-->
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +50,15 @@
 export default {
   data () {
     return {
+      flag: 2, // 是否绑定学号
+      stuInfoContent: [],
+      myInfo: {
+        schoolValue: [],
+        levelValue: [],
+        grade: '',
+        class: ''
+        // schoolNum: ''
+      },
       passwd: '',
       passwod: '',
       // errorText: '',
@@ -55,9 +79,42 @@ export default {
       return this.$store.state.exam.openid
     }
   },
+  mounted () {
+    this.getUserInfo()
+  },
   methods: {
     returnBack () {
       this.$router.go(-1)
+    },
+    getUserInfo () {
+      this.$axios({
+        method: 'get',
+        url: 'http://www.kgai.tech/getAllInfoByWechatId',
+        params: {
+          wechatId: this.openid
+        }
+      }).then(res => {
+        if (res.data.userLogin.diyid !== '') {
+          this.$vux.alert.show({
+            title: '提示',
+            content: '您已经绑定过学号啦！'
+          })
+          this.stuInfoContent = res.data.userLogin
+          this.flag = 1
+          this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.stuInfoContent.diyid).then(resp => {
+            this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
+            this.myInfo.levelValue.push(resp.data.userLogin.level)
+            this.myInfo.grade = resp.data.userLogin.gradeLevel
+            this.myInfo.class = resp.data.userLogin.className
+            console.log('信息：', resp.data)
+          })
+          console.log(res.data)
+          console.log('已经绑定~')
+        } else {
+          this.flag = 0
+          console.log('未绑定~')
+        }
+      })
     },
     changeSchoolNum (val) {
       this.$axios({
@@ -214,6 +271,27 @@ export default {
   .bind_school {
     border-bottom: 1px solid #e9e9e9;
     margin: 0 14px;
+  }
+  .my_info_first_item {
+    /*padding-left: 15px;*/
+    margin-left: 15px;
+    margin-top: 10px;
+    padding: 10px 15px;
+    /*background-color: #fff;*/
+    /*height: 56px;*/
+    /*line-height: 50px;*/
+    border-bottom: 1px solid #e9e9e9;
+    .city {
+      color: #7c7c7c;
+      float: right;
+      margin-right: 13px;
+    }
+    .iconfont {
+      margin-left: 3px;
+      font-size: 13px;
+      color: #c8c8cd;
+      font-weight: bolder;
+    }
   }
   .vux-cell-box:not(:first-child):before {
     border-top: 0;

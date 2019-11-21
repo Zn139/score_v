@@ -5,8 +5,10 @@
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">我的资料</div>
+      <div class="submitAll" @click="submitMyInfo">完成</div>
     </div>
-    <div class="my_info_detail_second" ref="my_info_detail_second">
+    <div class="my_info_detail_second">
+<!--    <div class="my_info_detail_second" ref="my_info_detail_second">-->
       <div>
         <div class="my_info_detail_second_normal">
           <h4>基本资料</h4>
@@ -15,26 +17,24 @@
           <popup-radio class="bind_school" title="性别" :options="sexList" v-model="sex"></popup-radio>
           <calendar class="bind_school" v-model="startYear" title="生日"></calendar>
           <div class="my_info_first_item"  @click="toAddress">所在地区<div class="city">{{city}}<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>
-          <!--        <li>-->
-          <!--          <div class="left">-->
-          <!--            <span>所在地区</span>-->
-          <!--          </div>-->
-          <!--          <div class="right r">-->
-          <!--            <div class="city" @click="toAddress">{{city}}</div>-->
-          <!--            <i class="arrow-r"> </i>-->
-          <!--          </div>-->
-          <!--        </li>-->
           <v-distpicker type="mobile" @selected='selected' v-show="addInp" class="area1"></v-distpicker>
-          <!--        <div class="mask" v-show="mask"></div>-->
+<!--          <div class="fixWidth">-->
+<!--            <div class="nav">-->
+<!--              <h1>mobileSelect Demo</h1>-->
+<!--            </div>-->
+<!--            <div class="demo">-->
+<!--              <div id="trigger">请选择地区</div>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
-        <div class="my_info_detail_second_normal">
-          <h4>学籍资料</h4>
-          <popup-picker class="bind_school" title="学校" disabled v-model="myInfo.schoolValue" placeholder="输入学校名称"></popup-picker>
-          <popup-picker class="bind_school" title="阶段" disabled v-model="myInfo.levelValue"  placeholder="选择学习阶段"></popup-picker>
-          <div class="my_info_first_item" >年级<div class="city">{{myInfo.grade}}<i v-if="myInfo.grade === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>
-          <div class="my_info_first_item" >班级<div class="city">{{myInfo.class}}<i v-if="myInfo.class === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>
-          <div class="my_info_first_item" >学号<div class="city">{{myInfo.schoolNum}}<i v-if="myInfo.schoolNum === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>
-        </div>
+<!--        <div class="my_info_detail_second_normal">-->
+<!--          <h4>学籍资料</h4>-->
+<!--          <popup-picker class="bind_school" title="学校" disabled v-model="myInfo.schoolValue" placeholder="输入学校名称"></popup-picker>-->
+<!--          <popup-picker class="bind_school" title="阶段" disabled v-model="myInfo.levelValue"  placeholder="选择学习阶段"></popup-picker>-->
+<!--          <div class="my_info_first_item" >年级<div class="city">{{myInfo.grade}}<i v-if="myInfo.grade === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>-->
+<!--          <div class="my_info_first_item" >班级<div class="city">{{myInfo.class}}<i v-if="myInfo.class === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>-->
+<!--          <div class="my_info_first_item" >学号<div class="city">{{myInfo.schoolNum}}<i v-if="myInfo.schoolNum === ''" class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div></div>-->
+<!--        </div>-->
         <div class="my_info_detail_second_normal" >
           <h4>个性资料</h4>
           <p class="enter_grade_title">个性签名</p>
@@ -54,7 +54,8 @@
 </template>
 <script>
 import { PopupRadio } from 'vux'
-import BScroll from 'better-scroll'
+import _ from 'underscore'
+// import BScroll from 'better-scroll'
 export default {
   components: {PopupRadio},
   data () {
@@ -84,29 +85,62 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    // this.init()
     this.getUserInfo()
   },
   methods: {
+    // submitAll () {
+    //
+    //   console.log('提交')
+    // },
     returnBack () {
       this.$router.go(-1)
     },
-    init () {
-      this.$nextTick(() => {
-        this.myInfoScroll = new BScroll(this.$refs.my_info_detail_second, {
-          click: true
-        })
-      })
-    },
+    // init () {
+    //   this.$nextTick(() => {
+    //     this.myInfoScroll = new BScroll(this.$refs.my_info_detail_second, {
+    //       click: true
+    //     })
+    //   })
+    // },
     submitMyInfo () {
+      this.$axios({
+        url: 'http://www.kgai.tech/rest/bindMyInfo',
+        method: 'post',
+        params: {
+          wechatId: this.openid,
+          diyid: this.myInfo.schoolNum,
+          realName: this.reallName,
+          nickName: this.nicheng,
+          sex: this.sex,
+          birthday: this.startYear,
+          location: this.city,
+          signature: this.signature
+        }
+      }).then(res => {
+        if (res.data.errno === 0) {
+          this.$vux.alert.show({
+            title: '提示',
+            content: '保存成功！'
+          })
+        }
+      })
+      console.log(this.reallName, this.nicheng, this.sex, this.startYear, this.city, this.signature)
       console.log('提交完成')
     },
-    getUserInfo () {
+    getUserInfo: _.debounce(function () {
+      console.log('执行几次啊')
       this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid).then(res => {
         // this.myInfo.userName = res.data.userLogin.userName
         // console.log('信息：', res.data)
         this.myInfo.schoolNum = res.data.userLogin.diyid
         this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.myInfo.schoolNum).then(resp => {
+          this.reallName = resp.data.userLogin.realName
+          this.nicheng = resp.data.userLogin.nickName
+          this.sex = resp.data.userLogin.sex
+          this.startYear = resp.data.userLogin.birthday
+          this.city = resp.data.userLogin.location
+          this.signature = resp.data.userLogin.signature
           this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
           this.myInfo.levelValue.push(resp.data.userLogin.level)
           this.myInfo.grade = resp.data.userLogin.gradeLevel
@@ -115,7 +149,7 @@ export default {
         })
         // this.myInfo.userImg = res.data.userLogin.headimgurl
       })
-    },
+    }, 500, true),
     toAddress () {
       this.mask = true
       this.addInp = true
@@ -161,6 +195,13 @@ export default {
     margin-left: 35%;
     transform: translateX(-45%);
   }
+  .submitAll {
+    float: right;
+    font-size: 13px;
+    margin-right: 5px;
+    line-height: 45px;
+    /*margin-top: 5px;*/
+  }
   .my_info_detail_second {
     margin-top: 15px;
     position: relative;
@@ -201,10 +242,12 @@ export default {
     /*background-color: #fff;*/
     /*height: 56px;*/
     /*line-height: 50px;*/
+    color: inherit;
     border-bottom: 1px solid #e9e9e9;
     .city {
       float: right;
       margin-right: 13px;
+      color: #7c7c7c;
     }
     .iconfont {
       margin-left: 3px;
@@ -218,10 +261,12 @@ export default {
   /*}*/
   .area1{
     width: 100%;
-    height: 35%;
+    height: 40%;
     position:fixed;
+    background-color: #fff;
     left: 0;
     bottom: 0;
+    z-index: 100;
     overflow-y: scroll;
   }
   .distpicker-address-wrapper .address-header ul {
@@ -250,5 +295,65 @@ export default {
   }
   .my_info_detail_last {
     height: 80px;
+  }
+
+
+  /*遮罩层*/
+  .blacks {
+    position: fixed;
+    width: 100%;
+    height: 50%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.45);
+  }
+  /*省市区三级联动*/
+  .divwrap {
+    height: 50%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 99;
+  }
+
+  /*外部*/
+  .divwrap > .distpicker-address-wrapper {
+    color: #0d0d0d;
+    height: 100%;
+  }
+
+  /*头部*/
+  .divwrap >>> .address-header {
+    background: #000;
+    color: #fff;
+    width: 100%;
+    position: fixed;
+    bottom: 50%;
+    height: 0.5rem;
+    font-size: 0.2rem;
+  }
+
+  /*头部内容*/
+  .divwrap >>> .address-header ul li {
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  /*选择过省市区的头部*/
+  .divwrap >>> .address-header .active {
+    color: #fff;
+    border-bottom: 0.05rem solid #666;
+  }
+
+  /*内容部分*/
+  .divwrap >>> .address-container {
+    overflow: scroll;
+    height: 100%;
+  }
+
+  /*点过的地区内容*/
+  .divwrap >>> .address-container .active {
+    color: red;
   }
 </style>
