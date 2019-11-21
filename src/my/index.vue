@@ -11,7 +11,7 @@
 <!--            <i v-else class="iconfont icontouxiang"></i>-->
         <div class="user_name_info">
           <div class="user-name">{{myInfo.userName}}</div>
-          <div class="vip-flag">未实名</div>
+<!--          <div class="vip-flag">未实名</div>-->
         </div>
         <div class="user_iconfont">
           <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i>
@@ -148,10 +148,22 @@ export default {
     /*border-radius: 10px;*/
     /*display: inline-block;*/
   }
+  /*div.ellipsis {*/
+  /*  padding-left: 5px;*/
+  /*  text-align: left;*/
+  /*  text-overflow:ellipsis;*/
+  /*  overflow: hidden;*/
+  /*  white-space: nowrap;*/
+  /*}*/
   .user_name_info {
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     height: 60px;
-    width: 60px;
-    margin-top: 10px;
+    width: 130px;
+    max-width: 130px;
+    /*overflow: hidden;*/
+    margin-top: 20px;
     float: left;
     /*position: relative;*/
     /*height: 70px;*/
@@ -164,8 +176,8 @@ export default {
     /*display: inline-block;*/
     float: left;
     margin-top: 8px;
-    margin-left: 49%;
-    transform: translateX(-51%);
+    margin-left: 50px;
+    /*transform: translateX(-70%);*/
     line-height: 60px;
   }
   .user-name {

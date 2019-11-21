@@ -123,3 +123,10 @@ export function getExamInfo (req) { // 录入成绩--录入统计--获取一条�
     params: req
   })
 }
+export function feedBack (req) { // 我的--反馈
+  return request({
+    url: 'user/addUserFeedBack',
+    method: 'post',
+    params: req
+  })
+}

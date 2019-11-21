@@ -8,8 +8,8 @@
     </div>
     <div class="feedBack_second">
 <!--      <group title="反馈">-->
-        <x-input placeholder="请输入功能点：如录入成绩" class="feedBack_second_input"></x-input>
-        <x-textarea placeholder="请描述具体问题" :show-counter="false" :rows="5" autosize class="feedBack_second_input"></x-textarea>
+        <x-input placeholder="请输入功能点：如录入成绩" class="feedBack_second_input" v-model="title"></x-input>
+        <x-textarea placeholder="请描述具体问题" :show-counter="false" :rows="5" autosize class="feedBack_second_input" v-model="content"></x-textarea>
         <x-button plain class="bind_school_button" @click.native="submitFeedBack">提交</x-button>
 <!--        <x-textarea :max="200" name="description" placeholder="具体描述" :autosize="true"></x-textarea>-->
 <!--      </group>-->
@@ -17,12 +17,19 @@
   </div>
 </template>
 <script>
+import {feedBack} from '@/api/index'
 import { XTextarea } from 'vux'
 export default {
   components: {XTextarea},
   data () {
     return {
-
+      title: '',
+      content: ''
+    }
+  },
+  computed: {
+    openid () {
+      return this.$store.state.exam.openid
     }
   },
   methods: {
@@ -30,7 +37,15 @@ export default {
       this.$router.go(-1)
     },
     submitFeedBack () {
-      console.log('提交')
+      feedBack({
+        userOpenid: this.openid,
+        content: this.title + '--' + this.content
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$vux.toast.text('反馈成功啦~')
+        }
+      })
+      // console.log('提交')
     }
   }
 }

@@ -62,13 +62,13 @@ export default {
     changeSchoolNum (val) {
       this.$axios({
         method: 'get',
-        url: 'http://zhongkeruitong.top/score_analysis/scoreTwo/verifyStudentId',
+        url: 'http://www.kgai.tech/getAllInfoByDiyid',
         params: {
-          openid: this.openid,
+          // openid: this.openid,
           verifyStudentId: val
         }
       }).then(res => {
-        if (res.data.code === 0) {
+        if (res.data.errno === 0) {
           // const a = res.data.data
           // this.schoolValue = [res.data.data.schoolName]
           // this.levelValue = [res.data.data.gradeName]
@@ -80,6 +80,26 @@ export default {
         }
       })
       console.log('学号变化：', val)
+      // this.$axios({
+      //   method: 'get',
+      //   url: 'http://zhongkeruitong.top/score_analysis/scoreTwo/verifyStudentId',
+      //   params: {
+      //     openid: this.openid,
+      //     verifyStudentId: val
+      //   }
+      // }).then(res => {
+      //   if (res.data.code === 0) {
+      //     // const a = res.data.data
+      //     // this.schoolValue = [res.data.data.schoolName]
+      //     // this.levelValue = [res.data.data.gradeName]
+      //     // this.className = res.data.data.className
+      //     this.schoolMember = 1
+      //     // console.log('cunzai:', a, res.data)
+      //   } else {
+      //     this.schoolMember = 0
+      //   }
+      // })
+      // console.log('学号变化：', val)
     },
     // checkPassword (val) {
     //   console.log('xixixiiixixiix', val)

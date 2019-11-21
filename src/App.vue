@@ -30,9 +30,9 @@ export default {
     }
   },
   mounted () {
-    console.log('空吗：', localStorage.openid)
+    // console.log('空吗：', localStorage.openid)
     // console.log('空吗2：', localStorage.SET_OPENID)
-    document.documentElement.style.fontSize = 14 * document.documentElement.clientWidth / 320 + 'px'
+    // document.documentElement.style.fontSize = 14 * document.documentElement.clientWidth / 320 + 'px'
     if (localStorage.openid !== '') {
       this.$store.commit('SET_OPENID', localStorage.openid)
       console.log('openid', localStorage.openid)

@@ -10,6 +10,9 @@ import echarts from 'echarts'
 import axios from 'axios'
 import { Alert, AlertPlugin, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
+import VDistpicker from 'v-distpicker'
+
+Vue.component('v-distpicker', VDistpicker)
 
 Vue.use(AlertPlugin)
 Vue.use(VueRouter)

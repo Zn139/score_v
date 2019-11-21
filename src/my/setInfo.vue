@@ -9,7 +9,7 @@
     <div class="setInfo_second" ref="setInfo_second">
       <div>
         <!--      <div class="setInfo_second_snum">-->
-        <x-input v-if="schoolNum !== ''" title="学号" v-model="schoolNum" disabled class="bind_school_1" text-align="right"></x-input>
+        <x-input title="学号" v-model="content.diyid" disabled class="bind_school_1" text-align="right"></x-input>
         <!--      <x-input class="bind_school" type="password" title="确认密码" placeholder="再次输入密码" text-align="left" v-model="passwod" @on-blur="confirmPassword"></x-input>-->
         <!--      </div>-->
         <div class="setInfo_second_edit">
@@ -36,6 +36,11 @@ import BScroll from 'better-scroll'
 export default {
   data () {
     return {
+      myInfo: {
+        userName: '',
+        userImg: ''
+      },
+      content: [],
       setInfoScroll: null,
       oldPasswd: '',
       passwd: '',
@@ -45,19 +50,23 @@ export default {
     }
   },
   computed: {
-    schoolNum () {
-      if (this.$store.state.exam.schoolNum !== '') {
-        return this.$store.state.exam.schoolNum
-      } else {
-        return localStorage.SET_SCHOOLNUM
-      }
+    openid () {
+      return this.$store.state.exam.openid
     }
+    // schoolNum () {
+    //   if (this.$store.state.exam.schoolNum !== '') {
+    //     return this.$store.state.exam.schoolNum
+    //   } else {
+    //     return localStorage.SET_SCHOOLNUM
+    //   }
+    // }
   },
   created () {
     this.init()
   },
   mounted () {
-    console.log('youma:', this.schoolNum)
+    this.getUserInfo()
+    // console.log('youma:', this.schoolNum)
   },
   methods: {
     returnBack () {
@@ -70,8 +79,33 @@ export default {
         })
       })
     },
+    getUserInfo () {
+      this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid).then(res => {
+        this.content = res.data.userLogin
+        console.log(this.content)
+        // this.myInfo.userName = res.data.userLogin.userName
+        this.myInfo.userName = res.data.nickname
+        this.myInfo.userImg = res.data.userLogin.headimgurl
+      })
+    },
     confirmOldPassword () { // 验证原密码
-      console.log('原密码对')
+      this.$axios({
+        url: 'http://www.kgai.tech/rest/passwordMatch',
+        method: 'get',
+        params: {
+          wechatId: this.openid,
+          diyid: this.content.diyid,
+          initialPassword: this.oldPasswd
+        }
+      }).then(res => {
+        if (res.data.errno !== 0) {
+          this.$vux.alert.show({
+            title: '警告',
+            content: '原密码不对'
+          })
+        }
+      })
+      // console.log('原密码对')
     },
     confirmPassword () {
       if (this.passwod !== this.passwd) {
@@ -79,6 +113,25 @@ export default {
         this.$vux.alert.show({
           title: '警告',
           content: '两次密码不一致'
+        })
+      } else {
+        this.$axios({
+          url: 'http://www.kgai.tech/rest/updatePassword',
+          method: 'post',
+          params: {
+            wechatId: this.openid,
+            diyid: this.content.diyid,
+            initialPassword: this.passwod
+          }
+        }).then(res => {
+          if (res.data.errno === 0) {
+            this.$vux.alert.show({
+              title: '提示',
+              content: '修改成功~'
+            })
+          }
+          // const a = res.data.errno
+          // console.log('修改成功：', a)
         })
       }
     }
@@ -153,7 +206,7 @@ export default {
     font-size: 18px;
     background-color: #fff;
     border-bottom: 1px solid #e9e9e9;
-    margin-top: 25px;
+    margin-top: 15px;
     height: 40px;
     padding: 0 34px;
   }
