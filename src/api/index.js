@@ -130,3 +130,17 @@ export function feedBack (req) { // 我的--反馈
     params: req
   })
 }
+export function positionCompare (req) { // 定位对比--定位
+  return request({
+    url: 'score/getSixRateInfo',
+    method: 'get',
+    params: req
+  })
+}
+export function getChaju (req) { // 定位对比--差距
+  return request({
+    url: 'scoreTwo/getGapValue',
+    method: 'get',
+    params: req
+  })
+}

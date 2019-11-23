@@ -361,6 +361,15 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
+        toolbox: { // 区域缩放
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none'
+            },
+            restore: {},
+            saveAsImage: {}
+          }
+        },
         legend: {
           // x: 'right',
           y: '5%', // 图里的位置
