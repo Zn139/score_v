@@ -42,7 +42,7 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in submitList" :key = index>
-              <td>{{item.subject}}</td>
+              <td>{{item.subject_name}}</td>
               <td>{{item.score}}</td>
               <td>{{item.class_rank}}</td>
               <td>{{item.grade_rank}}</td>
@@ -60,15 +60,15 @@
             </tbody>
           </x-table>
         </div>
-
+        <x-button class="enter_submit" v-if="submitList.length === 0" disabled>提交</x-button> <!--提交成绩单-->
         <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitList.length > 0">提交</x-button> <!--提交成绩单-->
         <x-dialog :show.sync="addscore" :hide-on-blur="true" class="enter_grade_dialog">
           <group title="科目信息">
             <selector placeholder="请选择科目" v-model="subkemu" title="科目" name="district" :options="list1" @on-change="onChange"></selector>
           </group>
-          <x-input title="分数" required v-model="score"></x-input>
-          <x-input title="班排" v-model="classPai"></x-input>
-          <x-input title="年排" v-model="schoolPai"></x-input>
+          <x-input title="分数" required v-model="score" @on-blur="losePoint(score)"></x-input>
+          <x-input title="班排" required v-model="classPai" @on-blur="losePoint(classPai)"></x-input>
+          <x-input title="年排" required v-model="schoolPai" @on-blur="losePoint(schoolPai)"></x-input>
           <div class="report-btns">
             <x-button text="提交" @click.native="sendSubmit" class="report-btns_text"></x-button>
             <x-button text="取消" @click.native="addscore = false" class="report-btns_text"></x-button>
@@ -133,6 +133,11 @@ export default {
       rightT: ''
     }
   },
+  computed: {
+    openid () {
+      return this.$store.state.exam.openid
+    }
+  },
   mounted () { // 或者created也可以
     this.init()
   },
@@ -149,6 +154,14 @@ export default {
     },
     onCancel () { // 点击取消触发
       this.showDel = false
+    },
+    losePoint (val) {
+      if (val === '') {
+        this.$vux.alert.show({
+          title: '提示',
+          content: '这是必填项！'
+        })
+      }
     },
     onConfirm () {
       this.submitList.splice(this.submitList.indexOf(this.delItem), 1)
@@ -178,7 +191,7 @@ export default {
       this.showEdit = false
       console.log('编辑：', kemu, score, classPai, schoolPai)
       // console.log('编辑：', this.editItem.subject, this.editItem.score, this.editItem.class_rank, this.editItem.grade_rank)
-      const a = {'wechat_openid': '121', 'student_number': '111', 'subject': kemu, 'score': score, 'class_rank': classPai, 'grade_rank': schoolPai, 'exam_name': this.rightT + this.examname}
+      const a = {'wechat_openid': this.openid, 'student_number': '111', 'subject_name': kemu, 'score': score, 'class_rank': classPai, 'grade_rank': schoolPai, 'exam_name': this.rightT + this.examname}
       console.log(a)
       for (const item in this.submitList) {
         if (this.submitList[item].subject === kemu) {
@@ -199,37 +212,44 @@ export default {
       console.log(this.subkemu)
     },
     sendSubmit () {
-      this.rightTimeList = this.examTime.split('-')
-      this.rightT = this.rightTimeList[0] + '年' + this.rightTimeList[1] + '月'
-      // this.submitList = []
-      this.addscore = false
-      console.log(this.examname, this.rightT, this.subkemu, this.score, this.classPai, this.schoolPai)
-      const grade = {'wechat_openid': '121', 'student_number': '111', 'subject': this.subkemu, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.rightT + this.examname}
-      this.submitList.push(grade)
-      // this.submitList.push(grade)
-      // this.submitList1.push(JSON.stringify(grade))
-      // enterGrade({
-      //   wechat_openid: '111',
-      //   student_number: '111',
-      //   subject: this.subkemu,
-      //   score: this.score,
-      //   class_rank: this.classPai,
-      //   grade_rank: this.schoolPai,
-      //   exam_name: this.examTime + this.examname
-      // }).then(res => {
-      //   this.content.push(res.data.data)
-      console.log('indexof:', this.list1.indexOf(this.subkemu))
-      this.list1.splice(this.list1.indexOf(this.subkemu), 1)
-      // for (const a in this.list) {
-      //   if (a === this.subkemu) {
-      //
-      //   }
-      //   console.log('a', a)
-      // }
-      // this.list.pop(this.subkemu)
-      // console.log(this.list1)
-      // console.log(this.content)
-      // })
+      if (this.score === '' || this.classPai === '' || this.schoolPai === '') {
+        this.$vux.alert.show({
+          title: '提示',
+          content: '分数或班排或年排必填！'
+        })
+      } else {
+        this.rightTimeList = this.examTime.split('-')
+        this.rightT = this.rightTimeList[0] + '年' + this.rightTimeList[1] + '月'
+        // this.submitList = []
+        this.addscore = false
+        console.log(this.examname, this.rightT, this.subkemu, this.score, this.classPai, this.schoolPai)
+        const grade = {'wechat_openid': this.openid, 'student_number': '111', 'subject_name': this.subkemu, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.rightT + this.examname}
+        this.submitList.push(grade)
+        // this.submitList.push(grade)
+        // this.submitList1.push(JSON.stringify(grade))
+        // enterGrade({
+        //   wechat_openid: '111',
+        //   student_number: '111',
+        //   subject: this.subkemu,
+        //   score: this.score,
+        //   class_rank: this.classPai,
+        //   grade_rank: this.schoolPai,
+        //   exam_name: this.examTime + this.examname
+        // }).then(res => {
+        //   this.content.push(res.data.data)
+        console.log('indexof:', this.list1.indexOf(this.subkemu))
+        this.list1.splice(this.list1.indexOf(this.subkemu), 1)
+        // for (const a in this.list) {
+        //   if (a === this.subkemu) {
+        //
+        //   }
+        //   console.log('a', a)
+        // }
+        // this.list.pop(this.subkemu)
+        // console.log(this.list1)
+        // console.log(this.content)
+        // })
+      }
     },
     submitTranscript () {
       console.log('提交了：', this.submitList)
@@ -237,8 +257,8 @@ export default {
         if (res.data.code === 0) {
           this.showToast = true
         }
-        const a = res.data.data
-        console.log('aaaaaaaaa', a)
+        // const a = res.data.data
+        // console.log('aaaaaaaaa', a)
       })
     }
   }

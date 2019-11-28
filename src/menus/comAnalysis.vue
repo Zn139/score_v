@@ -5,21 +5,22 @@
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">定位对比</div>
+      <div class="iconfont_header" @click="setTarget"><i class="iconfont icon_lulushezhi3"></i></div>
     </div>
     <div class="subAna_second_choice">
       <popup-picker :data="choiceList" :title="examname" :columns="3" v-model="choice" ref="picker3" @on-change="showChange()" show-name ></popup-picker>
     </div>
     <div>
-      <tab>
-        <tab-item selected @on-item-click="onItemClick">定位展示</tab-item>
-        <tab-item @on-item-click="onItemClick">目标设定</tab-item>
-      </tab>
-    </div>
+    <tab>
+      <tab-item selected @on-item-click="onItemClick">定位展示</tab-item>
+      <tab-item @on-item-click="onItemClick">目标设定</tab-item>
+    </tab>
+  </div>
     <div>
       <div v-show="showSelect === 'dingwei'">
         <div class="com_four">
           <div class="subAna_four_tip">
-            <p>同学您好，本次考试班级最高分,<span>100分</span>,年级最高分<span>100分</span>，班级平均分<span>94分</span>，年级平均分<span>84分</span>。请戒骄戒躁，继续努力，争取更大的突破。</p>
+            <p>同学您好，本次考试班级最高分<span>{{FS.classHighScore}}分</span>,年级最高分<span>{{FS.gradeHighScore}}分</span>，班级平均分<span>{{FS.classAvgScore}}分</span>，年级平均分<span>{{FS.gradeAvgScore}}分</span>。请戒骄戒躁，继续努力，争取更大的突破。</p>
 <!--            <p>未公开：是表示当前系统中录入成绩不够四次，不能进行贡献率的计算，及提升。</p>-->
           </div>
         </div>
@@ -75,10 +76,11 @@
   </div>
 </template>
 <script>
-import {getAllExam, positionCompare, getChaju} from '@/api/index'
+import {getAllExam, positionCompare, getChaju, getEachScore} from '@/api/index'
 export default {
   data () {
     return {
+      showSetAim: false,
       choice: [],
       choiceList: [],
       content: [],
@@ -92,7 +94,8 @@ export default {
       xData: ['高分', '优秀', '良好', '及格', '低分'],
       x_index: 0,
       x_content: 0,
-      CJList: []
+      CJList: [],
+      FS: [] // 定位处的上面一部分分数
     }
   },
   computed: {
@@ -114,10 +117,23 @@ export default {
     this.getComAnalyInfo()
     this.getChajuInfo()
     this.getAllExam()
+    this.getEachFS()
   },
   methods: {
     returnBack () {
       this.$router.go(-1)
+    },
+    setTarget () {
+
+    },
+    getEachFS () {
+      getEachScore({
+        openid: this.openid,
+        stuNumber: '08047737',
+        examName: this.examname
+      }).then(res => {
+        this.FS = res.data.data[0]
+      })
     },
     getComAnalyInfo () {
       this.barDataList = []
@@ -206,6 +222,13 @@ export default {
       }
       // console.log('hahah', this.scoreName)
       if (this.showSelect === 'dingwei') {
+        getEachScore({
+          openid: this.openid,
+          stuNumber: '08047737',
+          examName: this.scoreName
+        }).then(resp => {
+          this.FS = resp.data.data[0]
+        })
         positionCompare({
           stuNumber: '08047737',
           examType: this.scoreName
@@ -413,6 +436,14 @@ export default {
     display: inline-block;
     margin-left: 35%;
     transform: translateX(-45%);
+  }
+  .iconfont_header {
+    float: right;
+    margin-right: 13px;
+    margin-top: 2px;
+    .iconfont {
+      font-size: 16px;
+    }
   }
   .subAna_second_choice {
     background-color: #fff;

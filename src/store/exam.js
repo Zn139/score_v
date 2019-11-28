@@ -6,7 +6,7 @@ const exam = {
     // openid: 'o_pfhwpP_2R_kK4gzKw5SuDG0LXo',
     userImg: '',
     userName: '',
-    schoolNum: '' // 学号
+    schoolNum: '08047737' // 学号
   },
   mutations: {
     SET_EXAM_NAME: (state, name) => {

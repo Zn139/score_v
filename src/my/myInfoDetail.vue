@@ -297,7 +297,6 @@ export default {
     height: 80px;
   }
 
-
   /*遮罩层*/
   .blacks {
     position: fixed;

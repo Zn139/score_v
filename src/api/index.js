@@ -144,3 +144,24 @@ export function getChaju (req) { // 定位对比--差距
     params: req
   })
 }
+export function getEachScore (req) { // 定位对比--分数
+  return request({
+    url: 'scoreTwo/getCommentValue',
+    method: 'get',
+    params: req
+  })
+}
+export function getSelectSub (req) { // 定位对比--所选科目
+  return request({
+    url: 'scoreTwo/getSubjectCollection',
+    method: 'get',
+    params: req
+  })
+}
+export function getSubCompare (req) { // 定位对比--选完科目的对比信息获取
+  return request({
+    url: 'scoreTwo/getSingleContrastInfo',
+    method: 'get',
+    params: req
+  })
+}

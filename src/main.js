@@ -8,7 +8,7 @@ import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
 import axios from 'axios'
-import { Alert, AlertPlugin, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, DatetimePlugin, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
+import { Alert, AlertPlugin, XDialog, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 import VDistpicker from 'v-distpicker'
 
@@ -20,6 +20,7 @@ Vue.use(vueTap)
 Vue.use(ConfigPlugin, {
   $layout: 'VIEW_BOX'
 })
+Vue.component('x-dialog', XDialog)
 Vue.component('alert', Alert)
 Vue.component('x-button', XButton)
 Vue.component('x-table', XTable)
@@ -33,7 +34,6 @@ Vue.component('popup-picker', PopupPicker)
 Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
-Vue.use(DatetimePlugin)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 Vue.prototype.$axios = axios
 Vue.prototype.echarts = echarts

@@ -174,9 +174,9 @@ export default {
   }
   .user_iconfont {
     /*display: inline-block;*/
-    float: left;
+    float: right;
     margin-top: 8px;
-    margin-left: 50px;
+    margin-right: 20px;
     /*transform: translateX(-70%);*/
     line-height: 60px;
   }
