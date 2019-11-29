@@ -165,3 +165,10 @@ export function getSubCompare (req) { // 定位对比--选完科目的对比信�
     params: req
   })
 }
+export function getSetTarValue (req) { // 定位对比--初始查询设定的目标
+  return request({
+    url: 'scoreTwo/findTargetValue',
+    method: 'get',
+    params: req
+  })
+}

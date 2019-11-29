@@ -61,6 +61,7 @@
           </x-table>
         </div>
         <x-button class="enter_submit" v-if="submitList.length === 0" disabled>提交</x-button> <!--提交成绩单-->
+        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> <!--测试相机-->
         <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitList.length > 0">提交</x-button> <!--提交成绩单-->
         <x-dialog :show.sync="addscore" :hide-on-blur="true" class="enter_grade_dialog">
           <group title="科目信息">
@@ -151,6 +152,9 @@ export default {
     },
     returnBack () {
       this.$router.go(-1)
+    },
+    submitCamera () {
+      this.$router.push('/camera')
     },
     onCancel () { // 点击取消触发
       this.showDel = false

@@ -11,6 +11,7 @@ import axios from 'axios'
 import { Alert, AlertPlugin, XDialog, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 import VDistpicker from 'v-distpicker'
+// import $ from 'jquery'
 
 Vue.component('v-distpicker', VDistpicker)
 

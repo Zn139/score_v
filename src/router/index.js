@@ -30,6 +30,8 @@ const myInfoDetail = () => import('@/my/myInfoDetail') // 我的--我的详情
 const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
 const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
+const camera = () => import('@/camera/camera') // 录入--测试相机
+const ceshiCamera = () => import('@/camera/index') // 录入--测试lingyige相机
 const test = () => import('@/menus/test')
 
 export default new Router({
@@ -231,6 +233,24 @@ export default new Router({
       },
       name: 'ewm',
       meta: { tab: 'ewm', title: 'ewm' }
+    },
+    {
+      path: '/camera', // 测试相机
+      // path: '/share/:exam_name',
+      components: {
+        default: camera
+      },
+      name: 'camera',
+      meta: { tab: 'camera', title: 'camera' }
+    },
+    {
+      path: '/ceshiCamera', // 测试相机
+      // path: '/share/:exam_name',
+      components: {
+        default: ceshiCamera
+      },
+      name: 'ceshiCamera',
+      meta: { tab: 'ceshiCamera', title: 'ceshiCamera' }
     },
     {
       path: '/test',

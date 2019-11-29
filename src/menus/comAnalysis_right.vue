@@ -7,42 +7,68 @@
       <div class="title">定位对比</div>
       <div class="iconfont_header" @click="setTarget"><i class="iconfont icon_lulushezhi3"></i></div>
     </div>
-    <div class="subAna_second_choice">
-      <popup-picker :data="choiceList" :title="examname" :columns="3" v-model="choice" ref="picker3" @on-change="showChange()" show-name ></popup-picker>
-    </div>
-    <div>
-      <div class="com_four">
-        <div class="subAna_four_tip">
-          <p>同学您好，本次考试班级最高分<span>{{FS.classHighScore}}分</span>,年级最高分<span>{{FS.gradeHighScore}}分</span>，班级平均分<span>{{FS.classAvgScore}}分</span>，年级平均分<span>{{FS.gradeAvgScore}}分</span>。请戒骄戒躁，继续努力，争取更大的突破。</p>
-          <!--            <p>未公开：是表示当前系统中录入成绩不够四次，不能进行贡献率的计算，及提升。</p>-->
+    <div class="comAnaInfo_two" ref="comAnaInfo_two">
+      <div>
+        <div class="subAna_second_choice">
+          <popup-picker :data="choiceList" :title="examname" :columns="3" v-model="choice" ref="picker3" @on-change="showChange()" show-name ></popup-picker>
         </div>
-      </div>
-        <div class="subAna_third">
-        <h4 class="subAna_third_title">自我定位</h4>
-        <div ref="comAna_third_chart" class="subAna_third_chart"></div>
-        <!--        <div class="comInfo_tip">-->
-        <!--        <h4>说明：</h4>-->
-        <p class="comInfo_p">说明：上图为班级学生成绩分布，黄色为你所处区域段，所处分数段越多，说明你提升一定分数，可超越的人数越多，进步空间越大。</p>
-        <!--        </div>-->
+        <div>
+          <div class="com_four">
+            <div class="subAna_four_tip">
+              <p>同学您好，本次考试班级最高分<span>{{FS.classHighScore}}分</span>,年级最高分<span>{{FS.gradeHighScore}}分</span>，班级平均分<span>{{FS.classAvgScore}}分</span>，年级平均分<span>{{FS.gradeAvgScore}}分</span>。请戒骄戒躁，继续努力，争取更大的突破。</p>
+            </div>
+          </div>
+          <div class="subAna_third">
+            <h4 class="subAna_third_title">自我定位</h4>
+            <div ref="comAna_third_chart" class="subAna_third_chart"></div>
+            <p class="comInfo_p">说明：上图为我的成绩和目标成绩的对比，展示的是各科成绩的分数详情。</p>
+          </div>
+        </div>
+        <div class="comAna_table">
+          <x-table class="subAna_four_table">
+            <thead>
+            <tr class="subAna_four_table_thead">
+              <th>科目</th>
+              <th>我的排名</th>
+              <th>目标排名</th>
+              <th>我的分数</th>
+              <th>目标分数</th>
+              <th>差值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item, value, index) in lineData" :key="index">
+              <td>{{item.title}}</td>
+              <td>{{item.myRank}}</td>
+              <td>{{item.targetRank || '未公开'}}</td>
+              <td>{{item.myScore || '未公开'}}</td>
+              <td>{{item.targetScore || '未公开'}}</td>
+              <td>{{item.scoreDifferentValue || '未公开'}}</td>
+            </tr>
+            </tbody>
+          </x-table>
+        </div>
+        <x-dialog :show.sync="showSetAim" :hide-on-blur="true" class="comAna_dialog" mask-z-index="10">
+          <p class="comAna_dialog_title">请设定目标名次</p>
+          <x-input title="总分" required v-model="score" @on-change="setCountRank"></x-input>
+
+          <x-input :title="item.name" required v-for="(item, index) in selectSubs" :key="index" v-model="item.rank"></x-input>
+          <div class="report-btns">
+            <x-button text="确定" @click.native="sendSubmit" class="report-btns_text"></x-button>
+            <x-button text="取消" @click.native="showSetAim = false" class="report-btns_text"></x-button>
+          </div>
+        </x-dialog>
       </div>
     </div>
-    <x-dialog :show.sync="showSetAim" :hide-on-blur="true" class="comAna_dialog" mask-z-index="10">
-      <p class="comAna_dialog_title">请设定目标名次</p>
-      <x-input title="总分" required v-model="score" @on-change="setCountRank"></x-input>
-
-      <x-input :title="item.name" required v-for="(item, index) in selectSubs" :key="index" v-model="item.rank"></x-input>
-      <div class="report-btns">
-        <x-button text="确定" @click.native="sendSubmit" class="report-btns_text"></x-button>
-        <x-button text="取消" @click.native="showSetAim = false" class="report-btns_text"></x-button>
-      </div>
-    </x-dialog>
   </div>
 </template>
 <script>
-import {getAllExam, getEachScore, getSelectSub, getSubCompare} from '@/api/index'
+import BScroll from 'better-scroll'
+import {getAllExam, getEachScore, getSelectSub, getSubCompare, getSetTarValue} from '@/api/index'
 export default {
   data () {
     return {
+      comAnaInfoScroll: null,
       showSetAim: false,
       choice: [],
       choiceList: [],
@@ -56,6 +82,7 @@ export default {
       xData: [],
       yMyData: [],
       yTargetData: [],
+      ks_name: '', // 考试名称
       FS: [] // 定位处的上面一部分分数
     }
   },
@@ -78,9 +105,10 @@ export default {
     }
   },
   mounted () {
+    this.ks_name = this.examname
+    console.log('名称', this.ks_name)
+    this.init()
     this.getSelectSubjects()
-    // this.getComAnalyInfo()
-    // this.getChajuInfo()
     this.getAllExam()
     this.getEachFS()
   },
@@ -88,18 +116,86 @@ export default {
     returnBack () {
       this.$router.go(-1)
     },
+    init () {
+      this.$nextTick(() => {
+        this.comAnaInfoScroll = new BScroll(this.$refs.comAnaInfo_two, {
+          click: true
+        })
+      })
+    },
+    getSetTargetValue () {
+      getSetTarValue({
+        stuNumber: this.schoolNumber,
+        examName: this.ks_name
+      }).then(res => {
+        if (res.data.code === 0) { // 有目标
+          this.showSetAim = false
+          console.log('length:', this.selectSubs)
+          for (const item in this.selectSubs) {
+            this.subList_to_houD[this.selectSubs[item]['eng_name']] = res.data.data[this.selectSubs[item]['eng_name']]
+            // console.log('jejejej', this.selectSubs[item])
+            this.selectSubs[item]['rank'] = res.data.data[this.selectSubs[item]['eng_name']]
+          }
+          this.score = res.data.data['totalScore']
+          console.log('有目标吗：', this.selectSubs)
+        }
+        this.getSubCompare()
+        // console.log('sdfsdfsdfdghkhjkjl', this.subList_to_houD)
+      })
+    },
     getSelectSubjects () {
-      console.log('学号：', this.schoolNumber)
+      this.selectSubs = []
+      // console.log('学号：', this.schoolNumber)
       getSelectSub({
         openid: this.openid,
         stuNumber: this.schoolNumber,
-        examName: this.examname
+        examName: this.ks_name
       }).then(res => {
         for (const item in res.data.data) {
-          this.selectSubs.push({'name': res.data.data[item], 'rank': ''})
+          this.selectSubs.push({'name': res.data.data[item], 'rank': '', 'eng_name': ''})
         }
-        // this.selectSubs = res.data.data
-        console.log(this.selectSubs)
+        for (const item in this.selectSubs) {
+          // console.log(this.selectSubs[item].name)
+          if (this.selectSubs[item].name === '语文') {
+            this.sub_name = 'yuwen'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '数学') {
+            this.sub_name = 'shuxue'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '英语') {
+            this.sub_name = 'yingyu'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '物理') {
+            this.sub_name = 'wuli'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '化学') {
+            this.sub_name = 'huaxue'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '生物') {
+            this.sub_name = 'shengwu'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '历史') {
+            this.sub_name = 'lishi'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '地理') {
+            this.sub_name = 'dili'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          } else if (this.selectSubs[item].name === '政治') {
+            this.sub_name = 'zhengzhi'
+            this.selectSubs[item].eng_name = this.sub_name
+            this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
+          }
+        }
+        this.getSetTargetValue()
+        // console.log('this.selectSubs:', this.selectSubs)
       })
     },
     setCountRank () {
@@ -108,47 +204,53 @@ export default {
       }
     },
     sendSubmit () {
-      // const a = {}
+      for (const item in this.selectSubs) {
+        this.subList_to_houD[this.selectSubs[item].eng_name] = this.selectSubs[item].rank
+      }
+      this.getSubCompare()
+      // this.xData = []
+      // this.yMyData = []
+      // this.yTargetData = []
+      // for (const item in this.selectSubs) {
+      //   this.subList_to_houD[this.selectSubs[item].eng_name] = this.selectSubs[item].rank
+      // }
+      // console.log('this.subList_to_houD:', this.subList_to_houD)
+      // getSubCompare({
+      //   stuNumber: this.schoolNumber,
+      //   examName: this.ks_name,
+      //   total: this.score,
+      //   yuwen: this.subList_to_houD['yuwen'] || '',
+      //   shuxue: this.subList_to_houD['shuxue'] || '',
+      //   yingyu: this.subList_to_houD['yingyu'] || '',
+      //   wuli: this.subList_to_houD['wuli'] || '',
+      //   huaxue: this.subList_to_houD['huaxue'] || '',
+      //   shengwu: this.subList_to_houD['shengwu'] || '',
+      //   lishi: this.subList_to_houD['lishi'] || '',
+      //   dili: this.subList_to_houD['dili'] || '',
+      //   zhengzhi: this.subList_to_houD['zhengzhi'] || ''
+      // }).then(res => {
+      //   if (res.data.code === 0) {
+      //     console.log('fanhuile:', res.data.data[0].map)
+      //     this.lineData = res.data.data[0].map
+      //     for (const item in this.lineData) {
+      //       this.xData.push(this.lineData[item].title)
+      //       this.yMyData.push(this.lineData[item].myScore)
+      //       this.yTargetData.push(this.lineData[item].targetScore)
+      //     }
+      //     this.showSetAim = false
+      //   }
+      //   this.drawBar()
+      // })
+    },
+    getSubCompare () {
       this.xData = []
       this.yMyData = []
       this.yTargetData = []
-      for (const item in this.selectSubs) {
-        // console.log(this.selectSubs[item].name)
-        if (this.selectSubs[item].name === '语文') {
-          this.sub_name = 'yuwen'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '数学') {
-          this.sub_name = 'shuxue'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '英语') {
-          this.sub_name = 'yingyu'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '物理') {
-          this.sub_name = 'wuli'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '化学') {
-          this.sub_name = 'huaxue'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '生物') {
-          this.sub_name = 'shengwu'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '历史') {
-          this.sub_name = 'lishi'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '地理') {
-          this.sub_name = 'dili'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        } else if (this.selectSubs[item].name === '政治') {
-          this.sub_name = 'zhengzhi'
-          this.subList_to_houD[this.sub_name] = this.selectSubs[item].rank
-        }
-      }
-      // this.subList_to_houD['stuNumber'] = this.schoolNumber
-      // this.subList_to_houD['examName'] = this.examname
-      console.log(this.subList_to_houD)
+      console.log('对此咯：', this.subList_to_houD)
       getSubCompare({
         stuNumber: this.schoolNumber,
-        examName: this.examname,
+        examName: this.ks_name,
+        total: this.score,
         yuwen: this.subList_to_houD['yuwen'] || '',
         shuxue: this.subList_to_houD['shuxue'] || '',
         yingyu: this.subList_to_houD['yingyu'] || '',
@@ -180,8 +282,8 @@ export default {
     getEachFS () {
       getEachScore({
         openid: this.openid,
-        stuNumber: '08047737',
-        examName: this.examname
+        stuNumber: this.schoolNumber,
+        examName: this.ks_name
       }).then(res => {
         this.FS = res.data.data[0]
       })
@@ -231,14 +333,65 @@ export default {
       })
     },
     showChange () {
-      console.log(this.choice)
-      this.barDataList = []
-      // this.continuList = []
-      // this.differenNameRight = []
+      // this.xData = []
+      // this.yMyData = []
+      // this.yTargetData = []
+      // console.log(this.choice)
       this.scoreName = ''
       for (const item in this.choice) {
         this.scoreName += this.choice[item]
       }
+      this.ks_name = this.scoreName
+      this.getSelectSubjects()
+      // getEachScore({
+      //   openid: this.openid,
+      //   stuNumber: this.schoolNumber,
+      //   examName: this.scoreName
+      // }).then(resp => {
+      //   this.FS = resp.data.data[0]
+      // })
+      // getSetTarValue({
+      //   stuNumber: this.schoolNumber,
+      //   examName: this.scoreName
+      // }).then(res => {
+      //   if (res.data.code === 0) {
+      //     this.showSetAim = false
+      //     for (const item in this.selectSubs) {
+      //       this.selectSubs[item].rank = res.data.data[this.selectSubs[item]['eng_name']]
+      //       this.subList_to_houD[this.selectSubs[item]['eng_name']] = res.data.data[this.selectSubs[item]['eng_name']]
+      //       console.log('jejejej', res.data.data[this.selectSubs[item]['eng_name']])
+      //     }
+      //     this.score = res.data.data['totalScore']
+      //     console.log('123456789:', this.selectSubs, this.subList_to_houD)
+      //   }
+      //   console.log(res.data.data)
+      // })
+      // getSubCompare({
+      //   stuNumber: this.schoolNumber,
+      //   examName: this.scoreName,
+      //   total: this.score,
+      //   yuwen: this.subList_to_houD['yuwen'] || '',
+      //   shuxue: this.subList_to_houD['shuxue'] || '',
+      //   yingyu: this.subList_to_houD['yingyu'] || '',
+      //   wuli: this.subList_to_houD['wuli'] || '',
+      //   huaxue: this.subList_to_houD['huaxue'] || '',
+      //   shengwu: this.subList_to_houD['shengwu'] || '',
+      //   lishi: this.subList_to_houD['lishi'] || '',
+      //   dili: this.subList_to_houD['dili'] || '',
+      //   zhengzhi: this.subList_to_houD['zhengzhi'] || ''
+      // }).then(res => {
+      //   if (res.data.code === 0) {
+      //     console.log('fanhuile:', res.data.data[0].map)
+      //     this.lineData = res.data.data[0].map
+      //     for (const item in this.lineData) {
+      //       this.xData.push(this.lineData[item].title)
+      //       this.yMyData.push(this.lineData[item].myScore)
+      //       this.yTargetData.push(this.lineData[item].targetScore)
+      //     }
+      //     this.showSetAim = false
+      //   }
+      //   this.drawBar()
+      // })
       this.$store.commit('SET_SCORE_NAME', this.scoreName)
       localStorage.setItem('SET_SCORE_NAME', this.scoreName)
     },
@@ -424,6 +577,14 @@ export default {
       font-size: 16px;
     }
   }
+  .comAnaInfo_two {
+    margin-top: 15px;
+    position: relative;
+    background: #fbf9fe;
+    overflow: hidden;
+    padding: 10px 0;
+    height: calc(100% - 76px);
+  }
   .subAna_second_choice {
     background-color: #fff;
     border-bottom: 1px solid #d9d9d9;
@@ -519,6 +680,10 @@ export default {
   table.vux-table.subAna_four_table {
     line-height: 35px;
   }
+  .comAna_table {
+    margin: 20px 7px;
+    padding: 5px 2px 30px;
+  }
   .subAna_balance_tip {
     border: 4px dashed rgba(66,185,130,0.4);
     border-radius: 10px;
@@ -533,7 +698,7 @@ export default {
     line-height: 24px;
   }
   .subAna_four_tip {
-    margin: 20px 2px 0;
+    margin: 12px 2px 0;
     padding: 5px 3px;
     border: 3px rgba(66,185,130,0.4) dashed;
     border-radius: 10px;
