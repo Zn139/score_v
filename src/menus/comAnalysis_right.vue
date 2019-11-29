@@ -48,11 +48,11 @@
             </tbody>
           </x-table>
         </div>
-        <x-dialog :show.sync="showSetAim" :hide-on-blur="true" class="comAna_dialog" mask-z-index="10">
+        <x-dialog :show.sync="showSetAim" :hide-on-blur="true" class="comAna_dialog">
           <p class="comAna_dialog_title">请设定目标名次</p>
-          <x-input title="总分" required v-model="score" @on-change="setCountRank"></x-input>
+          <x-input title="总分" required v-model="score" @on-change="setCountRank" class="comAna_input"></x-input>
 
-          <x-input :title="item.name" required v-for="(item, index) in selectSubs" :key="index" v-model="item.rank"></x-input>
+          <x-input :title="item.name" required v-for="(item, index) in selectSubs" :key="index" v-model="item.rank" class="comAna_input"></x-input>
           <div class="report-btns">
             <x-button text="确定" @click.native="sendSubmit" class="report-btns_text"></x-button>
             <x-button text="取消" @click.native="showSetAim = false" class="report-btns_text"></x-button>
@@ -250,6 +250,7 @@ export default {
       getSubCompare({
         stuNumber: this.schoolNumber,
         examName: this.ks_name,
+        openid: this.openid,
         total: this.score,
         yuwen: this.subList_to_houD['yuwen'] || '',
         shuxue: this.subList_to_houD['shuxue'] || '',
@@ -343,6 +344,13 @@ export default {
       }
       this.ks_name = this.scoreName
       this.getSelectSubjects()
+      getEachScore({
+        openid: this.openid,
+        stuNumber: this.schoolNumber,
+        examName: this.ks_name
+      }).then(res => {
+        this.FS = res.data.data[0]
+      })
       // getEachScore({
       //   openid: this.openid,
       //   stuNumber: this.schoolNumber,
@@ -577,17 +585,26 @@ export default {
       font-size: 16px;
     }
   }
+  .comAna_dialog >>> .weui-dialog {
+    margin-top: -30%;
+  }
+  .comAna_input {
+    line-height: 25px;
+  }
   .comAnaInfo_two {
-    margin-top: 15px;
+    margin-top: 5px;
     position: relative;
     background: #fbf9fe;
     overflow: hidden;
     padding: 10px 0;
-    height: calc(100% - 76px);
+    height: calc(100% - 50px);
   }
   .subAna_second_choice {
     background-color: #fff;
     border-bottom: 1px solid #d9d9d9;
+  }
+  .vux-cell-box {
+    height: 45px;
   }
   .subAna_second_choice >>> .vux-cell-box .weui-cell_access {
     color: #999;

@@ -41,7 +41,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
   label {
     position: absolute;
     left: 50%;
