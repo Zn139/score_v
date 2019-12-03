@@ -20,6 +20,7 @@ const classSchedule = () => import('@/menus/classSchedule')
 const schoolInquire = () => import('@/menus/schoolInquire')
 const more = () => import('@/menus/more')
 const addScore = () => import('@/enterGrade/index')
+const addSingleSubScore = () => import('@/enterGrade/addSingleSubScore')
 const share = () => import('@/share/index')
 const ewm = () => import('@/components/EWeiM')
 const record = () => import('@/enterGrade/record')
@@ -31,7 +32,7 @@ const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
 const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
 const camera = () => import('@/camera/camera') // 录入--测试相机
-const ceshiCamera = () => import('@/camera/index') // 录入--测试lingyige相机
+// const ceshiCamera = () => import('@/camera/upload') // 录入--测试lingyige相机
 const test = () => import('@/menus/test')
 
 export default new Router({
@@ -55,6 +56,14 @@ export default new Router({
       },
       name: 'addScore',
       meta: { tab: 'addScore', title: 'addScore' }
+    },
+    { // 录入成绩-填写单科信息及试卷图片
+      path: '/addSingleSubScore',
+      components: {
+        default: addSingleSubScore
+      },
+      name: 'addSingleSubScore',
+      meta: { tab: 'addSingleSubScore', title: 'addSingleSubScore' }
     },
     {
       path: '/record',
@@ -243,15 +252,15 @@ export default new Router({
       name: 'camera',
       meta: { tab: 'camera', title: 'camera' }
     },
-    {
-      path: '/ceshiCamera', // 测试相机
-      // path: '/share/:exam_name',
-      components: {
-        default: ceshiCamera
-      },
-      name: 'ceshiCamera',
-      meta: { tab: 'ceshiCamera', title: 'ceshiCamera' }
-    },
+    // {
+    //   path: '/ceshiCamera', // 测试相机
+    //   // path: '/share/:exam_name',
+    //   components: {
+    //     default: ceshiCamera
+    //   },
+    //   name: 'ceshiCamera',
+    //   meta: { tab: 'ceshiCamera', title: 'ceshiCamera' }
+    // },
     {
       path: '/test',
       // path: '/share/:exam_name',

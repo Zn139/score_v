@@ -138,8 +138,13 @@ export default {
           }
           this.score = res.data.data['totalScore']
           console.log('有目标吗：', this.selectSubs)
+          this.getSubCompare()
+        } else {
+          this.showSetAim = true
+          console.log('没选目标的呢：', this.selectSubs)
+          console.log('没选目标的呢2：', this.subList_to_houD)
         }
-        this.getSubCompare()
+        // this.getSubCompare()
         // console.log('sdfsdfsdfdghkhjkjl', this.subList_to_houD)
       })
     },
@@ -207,6 +212,7 @@ export default {
       for (const item in this.selectSubs) {
         this.subList_to_houD[this.selectSubs[item].eng_name] = this.selectSubs[item].rank
       }
+      console.log('没选后又选完了：', this.subList_to_houD)
       this.getSubCompare()
       // this.xData = []
       // this.yMyData = []
@@ -263,7 +269,7 @@ export default {
         zhengzhi: this.subList_to_houD['zhengzhi'] || ''
       }).then(res => {
         if (res.data.code === 0) {
-          console.log('fanhuile:', res.data.data[0].map)
+          // console.log('fanhuile:', res.data.data[0].map)
           this.lineData = res.data.data[0].map
           for (const item in this.lineData) {
             this.xData.push(this.lineData[item].title)
@@ -334,6 +340,7 @@ export default {
       })
     },
     showChange () {
+      this.subList_to_houD = []
       // this.xData = []
       // this.yMyData = []
       // this.yTargetData = []

@@ -8,9 +8,14 @@ import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
 import axios from 'axios'
-import { Alert, AlertPlugin, XDialog, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
+import { Alert, AlertPlugin, XDialog, Datetime, Selector, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
+// import Vuex from 'vuex'
 import VDistpicker from 'v-distpicker'
+// import uploader from 'vue-easy-uploader'
+
+// let store = new Vuex.Store({})
+// Vue.use(uploader, store)
 // import $ from 'jquery'
 
 Vue.component('v-distpicker', VDistpicker)
@@ -21,6 +26,8 @@ Vue.use(vueTap)
 Vue.use(ConfigPlugin, {
   $layout: 'VIEW_BOX'
 })
+Vue.component('selector', Selector)
+Vue.component('datetime', Datetime)
 Vue.component('x-dialog', XDialog)
 Vue.component('alert', Alert)
 Vue.component('x-button', XButton)

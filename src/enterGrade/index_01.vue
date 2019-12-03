@@ -209,7 +209,7 @@ export default {
       this.$router.push({path: '/record'})
     },
     addNew () {
-      this.$router.push({path: '/addSingleSubScore'})
+      this.addscore = true
     },
     onChange (item) {
       console.log('当前值：', item)
