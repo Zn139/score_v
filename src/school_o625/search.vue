@@ -24,7 +24,7 @@
 <script>
   import { Search } from 'vux'
   import searchTab from './searchTab'
-  import schoolList from '../menus/schoolList'
+  import schoolList from '../school/schoolList'
   import { searchSchool } from '@/api/index.js'
   export default {
     components: { Search, searchTab, schoolList },

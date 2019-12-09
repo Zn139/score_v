@@ -14,19 +14,14 @@
       <div>
         <h4 class="enter_grade_title_info">中关村中学2019级07班</h4>
         <div class="addScore_form">
-<!--          <p>学校：</p>-->
-<!--          <p>班级：</p>-->
-          <!--      <group title="set is-type=china-name">-->
           <datetime
             v-model="examTime"
             title="考试时间"
             class="enter_grade_time"
+            v-if="showTime"
           ></datetime>
-          <!--      <h4 class="enter_grade_title">考试名称</h4>-->
           <p class="enter_grade_title">考试名称</p>
-          <!--      <x-input title="考试名称" name="username" placeholder="请输入考试名称" text-align="right" placeholder-align="right" v-model="examname"></x-input>-->
-          <x-input name="username"  text-align="left" placeholder="请在此输入考试名称，如：期中" placeholder-align="left" v-model="examname" class="enter_grade_input"></x-input>
-          <!--      </group>-->
+          <x-input name="username"  text-align="left" placeholder="请在此输入考试名称，如：期中" placeholder-align="left" v-model="examName" class="enter_grade_input"></x-input>
         </div>
         <div class="enter_grade_scoreForm">
           <p class="enter_grade_title">成绩信息</p>
@@ -37,17 +32,17 @@
               <th>分数</th>
               <th>班排</th>
               <th>年排</th>
-              <th colspan="2">操作</th>
+              <th>试卷图片</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in submitList" :key = index>
+            <tr v-for="(item, index) in submitList" @click="gotoEdit(item)" :key = index>
               <td>{{item.subject_name}}</td>
               <td>{{item.score}}</td>
               <td>{{item.class_rank}}</td>
               <td>{{item.grade_rank}}</td>
-              <td><span class="enter_action" @click="delData(item)">删除</span></td>
-              <td><span class="enter_action" @click="editData(item)">编辑</span></td>
+              <td v-if="item.imgs.length === 0"><i class="iconfont icon_luluxiangji"></i></td>
+              <td v-if="item.imgs.length > 0"><i class="iconfont icon_luluxiangji" style="color: #42b983"></i></td>
             </tr>
             <tr style="background-color:#fff;">
               <td colspan="6" @click="addNew" style="height: 90px">
@@ -55,43 +50,13 @@
                   <i class="iconfont icon_lulutianjia"></i>
                 </div>
               </td>
-              <!--          <td colspan="6" @click="addNew"><i class="iconfont icon_lulutianjia"></i></td>-->
             </tr>
             </tbody>
           </x-table>
         </div>
         <x-button class="enter_submit" v-if="submitList.length === 0" disabled>提交</x-button> <!--提交成绩单-->
         <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitList.length > 0">提交</x-button> <!--提交成绩单-->
-        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> <!--测试相机-->
-        <x-dialog :show.sync="addscore" :hide-on-blur="true" class="enter_grade_dialog">
-          <group title="科目信息">
-            <selector placeholder="请选择科目" v-model="subkemu" title="科目" name="district" :options="list1" @on-change="onChange"></selector>
-          </group>
-          <x-input title="分数" required v-model="score" @on-blur="losePoint(score)"></x-input>
-          <x-input title="班排" required v-model="classPai" @on-blur="losePoint(classPai)"></x-input>
-          <x-input title="年排" required v-model="schoolPai" @on-blur="losePoint(schoolPai)"></x-input>
-          <div class="report-btns">
-            <x-button text="提交" @click.native="sendSubmit" class="report-btns_text"></x-button>
-            <x-button text="取消" @click.native="addscore = false" class="report-btns_text"></x-button>
-          </div>
-        </x-dialog>
-        <x-dialog v-model="showEdit" :hide-on-blur="true" class="enter_grade_dialog">
-          <x-input title="科目" v-model="edit.subject" disabled></x-input>
-          <x-input title="分数" v-model="edit.score"></x-input>
-          <x-input title="班排" v-model="edit.banpai"></x-input>
-          <x-input title="年排" v-model="edit.nianpai"></x-input>
-          <div class="report-btns">
-            <x-button text="提交" @click.native="sendEdit(edit.subject, edit.score, edit.banpai, edit.nianpai)" class="report-btns_text"></x-button>
-            <x-button text="取消" @click.native="showEdit = false" class="report-btns_text"></x-button>
-          </div>
-        </x-dialog> <!--点击编辑按钮弹出-->
         <toast v-model="showToast" :time="1000">录入成功</toast>
-        <confirm v-model="showDel"
-                 title="删除提示"
-                 @on-cancel="onCancel"
-                 @on-confirm="onConfirm">
-          <p style="text-align:center;">确定删除吗？</p>
-        </confirm>
       </div>
     </div>
   </div>
@@ -101,33 +66,15 @@ import { XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, Selector
 import {enterGradeList} from '@/api/index'
 import BScroll from 'better-scroll'
 export default {
-  // directives: {TransferDom},
   components: {XInput, Datetime, XTable, LoadMore, XDialog, Confirm, XButton, Selector, Group},
   data () {
     return {
+      showTime: true, // 考试时间的显示
       scoreScroll: null,
-      showEdit: false,
       showToast: false,
-      showDel: false,
-      delItem: '', // 删除项
-      editItem: [],
-      examname: '',
+      examName: '',
       examTime: '',
-      addscore: false,
-      addscore1: false,
-      list: [{key: '语文', value: '语文'}, {key: '数学', value: '数学'}, {key: '英语', value: '英语'}, {key: '物理', value: '物理'},
-        {key: '化学', value: '化学'}, {key: '生物', value: '生物'}, {key: '历史', value: '历史'}, {key: '地理', value: '地理'}, {key: '政治', value: '政治'}],
-      list1: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治'],
       subkemu: '',
-      score: '',
-      classPai: '',
-      schoolPai: '',
-      edit: {
-        subject: '',
-        score: '',
-        banpai: '',
-        nianpai: ''
-      },
       content: [],
       submitList: [],
       rightTimeList: [],
@@ -140,7 +87,30 @@ export default {
     }
   },
   mounted () { // 或者created也可以
+    // console.log('时间还有吗：', this.$store.state.exam.examination)
+    if (this.$store.state.exam.examination.length > 0) {
+      this.examTime = this.$store.state.exam.examination.split(',')[0]
+      this.showTime = false
+      this.$nextTick(() => {
+        this.showTime = true
+      })
+      this.examName = this.$store.state.exam.examination.split(',')[1]
+    }
     this.init()
+    if (this.$store.state.exam.singleScoreList.length > 0) {
+      this.submitList = this.$store.state.exam.singleScoreList
+      this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList)
+      // console.log('里面没哟u:', this.submitList)
+      // this.examTime = this.$store.state.exam.singleScoreList[0].exam_time
+      // this.showTime = false
+      // this.$nextTick(() => {
+      //   this.showTime = true
+      // })
+      // console.log('时间：', this.examTime)
+      // this.examname = this.$store.state.exam.singleScoreList[0].exam_name
+      // this.submitList.push(this.$store.state.exam.singleScoreList[0])
+    }
+    // console.log('传过来了么：', this.$store.state.exam.singleScoreList)
   },
   methods: {
     init () {
@@ -153,116 +123,51 @@ export default {
     returnBack () {
       this.$router.go(-1)
     },
-    submitCamera () {
-      this.$router.push('/camera')
-    },
-    onCancel () { // 点击取消触发
-      this.showDel = false
-    },
-    losePoint (val) {
-      if (val === '') {
-        this.$vux.alert.show({
-          title: '提示',
-          content: '这是必填项！'
-        })
-      }
-    },
-    onConfirm () {
-      this.submitList.splice(this.submitList.indexOf(this.delItem), 1)
-      console.log('剩余的科目：', this.list1)
-      this.list1.push(this.delItem.subject)
-      console.log('剩余的科目2：', this.list1)
-    },
-    delData (item) { // 删除操作
-      this.showDel = true
-      this.delItem = item
-      // console.log(item)
-      // console.log('indexof:', this.submitList.indexOf(item))
-      // this.submitList.splice(this.submitList.indexOf(item), 1)
-    },
-    editData (item) { // 编辑操作
-      this.edit.subject = item.subject
-      this.edit.score = item.score
-      this.edit.banpai = item.class_rank
-      this.edit.nianpai = item.grade_rank
-      console.log(this.edit)
-      // setTimeout(function () {
-      this.showEdit = true
-      // }, 200)
-      // console.log('编辑', item)
-    },
-    sendEdit (kemu, score, classPai, schoolPai) { // 确认编辑
-      this.showEdit = false
-      console.log('编辑：', kemu, score, classPai, schoolPai)
-      // console.log('编辑：', this.editItem.subject, this.editItem.score, this.editItem.class_rank, this.editItem.grade_rank)
-      const a = {'wechat_openid': this.openid, 'student_number': '111', 'subject_name': kemu, 'score': score, 'class_rank': classPai, 'grade_rank': schoolPai, 'exam_name': this.rightT + this.examname}
-      console.log(a)
-      for (const item in this.submitList) {
-        if (this.submitList[item].subject === kemu) {
-          console.log('shiji', item)
-          this.submitList.splice(item, 1, a)
+    gotoEdit (val) {
+      // console.log('要编辑了：', val)
+      // console.log('要编辑了：', this.$store.state.exam.subjects_list.push(val.subject_name))
+      this.$router.push({
+        name: 'addSingleSubScore',
+        params: {
+          editContent: val,
+          remainSub: this.$store.state.exam.subjects_list.push(val.subject_name) // 加上当前学科
         }
-      }
-      console.log(this.submitList)
+      })
     },
     gotoRecord () {
       this.$router.push({path: '/record'})
     },
     addNew () {
-      this.$router.push({path: '/addSingleSubScore'})
-    },
-    onChange (item) {
-      console.log('当前值：', item)
-      console.log(this.subkemu)
-    },
-    sendSubmit () {
-      if (this.score === '' || this.classPai === '' || this.schoolPai === '') {
+      if (this.examTime.length === 0 || this.examName.length === 0) {
         this.$vux.alert.show({
           title: '提示',
-          content: '分数或班排或年排必填！'
+          content: '请先填写考试时间和名称哦！'
         })
       } else {
-        this.rightTimeList = this.examTime.split('-')
-        this.rightT = this.rightTimeList[0] + '年' + this.rightTimeList[1] + '月'
-        // this.submitList = []
-        this.addscore = false
-        console.log(this.examname, this.rightT, this.subkemu, this.score, this.classPai, this.schoolPai)
-        const grade = {'wechat_openid': this.openid, 'student_number': '111', 'subject_name': this.subkemu, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.rightT + this.examname}
-        this.submitList.push(grade)
-        // this.submitList.push(grade)
-        // this.submitList1.push(JSON.stringify(grade))
-        // enterGrade({
-        //   wechat_openid: '111',
-        //   student_number: '111',
-        //   subject: this.subkemu,
-        //   score: this.score,
-        //   class_rank: this.classPai,
-        //   grade_rank: this.schoolPai,
-        //   exam_name: this.examTime + this.examname
-        // }).then(res => {
-        //   this.content.push(res.data.data)
-        console.log('indexof:', this.list1.indexOf(this.subkemu))
-        this.list1.splice(this.list1.indexOf(this.subkemu), 1)
-        // for (const a in this.list) {
-        //   if (a === this.subkemu) {
-        //
-        //   }
-        //   console.log('a', a)
-        // }
-        // this.list.pop(this.subkemu)
-        // console.log(this.list1)
-        // console.log(this.content)
-        // })
+        // const kName = this.examTime.split('-')[0] + '年' + this.examTime.split('-')[1] + '月' + this.examName
+        // this.$store.commit('SET_examination', kName)
+        this.$store.commit('SET_examination', this.examTime + ' ,' + this.examName)
+        // localStorage.setItem('SET_examination', this.examTime + ' ,' + this.examName)
+        this.$router.push({
+          name: 'addSingleSubScore',
+          params: {
+            remainSub: this.$store.state.exam.subjects_list
+          }
+        })
       }
     },
-    submitTranscript () {
-      console.log('提交了：', this.submitList)
+    submitTranscript () { // 提交时，将考试时间和考试名称放入每个单科列中
+      const rightTimeList = this.examTime.split('-')
+      const rightT = rightTimeList[0] + '年' + rightTimeList[1] + '月'
+      console.log(this.examName, rightT)
+      for (const item in this.submitList) {
+        this.submitList[item].exam_name = rightT + this.examName
+      }
+      // console.log('提交了：', this.submitList)
       enterGradeList(this.submitList).then(res => {
         if (res.data.code === 0) {
           this.showToast = true
         }
-        // const a = res.data.data
-        // console.log('aaaaaaaaa', a)
       })
     }
   }

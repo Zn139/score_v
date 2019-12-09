@@ -9,7 +9,7 @@
       <div class="list-no-data" v-if="!loading && list.length === 0">
         暂无结果
       </div>
-      <div class="school-item" v-if="!loading && list.length !== 0" v-for="school in list" @click="gotoPage(school)">
+      <div class="school-item" v-if="!loading && list.length !== 0" v-for="(school, index) in list" @click="gotoPage(school)" :key="index">
         <div class="school-item__logo"><img :src="school.log"></div>
         <div class="school-item__devide"></div>
         <div class="school-item__info">
@@ -26,7 +26,7 @@
 <script>
 import _ from 'underscore'
 import BScroll from 'better-scroll'
-// import userMessage from '../school/userMessage'
+// import userMessage from '../school_o625/userMessage'
 export default {
   // components: { userMessage },
   data () {
@@ -124,6 +124,7 @@ export default {
       this.$emit('reList')
     }, 500, true),
     gotoPage: _.debounce(function (school) {
+      console.log('code:', school.schoolcode)
       this.$router.push({ path: '/schoolInfo/' + this.openid + '/' + school.schoolcode })
     }, 500, true)
   }
@@ -136,8 +137,8 @@ export default {
   .school-list {
     flex: auto;
     background: #fbf9fe;
-    padding: 30px 0 12px 0;
-    margin: 20px 0;
+    padding: 15px 0 12px 0;
+    margin: 10px 0;
     position: relative;
   }
   .school-item {
@@ -178,13 +179,15 @@ export default {
   }
   .school-item__name {
     font-size: 18px;
-    color: #1e509e;
+    color: #42b982;
+    /*color: #1e509e;*/
   }
   .school-item__grade,
   .school-item__ranking,
   .school-item__prescore {
     display: inline-block;
-    background: #5f95dc;
+    /*background: #5f95dc;*/
+    background-color: #42b982;
     color: #fff;
     margin: 8px 4px 0 0;
     padding: 2px 8px;
@@ -196,7 +199,7 @@ export default {
     display: none;
   }
   .school-item__info {
-    padding: 10px 20px 4px 20px;
+    padding: 10px 10px 4px 10px;
   }
   .school-item__name {
     font-size: 16px;

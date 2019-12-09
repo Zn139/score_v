@@ -81,10 +81,10 @@
 <!--        categ: '筛选性质'-->
 <!--      },-->
 <!--      urlMap: {-->
-<!--        prov: 'school/findAllProvince',-->
-<!--        class: 'school/findAllGrade',-->
-<!--        type: 'school/findAllType',-->
-<!--        categ: 'school/findAllCategory'-->
+<!--        prov: 'school_o625/findAllProvince',-->
+<!--        class: 'school_o625/findAllGrade',-->
+<!--        type: 'school_o625/findAllType',-->
+<!--        categ: 'school_o625/findAllCategory'-->
 <!--      },-->
 <!--      list: [['1', '2']],-->
 <!--      sProv: [],-->

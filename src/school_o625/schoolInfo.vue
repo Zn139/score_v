@@ -53,7 +53,7 @@
               </div>
               <div v-else  style="font-size: 14px;margin: 10px 10px 14px;text-indent: 26px;color: #aaa">暂时无往年录取分数线！</div>
               <div class="user" style="padding-left: 30%">
-                <!--                <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:red;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{batch}}</div>-->
+<!--                <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:red;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{batch}}</div>-->
                 <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:blue;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{category}}</div>
                 <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:green;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 20px;"></div>{{province}}</div>
               </div>
@@ -69,7 +69,7 @@
             <div class="major-item__sub" v-show="show" ref="majoritemList" style="padding: 10px 0;position: relative;">
               <div v-for="major in schoolMajors" @click="Scoreline(schoolCode,major.majorcode)" class="school-score_line" >
                 <div class="school-score_content" style="font-size:15px">{{major.majorcode}}</div>
-                <!--                <div style="width: 25%;margin-left: 75%">-->
+<!--                <div style="width: 25%;margin-left: 75%">-->
                 <div>
                   <div class="major-item_label" style="width: 11%;">{{major.category}}</div>
                   <div class="major-item_label" v-if="parseInt(major.lowestscore) === 0 " style="width: 11%;">
@@ -212,21 +212,20 @@ export default {
     }
   },
   computed: {
-    openid () {
+    openId () {
       return this.$route.params.id || ''
-      // return this.$store.state.exam.openid
     },
     schoolCode () {
       return this.$route.params.schoolcode || ''
     }
   },
   mounted () {
-    // this.getUserInfo()
+    this.getUserInfo()
     this.getSchoolDetail()
     this.init()
   },
   activated () {
-    // this.getUserInfo()
+    this.getUserInfo()
     this.getSchoolDetail()
     this.init()
   },
@@ -281,13 +280,13 @@ export default {
         })
       })
     },
-    // getUserInfo () {
-    //   myInfo(this.openid).then(res => {
-    //     this.batch = res.data.data.batch || '暂无'
-    //     this.category = res.data.data.category || '暂无'
-    //     this.province = res.data.data.province || '暂无'
-    //   })
-    // },
+    getUserInfo () {
+      myInfo(this.openId).then(res => {
+        this.batch = res.data.data.batch || '暂无'
+        this.category = res.data.data.category || '暂无'
+        this.province = res.data.data.province || '暂无'
+      })
+    },
     ReturnStatus () {
       this.show = !this.show
     },
@@ -307,14 +306,7 @@ export default {
         return
       }
       this.loading = true
-      this.$axios({
-        method: 'get',
-        url: 'http://zhiheyikaoqin.cn/cee/school/findInfoSchool',
-        params: {
-          openid: this.openid,
-          schoolcode: this.schoolCode
-        }
-      }).then(res => {
+      getSchoolInfo(this.schoolCode, this.openId).then(res => {
         this.loading = false
         if (res.data.code === 0) {
           this.schoolError = false

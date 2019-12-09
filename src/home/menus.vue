@@ -43,7 +43,7 @@ export default {
   methods: {
     gotoPage (name) {
       this.$router.push({ name: name })
-      // if (name === 'school') {
+      // if (name === 'school_o625') {
       //   this.$router.push({
       //     name: name,
       //     params: { type: 'all' }

@@ -9,8 +9,8 @@
     <div ref="aSSSI_second" class="aSSSI_second">
       <div>
         <div class="addSingleSubScoreInfo_second">
-          <datetime v-model="examTime" title="考试时间" class="enter_grade_time"  placeholder="请选择考试时间"></datetime>
-          <x-input title="考试名称" name="username" placeholder="请输入考试名称" text-align="right" placeholder-align="right" v-model="examName"></x-input>
+<!--          <datetime v-model="examTime" title="考试时间" class="enter_grade_time"  placeholder="请选择考试时间" v-if="showTime"></datetime>-->
+<!--          <x-input title="考试名称" name="username" placeholder="请输入考试名称" text-align="right" placeholder-align="right" v-model="examName"></x-input>-->
           <selector placeholder="请选择科目" v-model="selectSub" title="科目" direction="rtl" :options="subList" @on-change="onChange"></selector>
           <x-input title="分数" required v-model="score" @on-blur="losePoint(score)" text-align="right" placeholder="请输入分数"></x-input>
           <x-input title="班排" required v-model="classPai" @on-blur="losePoint(classPai)" text-align="right" placeholder="请输入班排"></x-input>
@@ -29,7 +29,7 @@
             </div>
             <input type="file" id="uploadFile" accept="image/*" v-on:change="readLocalFile()">
           </label>
-          <x-button class="enter_submit" @click.native="submitSingleSubScore" >保存</x-button> <!--保存一门学科成绩-->
+          <x-button class="enter_submit" @click.native="submitSingleSubScore">保存</x-button> <!--保存一门学科成绩-->
           <!--      <label> &lt;!&ndash; label 元素不会向用户呈现任何特殊效果。不过，它为鼠标用户改进了可用性。如果您在 label 元素内点击文本，就会触发此控件。就是说，当用户选择该标签时，浏览器就会自动将焦点转到和标签相关的表单控件上。&ndash;&gt;-->
           <!--        <i class="iconfont icon_luluxiangji3"></i>-->
           <!--        <input type="file" id="uploadFile" accept="image/*" v-on:change="readLocalFile()">-->
@@ -44,6 +44,8 @@ import BScroll from 'better-scroll'
 export default {
   data () {
     return {
+      showTime: true, // 考试时间的显示
+      // showSubject: true, // 考试科目的显示
       examTime: '',
       examName: '',
       subList: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治'],
@@ -51,7 +53,8 @@ export default {
       score: '',
       classPai: '',
       schoolPai: '',
-      imgs: [],
+      imgs: [], // 所有图片base64码，展示在页面的
+      imgsList: [], // 所有图片链接-传给梦良的
       files: '',
       aSSSIScroll: null,
       submitList: []
@@ -61,9 +64,12 @@ export default {
     openid () {
       return this.$store.state.exam.openid
     },
-    // schoolNumber () {
-    //   return this.$store.state.exam.schoolNum
-    // },
+    schoolNumber () {
+      return this.$store.state.exam.schoolNum
+    },
+    examination () {
+      return this.$store.state.exam.examination
+    }
     // examname () {
     //   if (this.$store.state.exam.exam_name !== '') {
     //     // console.log(1111111111111111)
@@ -77,6 +83,37 @@ export default {
   },
   mounted () {
     this.init()
+    console.log('考试名称：', this.$store.state.exam.examination)
+    // this.subList = localStorage.SET_SUBJECTS_LIST
+    // localStorage.setItem('single_Score_List', this.submitList)
+    console.log('localStorage.SET_SUBJECTS_LIST', this.$store.state.exam.enterScoreList)
+    if (this.$route.params.remainSub.length > 0) {
+      this.subList = this.$route.params.remainSub
+    }
+    console.log(this.$route.params.editContent)
+    if (this.$route.params.editContent.class_rank.length > 0) {
+      this.imgs = this.$route.params.editContent.imgs
+      console.log('time', typeof this.$route.params.editContent.exam_time)
+      // this.examTime = this.$route.params.editContent.exam_time
+      // this.showTime = false
+      // this.$nextTick(() => {
+      //   this.showTime = true
+      // })
+      // this.examTime = this.$route.params.editContent.exam_time
+      // this.examName = this.$route.params.editContent.exam_name
+      this.selectSub = this.$route.params.editContent.subject_name
+      this.score = this.$route.params.editContent.score
+      this.classPai = this.$route.params.editContent.class_rank
+      this.schoolPai = this.$route.params.editContent.grade_rank
+    } else {
+      this.imgs = []
+      // this.examTime = ''
+      // this.examName = ''
+      this.selectSub = ''
+      this.score = ''
+      this.classPai = ''
+      this.schoolPai = ''
+    }
   },
   methods: {
     returnBack () {
@@ -99,7 +136,7 @@ export default {
     },
     // 图片click
     imgClick: function () {
-      // document.getElementById('uploadFile').click()
+      document.getElementById('uploadFile').click()
     },
     // 点击选中图片
     readLocalFile: function () {
@@ -129,16 +166,10 @@ export default {
         if (res.data.errno === 0) {
           // alert(res.data.filemap[0])
           alert('成功')
-          console.log('heheheh', res.data.filemap[0].fastdfspath)
-          this.$axios({
-            method: 'post',
-            url: 'http://47.93.225.12:8081/downloadbyfastdfspath',
-            params: {
-              fastdfspath: res.data.filemap[0].fastdfspath
-            }
-          }).then(resp => {
-            console.log('下载：', resp.data.errmsg)
-          })
+          console.log('heheheh', res.data)
+          const a = 'http://47.93.225.12:8081/downloadbyfastdfspath?fastdfspath=' + res.data.filemap[0].fastdfspath
+          console.log(a)
+          this.imgsList.push(a)
         } else {
           alert('失败')
         }
@@ -146,14 +177,14 @@ export default {
       const sss = document.getElementById('uploadFile').value
       console.log(sss)
     },
-    // losePoint (val) {
-    //   if (val === '') {
-    //     this.$vux.alert.show({
-    //       title: '提示',
-    //       content: '这是必填项！'
-    //     })
-    //   }
-    // },
+    losePoint (val) {
+      if (val === '') {
+        this.$vux.alert.show({
+          title: '提示',
+          content: '这是必填项！'
+        })
+      }
+    },
     submitSingleSubScore () {
       if (this.score === '' || this.classPai === '' || this.schoolPai === '') {
         this.$vux.alert.show({
@@ -161,17 +192,41 @@ export default {
           content: '分数或班排或年排必填！'
         })
       } else {
-        const rightTimeList = this.examTime.split('-')
-        const rightT = rightTimeList[0] + '年' + rightTimeList[1] + '月'
-        // this.submitList = []
-        // this.addscore = false
-        console.log(this.examName, rightT, this.selectSub, this.score, this.classPai, this.schoolPai)
-        const grade = {'wechat_openid': this.openid, 'student_number': '111', 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': rightT + this.examName}
+        if (this.$store.state.exam.enterScoreList.length > 0) {
+          for (const item in this.$store.state.exam.enterScoreList) {
+            this.submitList.push(this.$store.state.exam.enterScoreList[item])
+          }
+        }
+        console.log(this.examTime)
+        console.log(typeof this.examTime)
+        // const rightTimeList = this.examTime.split('-')
+        // const rightT = rightTimeList[0] + '年' + rightTimeList[1] + '月'
+        // console.log(this.examName, rightT, this.selectSub, this.score, this.classPai, this.schoolPai)
+        const grade = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examination, 'imgs': this.imgsList}
+        // const grade = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examName, 'exam_time': this.examTime, 'imgs': this.imgsList}
+        for (const single in this.submitList) {
+          if (this.submitList[single].subject_name === grade.subject_name) {
+            console.log(single)
+            this.submitList.splice(single, 1) // splice函数参数介绍：第一个参数： 对于数数组的操作起始位置。第二个参数： 从第一个参数开始，删除数组中的个数。从第三个参数之后所有参数（如果有）：执行完第二步之后，都插入到第一个参数的起始位置处。
+          }
+        }
         this.submitList.push(grade)
         console.log('indexof:', this.subList.indexOf(this.selectSub))
         this.subList.splice(this.subList.indexOf(this.selectSub), 1)
+        console.log('还剩什么科目：', this.subList)
+        this.$store.commit('SET_SUBJECTS_LIST', this.subList)
+        // localStorage.setItem('SET_SUBJECTS_LIST', this.subList)
       }
+      // if (this.$store.state.exam.enterScoreList.length > 0) {
+      //   for (const item in this.$store.state.exam.enterScoreList) {
+      //     this.submitList.push(this.$store.state.exam.enterScoreList[item])
+      //   }
+      // }
       console.log('添加单科成绩成功', this.submitList)
+      this.$store.commit('single_Score_List', this.submitList)
+      // this.$store.dispatch('single_Score_List', this.submitList)
+      this.$router.push('/addScore')
+      this.submitList = []
     }
   }
 }

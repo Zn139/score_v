@@ -16,8 +16,9 @@ const comAnalysis = () => import('@/menus/comAnalysis_right')
 const hisAnalysis = () => import('@/menus/hisAnalysis')
 const question = () => import('@/menus/question')
 const classSchedule = () => import('@/menus/classSchedule')
-// const schoolInquire = () => import('@/school/index')
-const schoolInquire = () => import('@/menus/schoolInquire')
+// const schoolInquire = () => import('@/school_o625/index')
+const schoolInquire = () => import('@/school/schoolInquire')
+const schoolInfo = () => import('@/school/schoolInfo')
 const more = () => import('@/menus/more')
 const addScore = () => import('@/enterGrade/index')
 const addSingleSubScore = () => import('@/enterGrade/addSingleSubScore')
@@ -209,13 +210,21 @@ export default new Router({
       name: 'classSchedule',
       meta: { tab: 'classSchedule', title: 'classSchedule' }
     },
-    {
+    { // 学校列表
       path: '/schoolInquire',
       components: {
         default: schoolInquire
       },
       name: 'schoolInquire',
       meta: { tab: 'schoolInquire', title: 'schoolInquire' }
+    },
+    { // 学校详情
+      path: '/schoolInfo/:id/:schoolcode',
+      components: {
+        default: schoolInfo
+      },
+      name: 'schoolInfo',
+      meta: { tab: 'schoolInfo', title: 'schoolInfo' }
     },
     {
       path: '/more',

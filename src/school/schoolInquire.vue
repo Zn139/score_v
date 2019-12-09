@@ -1,18 +1,10 @@
 <template>
-  <div style="height: 100%;width: 100%;display:flex;flex-direction: column;">
-    <div class="school-box">
-      <div class="school__search">
-        <div class="school-return return-box">
-          <div class="return__icon" @click="gotoPage('home')">
-            <i class="iconfont iconleft-arrow"></i>
-          </div>
-          <search v-model="key" @on-focus="gotoPage('search')" :placeholder="placeholder"></search>
-        </div>
+  <div class="schoolInquireInfo">
+    <div class="score_header">
+      <div class="return__icon" @click="returnBack">
+        <i class="iconfont icon_lulufanhui"></i>
       </div>
-      <search-tab
-        @comSearch="comSearch"
-        @changeTab="changeTab"
-        :curTab="curTab"></search-tab>
+      <div class="title">高校查询</div>
     </div>
     <school-list
       ref="list"
@@ -25,12 +17,9 @@
   </div>
 </template>
 <script>
-import { Search } from 'vux'
-import searchTab from './searchTab'
-import schoolList from '../menus/schoolList'
-import { getAllSchool, comSearchApi } from '@/api/index.js'
+import schoolList from './schoolList'
 export default {
-  components: { Search, searchTab, schoolList },
+  components: { schoolList },
   data () {
     return {
       curTab: '',
@@ -47,7 +36,7 @@ export default {
   },
   computed: {
     openid () {
-      return this.$store.state.user.openid
+      return this.$store.state.exam.openid
     },
     listType () {
       if (this.curTab === 'prov' || this.curTab === 'type') {
@@ -61,6 +50,7 @@ export default {
     console.log('the hook of created is done!')
   },
   mounted () {
+    console.log('sdfsdfsf', this.$route.params.type)
     this.curTab = this.$route.params.type
     this.clearQuery()
     this.loading = true
@@ -81,6 +71,9 @@ export default {
     }
   },
   methods: {
+    returnBack () {
+      this.$router.go(-1)
+    },
     clearQuery () {
       this.page = 0
       this.list = []
@@ -118,9 +111,14 @@ export default {
         this.end = false
         this.list = []
       }
-      getAllSchool({
-        openid: this.openid,
-        page: this.page
+      this.$axios({
+        method: 'get',
+        url: 'http://zhongkeruitong.top/show/cee/school/findAllSchool',
+        params: {
+          openid: this.openid,
+          page: this.page,
+          size: 20
+        }
       }).then(res => {
         this.loading = false
         if (res.data && res.data.data && res.data.data.length < 20) {
@@ -143,10 +141,15 @@ export default {
     getList () {
       this.req.openid = this.openid
       this.req.page = this.page
+      this.req.size = 20
       if (this.page === 0) {
         this.end = false
       }
-      comSearchApi(this.req).then(res => {
+      this.$axios({
+        url: 'http://zhongkeruitong.top/show/cee/school/findByOptionsCause',
+        mathod: 'get',
+        params: this.req
+      }).then(res => {
         this.loading = false
         if (res.data && res.data.data && res.data.data.length < 20) {
           this.end = true
@@ -169,17 +172,22 @@ export default {
     changeTab (tab) {
       this.curTab = tab
       this.clearQuery()
-      this.$router.push({ name: 'school', params: { type: tab } })
+      this.$router.push({ name: 'school_o625', params: { type: tab } })
     },
     // ？
     comSearch (obj) {
       this.req = obj
+      obj.size = 20
       this.list = []
       this.req.openid = this.openid
       this.req.page = 0
       this.page = 0
       this.loading = true
-      comSearchApi(obj).then(res => {
+      this.$axios({
+        url: 'http://zhongkeruitong.top/show/cee/school/findByOptionsCause',
+        mathod: 'get',
+        params: obj
+      }).then(res => {
         this.loading = false
         const schoolCode = this.list.map(item => item.schoolcode)
         res.data.data.map(item => {
@@ -195,11 +203,40 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-  .school-box {
-    background: #647cfb;
-    background: linear-gradient(to right, #4a8ef9 0%, #5292f7 15%, #347ff4 70%, #0c5ddc 100%);
+<style scoped lang="scss">
+  .schoolInquireInfo {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f8f8f8;
+  }
+  .score_header {
+    /*padding: 0;*/
+    font-size: 16px;
+    /*text-align: center;*/
+    width: 100%;
+    background-color: #42b983;
+    color: #fff;
+    height: 40px;
+    line-height: 40px;
     flex: none;
     z-index: 1;
+  }
+  .return__icon{
+    margin-left: 20px;
+    width: 20px;
+    height: 20px;
+    /*margin-top: 10px;*/
+    /*color: #fff;*/
+    display: inline-block;
+  }
+  .iconfont {
+    margin-top: 10px;
+    font-size: 20px;
+  }
+  .title {
+    display: inline-block;
+    margin-left: 35%;
+    transform: translateX(-45%);
   }
 </style>

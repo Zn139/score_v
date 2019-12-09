@@ -16,7 +16,8 @@
           <th>分数</th>
           <th>班排</th>
           <th>校排</th>
-          <th>插入时间</th>
+          <th colspan="2">操作</th>
+<!--          <th>插入时间</th>-->
         </tr>
         </thead>
         <tbody>
@@ -25,10 +26,18 @@
           <td>{{item.score}}</td>
           <td>{{item.classRank}}</td>
           <td>{{item.gradeRank}}</td>
-          <td>{{item.inserttime}}</td>
+          <td><span class="enter_action" @click="delData(item)">删除</span></td>
+          <td><span class="enter_action" @click="editData(item)">编辑</span></td>
+<!--          <td>{{item.inserttime}}</td>-->
         </tr>
         </tbody>
       </x-table>
+      <confirm v-model="showDel"
+               title="删除提示"
+               @on-cancel="onCancel"
+               @on-confirm="onConfirm">
+        <p style="text-align:center;">确定删除吗？</p>
+      </confirm>
     </div>
   </div>
 </template>
@@ -37,7 +46,16 @@ import {getExamInfo} from '@/api/index'
 export default {
   data () {
     return {
-      content: []
+      content: [],
+      showDel: false,
+      delItem: '', // 删除项
+      edit: {
+        subject: '',
+        score: '',
+        banpai: '',
+        nianpai: ''
+      },
+      showEdit: false,
     }
   },
   // computed: {
@@ -63,7 +81,31 @@ export default {
         console.log(this.content)
       })
       // console.log('全称：', fullName)
-    }
+    },
+    delData (item) { // 删除操作
+      this.showDel = true
+      this.delItem = item
+      // console.log(item)
+      // console.log('indexof:', this.submitList.indexOf(item))
+      // this.submitList.splice(this.submitList.indexOf(item), 1)
+    },
+    onCancel () { // 点击取消触发
+      this.showDel = false
+    },
+    onConfirm () {
+      this.content.splice(this.content.indexOf(this.delItem), 1)
+    },
+    editData (item) { // 编辑操作
+      this.edit.subject = item.subjectName
+      this.edit.score = item.score
+      this.edit.banpai = item.classRank
+      this.edit.nianpai = item.gradeRank
+      console.log(this.edit)
+      // setTimeout(function () {
+      this.showEdit = true
+      // }, 200)
+      // console.log('编辑', item)
+    },
   }
 }
 </script>
@@ -124,5 +166,9 @@ export default {
   }
   table.vux-table.third_table {
     line-height: 33px;
+  }
+  .enter_action {
+    font-size: 13px;
+    color: #72b7e4;
   }
 </style>
