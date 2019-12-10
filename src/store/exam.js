@@ -9,8 +9,10 @@ const exam = {
     userName: '',
     schoolNum: '08047737', // 学号
     // singleScoreList: '', // 单科所有成绩
-    singleScoreList: [], // 单科所有成绩
-    enterScoreList: [], // 录入所有成绩
+    singleScoreList: [], // 单科所有成绩-梦良
+    enterScoreList: [], // 录入所有成绩-梦良
+    singleScoreListW: [], // 单科所有成绩-我
+    enterScoreListW: [], // 录入所有成绩-我
     subjects_list: [] // 剩余科目
   },
   // actions: {
@@ -48,6 +50,12 @@ const exam = {
     },
     enter_Score_List: (state, scoreList) => {
       state.enterScoreList = scoreList
+    },
+    single_Score_ListW: (state, scoreList) => {
+      state.singleScoreListW = scoreList
+    },
+    enter_Score_ListW: (state, scoreList) => {
+      state.enterScoreListW = scoreList
     }
     // single_Score_List (state, score) {
     //   state.singleScoreList = score

@@ -123,6 +123,20 @@ export function getExamInfo (req) { // 录入成绩--录入统计--获取一条�
     params: req
   })
 }
+export function getEditEnter (req) { // 录入成绩--录入统计--编辑
+  return request({
+    url: 'scoreTwo/updateManuallyEnter',
+    method: 'post',
+    params: req
+  })
+}
+export function getDelEnter (req) { // 录入成绩--录入统计--删除
+  return request({
+    url: 'scoreTwo/deleteManuallyEnter',
+    method: 'get',
+    params: req
+  })
+}
 export function feedBack (req) { // 我的--反馈
   return request({
     url: 'user/addUserFeedBack',

@@ -102,6 +102,12 @@ export default {
       } else {
         return this.$route.params.exam_name
       }
+    },
+    openid () {
+      return this.$store.state.exam.openid
+    },
+    schoolNumber () {
+      return this.$store.state.exam.schoolNum
     }
   },
   mounted () {
@@ -176,9 +182,10 @@ export default {
       this.titleList = []
       this.minLine = []
       hisSingleAnal({
-        stuNumber: '08047737',
+        stuNumber: this.schoolNumber,
         examType: this.examname,
-        openid: '123456',
+        openid: this.openid,
+        // openid: '123456',
         subject: this.sub_name_list[this.index01 - 1].key
       }).then(res => {
         // this.hisSingleContent = res.data.data[0]['map']
@@ -221,9 +228,10 @@ export default {
       this.titleList = []
       this.minLine = []
       hisCountAnal({
-        stuNumber: '08047737',
+        stuNumber: this.schoolNumber,
         examType: this.examname,
-        openid: '123456'
+        openid: this.openid
+        // openid: '123456'
       }).then(res => {
         this.hisCountcontent = res.data.data[0]['mapTotal']
         for (const item in this.hisCountcontent) {
@@ -265,9 +273,12 @@ export default {
       // console.log('scoreName: ', this.scoreName)
       if (this.index01 === 0) {
         hisCountAnal({
-          stuNumber: '08047737',
+          stuNumber: this.schoolNumber,
           examType: this.scoreName,
-          openid: '123456'
+          openid: this.openid
+          // stuNumber: '08047737',
+          // examType: this.scoreName,
+          // openid: '123456'
         }).then(res => {
           this.hisCountcontent = res.data.data[0]['mapTotal']
           for (const item in this.hisCountcontent) {
@@ -291,9 +302,12 @@ export default {
         })
       } else {
         hisSingleAnal({
-          stuNumber: '08047737',
+          // stuNumber: '08047737',
+          // examType: this.scoreName,
+          // openid: '123456',
+          stuNumber: this.schoolNumber,
           examType: this.scoreName,
-          openid: '123456',
+          openid: this.openid,
           subject: this.sub_name_list[this.index01 - 1].key
         }).then(res => {
           // this.hisSingleContent = res.data.data[0]['map']
@@ -329,7 +343,8 @@ export default {
     },
     getComprehensive () {
       getThree({
-        stuNumber: '08047737',
+        stuNumber: this.schoolNumber,
+        // stuNumber: '08047737',
         examType: this.examname
       }).then(res => {
         const compreList = res.data.data[0].list

@@ -36,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in submitList" @click="gotoEdit(item)" :key = index>
+            <tr v-for="(item, index) in submitListW" @click="gotoEdit(index, item)" :key = index>
               <td>{{item.subject_name}}</td>
               <td>{{item.score}}</td>
               <td>{{item.class_rank}}</td>
@@ -54,8 +54,8 @@
             </tbody>
           </x-table>
         </div>
-        <x-button class="enter_submit" v-if="submitList.length === 0" disabled>提交</x-button> <!--提交成绩单-->
-        <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitList.length > 0">提交</x-button> <!--提交成绩单-->
+        <x-button class="enter_submit" v-if="submitListW.length === 0" disabled>提交</x-button> <!--提交成绩单-->
+        <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitListW.length > 0">提交</x-button> <!--提交成绩单-->
         <toast v-model="showToast" :time="1000">录入成功</toast>
       </div>
     </div>
@@ -77,6 +77,7 @@ export default {
       subkemu: '',
       content: [],
       submitList: [],
+      submitListW: [],
       rightTimeList: [],
       rightT: ''
     }
@@ -87,7 +88,7 @@ export default {
     }
   },
   mounted () { // 或者created也可以
-    // console.log('时间还有吗：', this.$store.state.exam.examination)
+    console.log('时间还有吗：', this.$store.state.exam.examination)
     if (this.$store.state.exam.examination.length > 0) {
       this.examTime = this.$store.state.exam.examination.split(',')[0]
       this.showTime = false
@@ -97,20 +98,13 @@ export default {
       this.examName = this.$store.state.exam.examination.split(',')[1]
     }
     this.init()
+    console.log('1111111', this.$store.state.exam.singleScoreListW)
     if (this.$store.state.exam.singleScoreList.length > 0) {
+      this.submitListW = this.$store.state.exam.singleScoreListW
       this.submitList = this.$store.state.exam.singleScoreList
-      this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList)
-      // console.log('里面没哟u:', this.submitList)
-      // this.examTime = this.$store.state.exam.singleScoreList[0].exam_time
-      // this.showTime = false
-      // this.$nextTick(() => {
-      //   this.showTime = true
-      // })
-      // console.log('时间：', this.examTime)
-      // this.examname = this.$store.state.exam.singleScoreList[0].exam_name
-      // this.submitList.push(this.$store.state.exam.singleScoreList[0])
+      this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList) // 添加之前的已经添加过的成绩
+      this.$store.commit('enter_Score_ListW', this.$store.state.exam.singleScoreListW) // 添加之前的已经添加过的成绩
     }
-    // console.log('传过来了么：', this.$store.state.exam.singleScoreList)
   },
   methods: {
     init () {
@@ -121,16 +115,23 @@ export default {
       })
     },
     returnBack () {
-      this.$router.go(-1)
+      // this.$router.go(-1)
+      this.$router.push('/home')
     },
-    gotoEdit (val) {
-      // console.log('要编辑了：', val)
-      // console.log('要编辑了：', this.$store.state.exam.subjects_list.push(val.subject_name))
+    gotoEdit (index, item) {
+      console.log('要编辑了：', this.$store.state.exam.subjects_list)
+      // const a = this.$store.state.exam.subjects_list
+      // console.log(val.subject_name)
+      // const b = a.push(val.subject_name)
+      // console.log('要编辑了：', b)
       this.$router.push({
         name: 'addSingleSubScore',
         params: {
-          editContent: val,
-          remainSub: this.$store.state.exam.subjects_list.push(val.subject_name) // 加上当前学科
+          type: 1, // 指定是现在编辑类型
+          id: index, // 当前数据的索引
+          remainSub: this.$store.state.exam.subjects_list, // 加上当前学科
+          currentSub: item.subject_name,
+          allContent: this.submitListW
         }
       })
     },
@@ -151,7 +152,8 @@ export default {
         this.$router.push({
           name: 'addSingleSubScore',
           params: {
-            remainSub: this.$store.state.exam.subjects_list
+            type: 0, // 指定是当前添加数据
+            remainSub: this.$store.state.exam.subjects_list // 剩余的科目，未加当前学科
           }
         })
       }
@@ -163,10 +165,19 @@ export default {
       for (const item in this.submitList) {
         this.submitList[item].exam_name = rightT + this.examName
       }
-      // console.log('提交了：', this.submitList)
+      console.log('提交了：', this.submitList)
       enterGradeList(this.submitList).then(res => {
         if (res.data.code === 0) {
           this.showToast = true
+          this.examName = ''
+          this.examTime = ''
+          this.submitListW = []
+          this.$store.state.exam.subjects_list = []
+        } else {
+          this.$vux.alert.show({
+            title: '提示',
+            content: res.data.data
+          })
         }
       })
     }

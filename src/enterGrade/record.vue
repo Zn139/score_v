@@ -10,7 +10,7 @@
       <div class="recond_second_info" v-for="(item, index) in yearsList" :key="index">
           <div class="record_year_name">
             <div class="record_year_sty" @click="getAllMonth(item)">
-              <span>{{item.name}}</span>
+              <div class="record_year_sty_name">{{item.name}}</div>
               <div class="record_year_count">共<span>{{item.sum}}</span>次考试</div>
               <i class="iconfont icon_lulujiantou-copy-copy" v-if="item.show"></i>
               <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" v-else></i>
@@ -45,12 +45,17 @@ export default {
   mounted () {
     this.getAllYear()
   },
+  computed: {
+    openid () {
+      return this.$store.state.exam.openid
+    }
+  },
   methods: {
     returnBack () {
       this.$router.go(-1)
     },
     getAllYear () {
-      getYears({openid: '111'}).then(res => {
+      getYears({openid: this.openid}).then(res => {
         this.yearsList = res.data.data.map((item, index) => {
           return {
             show: false,
@@ -63,7 +68,7 @@ export default {
         console.log('y', this.yearsList)
         for (const a in this.yearsList) {
           console.log(this.yearsList[a].name)
-          getMonths({openid: '111', year: this.yearsList[a].name}).then(res => {
+          getMonths({openid: this.openid, year: this.yearsList[a].name}).then(res => {
             this.yearsList[a].sum = res.data.data[0].countTimes
           })
           // this.getAllMonth(this.yearsList[a])
@@ -76,14 +81,14 @@ export default {
       // _this.yearsList[item.index].children = []
       console.log('333333333333', item, _this.yearsList[item.index].name)
       if (!_this.yearsList[item.index].show) {
-        getMonths({openid: '111', year: _this.yearsList[item.index].name}).then(res => {
+        getMonths({openid: this.openid, year: _this.yearsList[item.index].name}).then(res => {
           _this.months = res.data.data[0].list
           // _this.yearsList[item.index].sum = 0
           _this.yearsList[item.index].children = []
           if (res.data.code === 0) {
             for (const i in _this.months) {
               getExamName({
-                openid: '111',
+                openid: this.openid,
                 yearMonth: _this.yearsList[item.index].name + _this.months[i]
               }).then(res => {
                 // console.log('ssssssssss', res.data.data)
@@ -103,14 +108,16 @@ export default {
       // _this.yearsList[item.index].show = false
     },
     selectExamInfo (fullName) {
+      console.log(fullName)
       this.$router.push({
-        path: '/examInfo' + fullName
-        // params: {
-        //   fullName: fullName
-        // }
+        name: 'examInfo',
+        // path: '/examInfo' + fullName
+        params: {
+          fullName: fullName
+        }
       })
       // getExamInfo({
-      //   openid: '111',
+      //   openid: this.openid,
       //   examName: fullName
       // }).then(res => {
       //   const content = res.data.data[0]
@@ -148,18 +155,25 @@ export default {
     display: inline-block;
   }
   .record_year_sty .iconfont {
-    margin-top: 15px;
+    /*margin-top: 15px;*/
     /*margin-left: 70%;*/
-    transform: translateX(-10%);
-    font-size: 15px;
+    /*transform: translateX(-10%);*/
+    /*font-size: 15px;*/
+    text-align: right;
   }
   .record_year_sty {
-    padding-top: 5px;
+    width: 100%;
+    padding-top: 8px;
+  }
+  .record_year_sty_name {
+    width: 20%;
+    display: inline-block;
   }
   .record_year_count {
-    display: inline;
-    /*text-align: right;*/
-    margin-left: 51%;
+    width: 67%;
+    display: inline-block;
+    text-align: right;
+    /*margin-left: 51%;*/
     font-size: 13px;
     span {
       color: red;

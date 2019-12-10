@@ -34,7 +34,7 @@ const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
 const camera = () => import('@/camera/camera') // 录入--测试相机
 // const ceshiCamera = () => import('@/camera/upload') // 录入--测试lingyige相机
-const test = () => import('@/menus/test')
+const test = () => import('@/camera/yulan')
 
 export default new Router({
   routes: [
@@ -75,7 +75,8 @@ export default new Router({
       meta: { tab: 'record', title: 'record' }
     },
     {
-      path: '/examInfo:examName',
+      path: '/examInfo',
+      // path: '/examInfo:examName',
       components: {
         default: examInfo
       },

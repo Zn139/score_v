@@ -45,6 +45,11 @@ Vue.use(LoadingPlugin)
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 Vue.prototype.$axios = axios
 Vue.prototype.echarts = echarts
+// if ('addEventListener' in document) {
+//   document.addEventListener('DOMContentLoaded', function () {
+//     FastClick.attach(document.body)
+//   }, false)
+// }
 FastClick.attach(document.body)
 Vue.config.productionTip = false
 

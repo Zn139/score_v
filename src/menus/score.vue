@@ -131,6 +131,12 @@ export default {
       } else {
         return this.$route.params.exam_name
       }
+    },
+    openid () {
+      return this.$store.state.exam.openid
+    },
+    schoolNumber () {
+      return this.$store.state.exam.schoolNum
     }
   },
   mounted () {
@@ -270,7 +276,8 @@ export default {
       localStorage.setItem('SET_SCORE_NAME', this.examname)
       console.log('choice1:', this.scoreName)
       getScoreReport({
-        stuNumber: '08047737',
+        stuNumber: this.schoolNumber,
+        // stuNumber: '08047737',
         examType: this.examname
         // examType: '19年3月考试'
       }).then(res => {
@@ -294,7 +301,8 @@ export default {
       }
       console.log('hahah', this.scoreName)
       getScoreReport({
-        stuNumber: '08047737',
+        stuNumber: this.schoolNumber,
+        // stuNumber: '08047737',
         examType: this.scoreName
         // examType: '19年3月考试'
       }).then(res => {

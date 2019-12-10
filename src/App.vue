@@ -37,6 +37,13 @@ export default {
       this.$store.commit('SET_OPENID', localStorage.openid)
       console.log('openid', localStorage.openid)
     }
+    window.addEventListener('resize', function () {
+      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+        window.setTimeout(function () {
+          document.activeElement.scrollIntoViewIfNeeded()
+        }, 0)
+      }
+    })
     // this.setWxjs()
   },
   methods: {
