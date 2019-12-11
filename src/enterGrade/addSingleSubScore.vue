@@ -18,14 +18,22 @@
         </div>
         <div class="addSingleSubScoreInfo_third">
           <p>试卷图片（最多可上传九张照片）</p>
-          <!--照片区域-->
-          <div class="addSingleSubScoreInfo_third_camera" v-for="(urls, index) in imgs" :key="index">
-            <div class="delete" @click="deleteImg(index)">×</div>
-<!--                    <div style="text-align: right; position: absolute;" v-on:click="deleteImg(index)">X</div>-->
-            <img :src="urls"/>
+          <div class="xie" v-for="(url, key) in imgs" :key="key"  @click="$preview($event, imgs, key)" :style="{'backgroundImage': 'url(' + url + ')'}">
+            <div class="delete" @click.stop="deleteImg(index)">×</div>
           </div>
-<!--          <viewer :images="imgs">-->
-<!--            <img v-for="src in imgs" :key="src">-->
+<!--          <div class="box" v-for="(url,key) in imgs" :key="key">-->
+<!--            <div class="delete" @click="deleteImg(index)">×</div>-->
+<!--            <img :src="url" alt="" class="user wc-preview-img" @click="$preview($event, imgs, key)">-->
+<!--          </div>-->
+          <!--照片区域-->
+<!--          <div class="addSingleSubScoreInfo_third_camera" v-for="(urls, index) in imgs" :key="index">-->
+<!--            <div class="delete" @click="deleteImg(index)">×</div>-->
+<!--&lt;!&ndash;                    <div style="text-align: right; position: absolute;" v-on:click="deleteImg(index)">X</div>&ndash;&gt;-->
+<!--            <img :src="urls" @click="$preview($event, imgs, index)"/>-->
+<!--          </div>-->
+<!--          <viewer :images="imgs" class="xie">-->
+<!--&lt;!&ndash;            <div class="delete" @click="deleteImg(index)">×</div>&ndash;&gt;-->
+<!--            <img v-for="src in imgs" :src="src" :key="src" width="100">-->
 <!--          </viewer>-->
           <label v-if="iphoneTypeIOS">
             <div class="aSSSI_third_camera_add" v-on:click="imgClick()">
@@ -108,6 +116,10 @@ export default {
     this.getInfos()
   },
   methods: {
+    fn (e, list, key) {
+      // console.log(this, this.$event)
+      this.$refs.view.open(e, list, key)
+    },
     returnBack () {
       if (this.$route.params.type === 2) {
         this.$router.push({
@@ -437,17 +449,17 @@ export default {
     /*!*left: 20px;*!*/
     margin-left: 86px;
     text-align: center;
-      position: absolute;
-      font-size: 12px;
-      /*right: 5px;*/
-      /*top: 1px;*/
-      width: 14px;
-      height: 14px;
-      color: white;
-      cursor: pointer;
-      line-height: 12px;
-      background: rgba(0, 0, 0, 0.25);
-      z-index: 1000;
+    position: absolute;
+    font-size: 12px;
+    /*right: 5px;*/
+    /*top: 1px;*/
+    width: 14px;
+    height: 14px;
+    color: white;
+    cursor: pointer;
+    line-height: 12px;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1000;
 
     /*&:hover .delete {*/
     /*  display: inline;*/
@@ -474,5 +486,38 @@ export default {
     background-color: #42b982;
     /*opacity: 0.8;*/
     /*background-color: rgba(66, 185, 130, 0.3);*/
+  }
+  .xie {
+    float: left;
+    margin: 15px 5px 0;
+    height: 100px;
+    width: 100px;
+    background-position: center center;
+
+    background-size:cover;
+    display: inline-block;
+    img {
+      float: left;
+      margin: 15px 5px 0;
+      position: relative;
+    }
+    /*float: left;*/
+  }
+  .user {
+    height: 100px;
+    width: 100px;
+  }
+  /*.wc-preview-img {*/
+  /*  transform-origin: left top;*/
+  /*  transition: transform 333ms cubic-bezier(0.4, 0, 0.22, 1);*/
+  /*}*/
+  .box {
+    /*position: fixed;*/
+    /*overflow-y: scroll;*/
+    /*touch-action: pan-y;*/
+    /*-webkit-overflow-scrolling: touch;*/
+    float: left;
+    margin: 15px 5px 0;
+    position: relative;
   }
 </style>

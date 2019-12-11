@@ -13,7 +13,9 @@ import store from './store'
 // import Vuex from 'vuex'
 import VDistpicker from 'v-distpicker'
 // import uploader from 'vue-easy-uploader'
-
+import wcView from 'wc-view'
+import 'wc-view/style.css'
+Vue.use(wcView)
 // let store = new Vuex.Store({})
 // Vue.use(uploader, store)
 // import $ from 'jquery'

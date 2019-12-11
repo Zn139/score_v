@@ -8,7 +8,7 @@
 <!--    </div>-->
     <!-- component -->
     <viewer :images="images">
-      <img v-for="src in images" :src="src" :key="src">
+      <img v-for="src in images" :src="src" :key="src" width="100">
     </viewer>
   </div>
 </template>

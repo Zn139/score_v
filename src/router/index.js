@@ -7,7 +7,9 @@ Vue.use(Router)
 const home = () => import('@/home/index')
 const my = () => import('@/my/index')
 const study = () => import('@/home/study')
-const lineCourse = () => import('@/home/lineCourse')
+const lineCourse = () => import('@/lineCourse/index') // 在线课堂
+const chapterList = () => import('@/lineCourse/chapterList') // 章节列表
+const chapterExercise = () => import('@/lineCourse/chapterExercise') // 章节列表
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
 const score = () => import('@/menus/score')
@@ -146,6 +148,22 @@ export default new Router({
       },
       name: 'lineCourse',
       meta: { tab: 'lineCourse', title: 'lineCourse' }
+    },
+    {
+      path: '/chapterList', // 章节列表
+      components: {
+        default: chapterList
+      },
+      name: 'chapterList',
+      meta: { tab: 'chapterList', title: 'chapterList' }
+    },
+    {
+      path: '/chapterExercise', // 章节练习
+      components: {
+        default: chapterExercise
+      },
+      name: 'chapterExercise',
+      meta: { tab: 'chapterExercise', title: 'chapterExercise' }
     },
     {
       path: '/add',
