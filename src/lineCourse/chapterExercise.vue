@@ -16,7 +16,9 @@ export default {
     }
   },
   methods: {
-
+    returnBack () {
+      this.$router.go(-1)
+    },
   }
 }
 </script>

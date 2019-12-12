@@ -56,6 +56,7 @@
         </div>
         <x-button class="enter_submit" v-if="submitListW.length === 0" disabled>提交</x-button> <!--提交成绩单-->
         <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitListW.length > 0">提交</x-button> <!--提交成绩单-->
+<!--        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> &lt;!&ndash;测试相机&ndash;&gt;-->
         <toast v-model="showToast" :time="1000">录入成功</toast>
       </div>
     </div>
@@ -113,6 +114,9 @@ export default {
           click: true
         })
       })
+    },
+    submitCamera () {
+      this.$router.push('/camera')
     },
     returnBack () {
       // this.$router.go(-1)

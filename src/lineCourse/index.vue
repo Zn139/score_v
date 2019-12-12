@@ -7,7 +7,8 @@
       <div class="title">在线课程</div>
     </div>
     <div class="lineCourse_second">
-      <div @click="gotoChapter">章节练习</div>
+      <div class="lineCourse_second_chapter" @click="gotoChapter">章节练习</div>
+      <x-button @click.native="gotoSimulate">模拟考试</x-button>
     </div>
   </div>
 </template>
@@ -19,8 +20,14 @@ export default {
     }
   },
   methods: {
+    returnBack () {
+      this.$router.go(-1)
+    },
     gotoChapter () {
       this.$router.push('/chapterList')
+    },
+    gotoSimulate () {
+      this.$router.push('/simulationList')
     }
   }
 }
@@ -63,5 +70,12 @@ export default {
   }
   .lineCourse_second {
     margin: 20px;
+  }
+  .lineCourse_second_chapter {
+    margin: 10px 10px 30px;
+    padding: 5px;
+    text-align: center;
+    box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
+    border-radius: 10px;
   }
 </style>

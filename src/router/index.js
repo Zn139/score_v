@@ -9,6 +9,7 @@ const my = () => import('@/my/index')
 const study = () => import('@/home/study')
 const lineCourse = () => import('@/lineCourse/index') // 在线课堂
 const chapterList = () => import('@/lineCourse/chapterList') // 章节列表
+const simulationList = () => import('@/lineCourse/simulationList') // 章节列表
 const chapterExercise = () => import('@/lineCourse/chapterExercise') // 章节列表
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
@@ -156,6 +157,14 @@ export default new Router({
       },
       name: 'chapterList',
       meta: { tab: 'chapterList', title: 'chapterList' }
+    },
+    {
+      path: '/simulationList', // 模拟列表
+      components: {
+        default: simulationList
+      },
+      name: 'simulationList',
+      meta: { tab: 'simulationList', title: 'simulationList' }
     },
     {
       path: '/chapterExercise', // 章节练习

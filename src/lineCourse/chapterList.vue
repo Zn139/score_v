@@ -19,6 +19,9 @@ export default {
     }
   },
   methods: {
+    returnBack () {
+      this.$router.go(-1)
+    },
     gotoExercise () {
       this.$router.push('/chapterExercise')
     }

@@ -10,7 +10,10 @@
            判断ios，如果是ios就去掉capture属性
    -->
     <label>上传图片
-      <input type="file" id="file" accept="image/*" @click="readLocalFile">
+      <input type="file" id="file" accept="audio" @click="readLocalFile">
+    </label>
+    <label style="margin-top: 100px;">上传图片1
+      <input type="file" id="files" accept="video" @click="readLocalFile" name="file" multiple>
     </label>
 <!--    <uploader-->
 <!--      url="http://47.93.225.12:8081/upload.html"-->
@@ -22,12 +25,27 @@
 export default {
   mounted () {
     this.getInfo()
+    this.getInfo1()
   },
   methods: {
     submitCamera () {
       this.$router.push('/ceshiCamera')
     },
     getInfo () {
+      var file = document.querySelector('#file')
+      if (getIos()) {
+        file.removeAttribute('capture')
+      }
+      function getIos () {
+        var ua = navigator.userAgent.toLowerCase()
+        if (ua.match(/iPhone\sOS/i) === 'iphone os') {
+          return true
+        } else {
+          return false
+        }
+      }
+    },
+    getInfo1 () {
       var file = document.querySelector('#file')
       if (getIos()) {
         file.removeAttribute('capture')
