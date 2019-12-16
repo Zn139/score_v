@@ -14,18 +14,21 @@
       <div>
         <h4 class="enter_grade_title_info">中关村中学2019级07班</h4>
         <div class="addScore_form">
+          <div class="smallKuang"></div><strong>考试信息</strong>
+<!--          <calendar class="enter_grade_time" v-model="examTime" placeholder="请在此输入考试名称，如：期中" placeholder-align="left"></calendar>-->
           <datetime
             v-model="examTime"
-            title="考试时间"
+            placeholder="请选择考试时间"
             class="enter_grade_time"
             v-if="showTime"
           ></datetime>
-          <p class="enter_grade_title">考试名称</p>
-          <x-input name="username"  text-align="left" placeholder="请在此输入考试名称，如：期中" placeholder-align="left" v-model="examName" class="enter_grade_input"></x-input>
+<!--          <p class="enter_grade_title">考试名称</p>-->
+          <x-input name="username" placeholder="请在此输入考试名称，如：期中" placeholder-align="left" v-model="examName" class="enter_grade_input"></x-input>
         </div>
         <div class="enter_grade_scoreForm">
-          <p class="enter_grade_title">成绩信息</p>
-          <x-table style="background-color:#fff;" full-bordered class="enter_grade_table">
+          <div class="smallKuang"></div><strong>成绩信息</strong>
+<!--          <p class="enter_grade_title">成绩信息</p>-->
+          <x-table class="enter_grade_table">
             <thead>
             <tr>
               <th>科目</th>
@@ -44,19 +47,40 @@
               <td v-if="item.imgs.length === 0"><i class="iconfont icon_luluxiangji"></i></td>
               <td v-if="item.imgs.length > 0"><i class="iconfont icon_luluxiangji" style="color: #42b983"></i></td>
             </tr>
-            <tr style="background-color:#fff;">
-              <td colspan="6" @click="addNew" style="height: 90px">
-                <div class="tabbar-add-btn">
-                  <i class="iconfont icon_lulutianjia"></i>
+            <tr v-if="submitListW.length === 0">
+              <td colspan="6" @click="addNew">
+                <div class="tabbar-add-btn1">
+                  <i class="iconfont icon_luluzanwushuju21"></i>
+                  <div class="tabbar-add-btn_info">还未添加信息呦！</div>
                 </div>
+                <div class="gotoAdd">去添加成绩<i class="iconfont icon_lulushuangyoujiantou-"></i></div>
               </td>
             </tr>
+            <tr v-if="submitListW.length > 0">
+              <td colspan="6" @click="addNew">
+<!--                <div class="tabbar-add-btn">-->
+<!--                  <i class="iconfont icon_luluzanwushuju21"></i>-->
+<!--                  <div class="tabbar-add-btn_info">还未添加信息呦！</div>-->
+<!--                </div>-->
+                <div class="jixuAdd">继续添加<i class="iconfont icon_lulushuangyoujiantou-"></i></div>
+              </td>
+            </tr>
+<!--            <tr style="background-color:#fff;">-->
+<!--              <td colspan="6" @click="addNew" style="height: 90px">-->
+<!--                <div class="tabbar-add-btn">-->
+<!--                  <i class="iconfont icon_lulutianjia"></i>-->
+<!--                </div>-->
+<!--              </td>-->
+<!--            </tr>-->
             </tbody>
           </x-table>
         </div>
-        <x-button class="enter_submit" v-if="submitListW.length === 0" disabled>提交</x-button> <!--提交成绩单-->
-        <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitListW.length > 0">提交</x-button> <!--提交成绩单-->
-<!--        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> &lt;!&ndash;测试相机&ndash;&gt;-->
+<!--        <div v-if="submitListW.length === 0" class="gotoAdd">-->
+<!--          <div>去添加成绩<i class="iconfont icon_lulushuangyoujiantou-"></i></div>-->
+<!--        </div>-->
+        <x-button class="enter_submit" v-if="submitListW.length === 0" disabled>立即提交</x-button> <!--提交成绩单-->
+        <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitListW.length > 0">立即提交</x-button> <!--提交成绩单-->
+        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> <!--测试相机-->
         <toast v-model="showToast" :time="1000">录入成功</toast>
       </div>
     </div>
@@ -116,7 +140,7 @@ export default {
       })
     },
     submitCamera () {
-      this.$router.push('/camera')
+      this.$router.push('/test')
     },
     returnBack () {
       // this.$router.go(-1)
@@ -243,39 +267,67 @@ export default {
   .iconfont {
     font-size: 18px;
   }
+  .addScore_form >>> .vux-datetime .weui-cell__ft {
+    text-align: left;
+    font-size: 14px;
+  }
+
+  /*.vux-datetime.weui-cell.enter_grade_time.weui-cell_access {*/
+  /*  color: #8c8c8c;*/
+  /*  font-size: 15px;*/
+  /*}*/
   .enter_grade_time {
-    border-bottom:  1px solid #e5e5e5;
+    margin-top: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    /*color: #8c8c8c;*/
     /*background-color: #fff;*/
   }
   .enter_grade_title_info {
-    padding: 10px 25px 0;
+    text-align: center;
+    /*padding: 10px 25px 0;*/
     margin-top: 5px;
+  }
+  .smallKuang {
+    margin-left: 15px;
+    margin-top: 10px;
+    height: 15px;
+    width: 3px;
+    background-color: #42b983;
+    /*float: left;*/
+    display: inline-block;
+  }
+  strong {
+    display: inline-block;
+    margin-left: 7px;
+    /*margin-top: -3px;
+    float: left;*/
   }
   .enter_grade_title {
     padding: 10px 15px 0;
     margin-top: 5px;
   }
   .enter_grade_input {
-    border-bottom: 1px solid #42b983;
+    border-bottom: 1px solid #e5e5e5;
   }
   .addScore_form >>> .weui-cell:before{
     border-top: 0;
   }
   .addScore_form >>> .vux-x-input .weui-input {
-    font-size: 13px;
+    font-size: 14px;
+    color: #999;
   }
   .enter_grade_table {
     margin-top: 15px;
   }
   .addScore_form {
-    margin-top: 5%;
-    padding: 0 10px 15px;
+    margin-top: 5px;
+    padding: 0 10px 10px;
     background-color: #fff;
   }
   .enter_grade_scoreForm {
     background-color: #fff;
     margin-top: 13px;
-    padding: 0 10px;
+    padding: 10px 10px;
   }
   .enter_grade_split {
     margin-top: 15px;
@@ -312,21 +364,46 @@ export default {
   /*  font-size: 22px;*/
   /*  border: #333333 1px solid;*/
   /*}*/
-  .tabbar-add-btn {
+  .tabbar-add-btn1 {
     margin-left: 50%;
     transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background: #42b982;
-    border-radius: 100px;
-    margin-top: 5px;
+    /*width: 50px;*/
+    /*height: 50px;*/
+    /*background: #42b982;*/
+    /*border-radius: 100px;*/
+    margin-top: 45px;
     /*margin: -5px auto 0;*/
-    box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);
+    /*box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);*/
     .iconfont {
-      font-size: 28px;
-      color: #fff;
-      line-height: 50px;
+      font-size: 50px;
+      color: #42b982;
+      /*border-color: #42b982;*/
+      /*line-height: 50px;*/
       text-align: center;
+    }
+    .tabbar-add-btn_info {
+      font-size: 10px;
+      margin-top: -20px;
+    }
+  }
+  .gotoAdd {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #42b982;
+    font-weight: bold;
+    .iconfont {
+      margin-left: 5px;
+      font-size: 15px;
+    }
+  }
+  .jixuAdd {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #42b982;
+    font-weight: bold;
+    .iconfont {
+      margin-left: 5px;
+      font-size: 15px;
     }
   }
   /*.icon_lulutianjia {*/
@@ -337,21 +414,31 @@ export default {
   /*  border-radius: 100px;*/
   /*  box-shadow: 0 0 4px 4px rgba(66, 185, 130, 0.3);*/
   /*}*/
-  tbody tr:nth-child(2n + 1) {
-    /*background-color: rgb(229,253,239);*/
-    background-color: rgba(66,185,130,0.2);
+  .vux-table td:before, .vux-table th:before {
+    border-bottom: 0;
   }
+  .vux-table th:after {
+    border-right: 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  /*tbody tr:nth-child(2n + 1) {*/
+    /*background-color: rgb(229,253,239);*/
+    /*background-color: rgba(66,185,130,0.2);*/
+  /*}*/
   tbody tr td {
-    border: 1px solid rgba(66,185,130,0.2);
+    /*border: 1px solid rgba(66,185,130,0.2);*/
     font-size: 13px;
   }
   thead tr th {
-    border: 1px solid rgba(66,185,130,0.2);
+    /*border: 1px solid rgba(66,185,130,0.2);*/
     font-weight: bold;
     font-size: 14px;
   }
   table.vux-table.vux-table-bordered {
     line-height: 35px;
+  }
+  .vux-table td:after{
+    border-right: 0;
   }
   .enter_action {
     font-size: 13px;

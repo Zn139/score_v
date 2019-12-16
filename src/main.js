@@ -15,6 +15,8 @@ import VDistpicker from 'v-distpicker'
 // import uploader from 'vue-easy-uploader'
 import wcView from 'wc-view'
 import 'wc-view/style.css'
+import VueTouch from 'vue-touch'
+Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(wcView)
 // let store = new Vuex.Store({})
 // Vue.use(uploader, store)

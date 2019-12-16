@@ -37,7 +37,7 @@ const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
 const camera = () => import('@/camera/camera') // 录入--测试相机
 // const ceshiCamera = () => import('@/camera/upload') // 录入--测试lingyige相机
-const test = () => import('@/camera/yulan')
+const test = () => import('@/components/left_right_slide')
 
 export default new Router({
   routes: [

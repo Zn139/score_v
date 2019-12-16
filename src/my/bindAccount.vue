@@ -94,6 +94,7 @@ export default {
           wechatId: this.openid
         }
       }).then(res => {
+        console.log('学号：', res.data.userLogin.diyid)
         if (res.data.userLogin.diyid !== '') {
           this.$vux.alert.show({
             title: '提示',
@@ -122,7 +123,7 @@ export default {
         url: 'http://www.kgai.tech/getAllInfoByDiyid',
         params: {
           // openid: this.openid,
-          verifyStudentId: val
+          diyid: val
         }
       }).then(res => {
         if (res.data.errno === 0) {
@@ -196,9 +197,22 @@ export default {
           diyid: this.schoolNum
         }
       }).then(res => {
-        const msg = res.data.errmsg
-        // this.$vux.toast.text(msg)
-        console.log('成功：', msg)
+        if (res.data.errno === 0) {
+          this.$vux.toast.text(res.data.errmsg)
+          // 绑定完账号以后，flag=1，展示已经绑定完的信息
+          this.flag = 1
+          this.stuInfoContent.diyid = this.schoolNum
+          this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
+            this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
+            this.myInfo.levelValue.push(resp.data.userLogin.level)
+            this.myInfo.grade = resp.data.userLogin.gradeLevel
+            this.myInfo.class = resp.data.userLogin.className
+          })
+        } else {
+          const msg = res.data.errmsg
+          this.$vux.toast.text(msg)
+          console.log('成功：', msg)
+        }
       })
     },
     bindOutUser () {
@@ -219,6 +233,16 @@ export default {
       }).then(res => {
         const msg = res.data.errmsg
         this.$vux.toast.text(msg)
+        // 绑定完账号以后，flag=1，展示已经绑定完的信息
+        this.flag = 1
+        this.stuInfoContent.diyid = this.schoolNum
+        this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
+          this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
+          this.myInfo.levelValue.push(resp.data.userLogin.level)
+          this.myInfo.grade = resp.data.userLogin.gradeLevel
+          this.myInfo.class = resp.data.userLogin.className
+          console.log('信息：', resp.data)
+        })
         console.log('成功：', msg)
       })
     }

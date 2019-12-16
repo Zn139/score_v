@@ -11,10 +11,10 @@
         <div class="addSingleSubScoreInfo_second">
 <!--          <datetime v-model="examTime" title="考试时间" class="enter_grade_time"  placeholder="请选择考试时间" v-if="showTime"></datetime>-->
 <!--          <x-input title="考试名称" name="username" placeholder="请输入考试名称" text-align="right" placeholder-align="right" v-model="examName"></x-input>-->
-          <selector placeholder="请选择科目" v-model="selectSub" title="科目" direction="rtl" :options="subList" @on-change="onChange"></selector>
-          <x-input title="分数" required v-model="score" @on-blur="losePoint(score)" text-align="right" placeholder="请输入分数"></x-input>
-          <x-input title="班排" required v-model="classPai" @on-blur="losePoint(classPai)" text-align="right" placeholder="请输入班排"></x-input>
-          <x-input title="年排" required v-model="schoolPai" @on-blur="losePoint(schoolPai)" text-align="right" class="enter_grade_input" placeholder="请输入年排"></x-input>
+          <selector placeholder="请选择考试科目" v-model="selectSub" title="科目" direction="rtl" :options="subList" @on-change="onChange"></selector>
+          <x-input title="分数" required v-model="score" @on-blur="losePoint(score)" text-align="right" placeholder="请输入考试分数"></x-input>
+          <x-input title="班排" required v-model="classPai" @on-blur="losePoint(classPai)" text-align="right" placeholder="请输入班级排名"></x-input>
+          <x-input title="年排" required v-model="schoolPai" @on-blur="losePoint(schoolPai)" text-align="right" class="enter_grade_input" placeholder="请输入年级排名"></x-input>
         </div>
         <div class="addSingleSubScoreInfo_third">
           <p>试卷图片（最多可上传九张照片）</p>
@@ -37,13 +37,14 @@
 <!--          </viewer>-->
           <label v-if="iphoneTypeIOS">
             <div class="aSSSI_third_camera_add" v-on:click="imgClick()">
-              <i class="iconfont icon_luluxiangji3"></i>
+              <i class="iconfont icon_luluxiangji5"></i>
+              <div class="uploadImg">点击上传图片</div>
             </div>
             <input type="file" class="uploadFile" accept="image/*" v-on:change="readLocalFile()">
           </label>
           <label v-else>
             <div class="aSSSI_third_camera_add">
-              <i class="iconfont icon_luluxiangji3"></i>
+              <i class="iconfont icon_luluxiangji5"></i>
             </div>
             <input type="file" class="uploadFile" accept="image/*" v-on:change="readLocalFile()">
           </label>
@@ -420,19 +421,34 @@ export default {
   .aSSSI_third_camera_add {
     width: 100px;
     height: 100px;
-    background-color: #ececec;
+    border: 2px dashed #bcbcbc;
+    border-radius: 5px;
+    /*background-color: #ececec;*/
     /*border:1px solid #ccc;*/
     position: relative;
     float: left;
     margin: 15px 5px 35px;
-  }
-  .icon_luluxiangji3 {
-    color: #42b983;
-    font-size: 40px;
-    position: absolute;
-    margin-left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    margin-top: 50%;
+    .uploadImg {
+      color: #bcbcbc;
+      /*color: #c9c9c9;*/
+      font-weight: bold;
+      position: absolute;
+      margin-top: 55%;
+      text-align: center;
+      margin-left: 14px;
+      /*transform: translateX(-50%);*/
+      font-size: 10px;
+    }
+    .icon_luluxiangji5 {
+      color: #bcbcbc;
+      /*font-weight: bold;*/
+      /*color: #c9c9c9;*/
+      font-size: 30px;
+      position: absolute;
+      margin-left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      margin-top: 40%;
+    }
   }
   .delete{
     /*width: 15px;*/

@@ -186,3 +186,25 @@ export function getSetTarValue (req) { // 定位对比--初始查询设定的目
     params: req
   })
 }
+// 在线课堂
+export function getChapter (req) { // 在线课程--获取年级章
+  return request({
+    url: 'exam/getAllChapter',
+    method: 'get',
+    params: req
+  })
+}
+export function getSection (req) { // 在线课程--获取年级节
+  return request({
+    url: 'exam/getAllSection',
+    method: 'get',
+    params: req
+  })
+}
+export function getOneSectionQues (req) { // 在线课程--获取一节题
+  return request({
+    url: 'exam/findExamQuestionInfo',
+    method: 'get',
+    params: req
+  })
+}

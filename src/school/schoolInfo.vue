@@ -1,9 +1,15 @@
 <template>
   <div style="height: 100%;width: 100%;display:flex;flex-direction: column">
     <div class="school-info-wrapper">
+<!--      <div class="score_header">-->
+<!--        <div class="return__icon" @click="returnBack">-->
+<!--          <i class="iconfont icon_lulufanhui"></i>-->
+<!--        </div>-->
+<!--        <div class="title">绑定账号</div>-->
+<!--      </div>-->
       <div class="school-info-return return-box">
         <div class="return__icon" @click="gotoPage">
-          <i class="iconfont iconleft-arrow"></i>
+          <i class="iconfont icon_lulufanhui"></i>
         </div>
         <div class="school-info-title">{{schoolName}}</div>
       </div>
@@ -309,9 +315,9 @@ export default {
       this.loading = true
       this.$axios({
         method: 'get',
-        url: 'http://zhiheyikaoqin.cn/cee/school/findInfoSchool',
+        url: 'http://zhongkeruitong.top/show/cee/school/findInfoSchool',
         params: {
-          openid: this.openid,
+          openid: '123456',
           schoolcode: this.schoolCode
         }
       }).then(res => {
