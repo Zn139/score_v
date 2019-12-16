@@ -17,6 +17,9 @@ import wcView from 'wc-view'
 import 'wc-view/style.css'
 import VueTouch from 'vue-touch'
 Vue.use(VueTouch, {name: 'v-touch'})
+VueTouch.config.swipe = {
+  threshold: 50 // 设置左右滑动的距离
+}
 Vue.use(wcView)
 // let store = new Vuex.Store({})
 // Vue.use(uploader, store)
