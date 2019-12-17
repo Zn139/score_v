@@ -6,22 +6,43 @@
       </div>
       <div class="title">在线课程</div>
     </div>
-    <div class="lineCourse_second">
-      <div class="lineCourse_second_chapter" @click="gotoChapter">章节练习</div>
-      <x-button @click.native="gotoSimulate">模拟考试</x-button>
+    <div class="lineCourse_second" ref="lineCourse_second">
+      <div>
+        <line-first></line-first>
+        <line-second></line-second>
+        <line-third></line-third>
+      </div>
+
+<!--      <div class="lineCourse_second_chapter" @click="gotoChapter">章节练习</div>-->
+<!--      <x-button @click.native="gotoSimulate">模拟考试</x-button>-->
     </div>
   </div>
 </template>
 <script>
+import BScroll from 'better-scroll'
+import lineFirst from './lineFirst'
+import lineSecond from './lineSecond'
+import lineThird from './lineThird'
 export default {
+  components: {lineFirst, lineSecond, lineThird},
   data () {
     return {
-
+      lineCourseScroll: null
     }
+  },
+  mounted () {
+    this.init()
   },
   methods: {
     returnBack () {
       this.$router.go(-1)
+    },
+    init () {
+      this.$nextTick(() => {
+        this.lineCourseScroll = new BScroll(this.$refs.lineCourse_second, {
+          click: true
+        })
+      })
     },
     gotoChapter () {
       this.$router.push('/chapterList')
@@ -68,14 +89,21 @@ export default {
     margin-left: 35%;
     transform: translateX(-45%);
   }
-  .lineCourse_second {
-    margin: 20px;
-  }
+  /*.lineCourse_second {*/
+  /*  margin: 20px;*/
+  /*}*/
   .lineCourse_second_chapter {
     margin: 10px 10px 30px;
     padding: 5px;
     text-align: center;
     box-shadow: 1px 1px 5px 1px rgba(66,185,130,0.4);
     border-radius: 10px;
+  }
+  .lineCourse_second {
+    position: relative;
+    background: #fbf9fe;
+    overflow: hidden;
+    /*padding: 10px 0;*/
+    height: calc(100% - 100px);
   }
 </style>

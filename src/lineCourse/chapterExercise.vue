@@ -9,82 +9,158 @@
     <div class="section_exec_second" ref="section_exec_second">
       <div>
         <div v-for="(item, index) in one_section_content" :key="index">
-          <div v-if="selectIndex === index" class="section_exec_ques">
-            <span>{{item.question.questionType}}</span>
-            {{item.question.questionContext.split('）')[0] + '）'}}
-            <!--          <div class="choose-box" v-for="(a,index) in item.option" :key="index">-->
-            <!--            <input name="biological" type="radio" value="" />-->
-            <!--            <label style="cursor:pointer">{{a}}</label>-->
-            <!--          </div>-->
-            <div class="box">
-                <!--未选择选项时，selectRight为0-->
-              <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
-              <!--选择正确时，selectRight为1-->
-              <div v-if="selectRight === 1">
-                <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
-                  <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
-                  <div v-if="index !== n"><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
-                </div>
-                <x-button class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
-              </div>
-              <!--选择错误时，selectRight为2-->
-              <div v-if="selectRight === 2">
-                <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
-                  <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('．')[1]}}</div>
-                  <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
-                  <div v-else><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+          <v-touch v-on:swipeleft="swiperleft" v-on:swiperight="swiperright" class="wrapper">
+            <div class="menu-container" ref="menuContainer">
+              <!-- 这个是内容 -->
+              <div v-if="selectIndex === index" class="section_exec_ques">
+                <span>{{item.question.questionType}}</span>
+                {{item.question.questionContext.split('）')[0] + '）'}}
+                <!--          <div class="choose-box" v-for="(a,index) in item.option" :key="index">-->
+                <!--            <input name="biological" type="radio" value="" />-->
+                <!--            <label style="cursor:pointer">{{a}}</label>-->
+                <!--          </div>-->
+                <div class="box">
+                  <!--未选择选项时，selectRight为0-->
+                  <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                  <!--选择正确时，selectRight为1-->
+                  <div v-if="selectRight === 1">
+                    <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
+                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
+                      <div v-if="index !== n"><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                    </div>
+                    <x-button class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
                   </div>
-                <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>
-              </div>
-            </div>
-          </div>
-          <div class="section_exec_jiexi" v-if="selectIndex === index">
-            <div v-if="selectRight === 1">
-            <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>
-            <div v-if="showDetail">
-              <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
-              <div class="jiexi_second">
-                <div class="smallKuang"></div><h4>解析</h4>
-                <div class="jiexi_content">
-                  {{item.question.correctAnalysis.split('】')[1]}}
-                </div>
-              </div>
-              <div class="jiexi_second">
-                <div class="smallKuang"></div><h4>知识点</h4>
-                <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>
-              </div>
-              <div class="jiexi_second">
-                <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>
-                <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
-              </div>
-            </div>
-          </div>
-            <div v-if="selectRight === 2">
-<!--              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
-              <div>
-                <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
-                <div class="jiexi_second">
-                  <div class="smallKuang"></div><h4>解析</h4>
-                  <div class="jiexi_content">
-                    {{item.question.correctAnalysis.split('】')[1]}}
+                  <!--选择错误时，selectRight为2-->
+                  <div v-if="selectRight === 2">
+                    <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
+                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('．')[1]}}</div>
+                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
+                      <div v-else><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                    </div>
+                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>
                   </div>
                 </div>
-                <div class="jiexi_second">
-                  <div class="smallKuang"></div><h4>知识点</h4>
-                  <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>
+              </div>
+              <div class="section_exec_jiexi" v-if="selectIndex === index && selectRight !== 0">
+                <div v-if="selectRight === 1">
+                  <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>
+                  <div v-if="showDetail">
+                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>解析</h4>
+                      <div class="jiexi_content">
+                        {{item.question.correctAnalysis.split('】')[1]}}
+                      </div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>知识点</h4>
+                      <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>
+                      <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
+                    </div>
+                  </div>
                 </div>
-                <div class="jiexi_second">
-                  <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>
-                  <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
+                <div v-if="selectRight === 2">
+                  <!--              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
+                  <div>
+                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>解析</h4>
+                      <div class="jiexi_content">
+                        {{item.question.correctAnalysis.split('】')[1]}}
+                      </div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>知识点</h4>
+                      <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>
+                      <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </v-touch>
+<!--          <div v-if="selectIndex === index" class="section_exec_ques">-->
+<!--            <span>{{item.question.questionType}}</span>-->
+<!--            {{item.question.questionContext.split('）')[0] + '）'}}-->
+<!--            &lt;!&ndash;          <div class="choose-box" v-for="(a,index) in item.option" :key="index">&ndash;&gt;-->
+<!--            &lt;!&ndash;            <input name="biological" type="radio" value="" />&ndash;&gt;-->
+<!--            &lt;!&ndash;            <label style="cursor:pointer">{{a}}</label>&ndash;&gt;-->
+<!--            &lt;!&ndash;          </div>&ndash;&gt;-->
+<!--            <div class="box">-->
+<!--                &lt;!&ndash;未选择选项时，selectRight为0&ndash;&gt;-->
+<!--              <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>-->
+<!--              &lt;!&ndash;选择正确时，selectRight为1&ndash;&gt;-->
+<!--              <div v-if="selectRight === 1">-->
+<!--                <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">-->
+<!--                  <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>-->
+<!--                  <div v-if="index !== n"><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>-->
+<!--                </div>-->
+<!--                <x-button class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;选择错误时，selectRight为2&ndash;&gt;-->
+<!--              <div v-if="selectRight === 2">-->
+<!--                <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">-->
+<!--                  <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('．')[1]}}</div>-->
+<!--                  <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>-->
+<!--                  <div v-else><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>-->
+<!--                  </div>-->
+<!--                <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="section_exec_jiexi" v-if="selectIndex === index">-->
+<!--            <div v-if="selectRight === 1">-->
+<!--            <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
+<!--            <div v-if="showDetail">-->
+<!--              <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--              <div class="jiexi_second">-->
+<!--                <div class="smallKuang"></div><h4>解析</h4>-->
+<!--                <div class="jiexi_content">-->
+<!--                  {{item.question.correctAnalysis.split('】')[1]}}-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="jiexi_second">-->
+<!--                <div class="smallKuang"></div><h4>知识点</h4>-->
+<!--                <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>-->
+<!--              </div>-->
+<!--              <div class="jiexi_second">-->
+<!--                <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>-->
+<!--                &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--            <div v-if="selectRight === 2">-->
+<!--&lt;!&ndash;              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>&ndash;&gt;-->
+<!--              <div>-->
+<!--                <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--                <div class="jiexi_second">-->
+<!--                  <div class="smallKuang"></div><h4>解析</h4>-->
+<!--                  <div class="jiexi_content">-->
+<!--                    {{item.question.correctAnalysis.split('】')[1]}}-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="jiexi_second">-->
+<!--                  <div class="smallKuang"></div><h4>知识点</h4>-->
+<!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>-->
+<!--                </div>-->
+<!--                <div class="jiexi_second">-->
+<!--                  <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>-->
+<!--                  &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
     </div>
     <div class="section_exec_third">
-      <div>heheh </div>
+      <div>收藏</div>
     </div>
   </div>
 </template>
@@ -138,6 +214,23 @@ export default {
           click: true
         })
       })
+    },
+    swiperleft: function () {
+      if (this.selectIndex < this.one_section_content.length - 1) {
+        this.selectIndex += 1
+        console.log('展示的题：', this.selectIndex)
+        this.selectRight = 0
+        this.showDetail = false
+        // this.$router.push({'path': '/home'})
+        console.log('左划')
+      }
+    },
+    swiperright: function () {
+      if (this.selectIndex > 0) {
+        this.selectIndex -= 1
+        this.selectRight = 0
+        this.showDetail = false
+      }
     },
     getOneSectionQues () {
       getOneSectionQues({
@@ -255,6 +348,9 @@ export default {
     padding: 10px 0;
     height: calc(100% - 71px);
     /*background-color: #fff;*/
+  }
+  .wrapper {
+    touch-action: pan-y!important;
   }
   .section_exec_ques {
     background-color: #fff;
@@ -406,6 +502,7 @@ export default {
   }
   .section_exec_third {
     background-color: rgb(255,255, 223);
+    font-size: 13px;
     /*margin-top: calc(100% - 91px);*/
     /*height: 20px;*/
   }

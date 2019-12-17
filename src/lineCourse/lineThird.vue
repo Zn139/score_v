@@ -1,0 +1,96 @@
+<template>
+  <div class="line-third-info">
+    <div class="line-second-first">
+      <div class="line-second-first_title">
+        <i class="iconfont icon_lulufengefu"></i><strong>最近练习</strong>
+      </div>
+      <div class="line-second-first_content">
+        <div class="line-third-title">第一章 走进细胞</div>
+        <div class="line-third-con">
+          <div>第一节 从生物圈到细胞</div>
+          <div>1、生命体结构和功能的基本单位是？</div>
+          <x-button>继续学习</x-button>
+        </div>
+      </div>
+    </div>
+    <div class="line-third_second">
+      <div class="line-third_second_item" @click="bindAccount"><i class="iconfont icon_lulurenyuanbangding"></i><span>做题记录</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+
+}
+</script>
+<style scoped lang="scss">
+  .line-second-first {
+    margin-bottom: 6px;
+    background-color: #fff;
+  }
+  strong {
+    font-size: 15px;
+  }
+  .line-second-first_title {
+    margin: 0 10px;
+    padding: 10px 0;
+    font-size: 16px;
+    border-bottom: 1px solid #ececec;
+    .icon_lulufengefu {
+      color: #42b982;
+      /*font-weight: ;*/
+    }
+  }
+  .line-second-first_content {
+    /*padding: 5px 0;*/
+    margin: 10px 30px 0;
+    padding-bottom: 30px;
+  }
+  .line-third-title {
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .line-third-con {
+    margin-top: 15px;
+    text-align: center;
+    div:nth-child(2) {
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    button {
+      color: #42b982;
+      margin-top: 15px;
+      width: 47%;
+      font-size: 16px;
+      /*border: 1px red solid;*/
+    }
+    .weui-btn:after {
+      border: 1px solid #42b982;
+    }
+    .weui-btn_default {
+      background-color: #fff;
+    }
+  }
+  .line-third_second {
+    margin-top: 15px;
+    padding: 0 15px 15px;
+    /*padding-bottom: 40px;*/
+    background-color: #fff;
+  }
+  .line-third_second_item {
+    /*padding-left: 20px;*/
+    background-color: #fff;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #ececec;
+    .iconfont:first-child {
+      /*margin-left: 10px;*/
+    }
+    span {
+      margin-left: 10px;
+    }
+  }
+  .line-third_second_item i:nth-child(2) {
+    margin-left: 65%;
+  }
+</style>
