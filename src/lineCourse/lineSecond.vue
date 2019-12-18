@@ -5,7 +5,7 @@
         <i class="iconfont icon_lulufengefu"></i><strong>考试演练</strong>
       </div>
       <div class="line-second-first_content">
-        <div class="line-second-first_content1">
+        <div class="line-second-first_content1" @click="gotoPage('simulationList')">
 <!--          2-->
           <i class="iconfont icon_lulumonishijuan"></i>
           <div>
@@ -14,8 +14,9 @@
           </div>
         </div>
         <div class="fenge"></div>
-        <div class="line-second-first_content2">
-          <i class="iconfont icon_lululinianzhenti"></i>
+        <div class="line-second-first_content2" @click="gotoPage('overYearsZT')">
+<!--          <i class="iconfont icon_lululinianzhenti"></i>-->
+          <i class="iconfont icon_luluzhentiku"></i>
           <div>
             <strong>历年真题</strong>
             <span>多年试题积累更多经验</span>
@@ -29,7 +30,7 @@
         <i class="iconfont icon_lulufengefu"></i><strong>平时练习</strong>
       </div>
       <div class="line-second-first_content">
-        <div class="line-second-first_content1">
+        <div class="line-second-first_content1" @click="gotoPage('chapterList')">
           <i class="iconfont icon_luluzhangjiekecheng-copy"></i>
           <div>
             <strong>章节练习</strong>
@@ -37,7 +38,7 @@
           </div>
         </div>
         <div class="fenge"></div>
-        <div class="line-second-first_content2">
+        <div class="line-second-first_content2" @click="gotoPage('specialItem')">
           <i class="iconfont icon_luluzhuanxiangjiance"></i>
           <div>
             <strong>专项练习</strong>
@@ -48,15 +49,15 @@
       </div>
     </div>
     <div class="line-second-third">
-      <div class="menu-icon_1" @click="gotoPage('more')">
+      <div class="menu-icon_1" @click="gotoPage('xitiStatistics')">
         <i class="iconfont icon_lulutongji-copy1"></i>
         <div class="icon-text">习题统计</div>
       </div>
-      <div class="menu-icon_1" @click="gotoPage('more')">
+      <div class="menu-icon_1" @click="gotoPage('wrongQues')">
         <i class="iconfont icon_lulucuotiben"></i>
         <div class="icon-text">错题记录</div>
       </div>
-      <div class="menu-icon_1" @click="gotoPage('more')">
+      <div class="menu-icon_1" @click="gotoPage('xtcollect')">
         <i class="iconfont icon_luluwodeshoucang2"></i>
         <div class="icon-text">我的收藏</div>
       </div>
@@ -65,7 +66,22 @@
 </template>
 <script>
 export default {
+  data () {
+    return {
 
+    }
+  },
+  methods: {
+    gotoPage (name) {
+      this.$router.push({name: name})
+    }
+    // gotoChapter () {
+    //   this.$router.push('/chapterList')
+    // },
+    // gotoSimulate () {
+    //   this.$router.push('/simulationList')
+    // }
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -87,7 +103,7 @@ export default {
     }
   }
   .line-second-first_content {
-    padding: 5px 0;
+    padding: 5px 0 15px;
     margin: 10px 10px 0;
     /*background-color: #fff;*/
     /*text-align: center;*/
@@ -103,7 +119,8 @@ export default {
       margin-top: 5px;
       position: absolute;
       font-size: 32px;
-      color: #42b982;
+      color: rgb(151, 204, 174);
+      /*color: #42b982;*/
     }
     .icon_luluzhangjiekecheng-copy {
       margin-top: 7px;
@@ -124,7 +141,7 @@ export default {
       color: #bbb;
       margin-top: 35px;
       margin-left: 42px;
-      font-size: 9px;
+      font-size: 10px;
     }
   }
   .fenge {
@@ -148,6 +165,12 @@ export default {
       font-size: 32px;
       color: rgb(113, 167, 239);
     }
+    .icon_luluzhentiku {
+      margin-top: 6px;
+      position: absolute;
+      font-size: 29px;
+      color: rgb(113, 167, 239);
+    }
     .icon_luluzhuanxiangjiance {
       margin-top: 7px;
       position: absolute;
@@ -165,7 +188,7 @@ export default {
       color: #bbb;
       margin-top: 35px;
       margin-left: 42px;
-      font-size: 9px;
+      font-size: 10px;
     }
   }
   .line-second-second {

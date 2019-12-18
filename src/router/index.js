@@ -8,9 +8,17 @@ const home = () => import('@/home/index')
 const my = () => import('@/my/index')
 const study = () => import('@/home/study')
 const lineCourse = () => import('@/lineCourse/index') // 在线课堂
-const chapterList = () => import('@/lineCourse/chapterList') // 章节列表
-const simulationList = () => import('@/lineCourse/simulationList') // 章节列表
-const chapterExercise = () => import('@/lineCourse/chapterExercise') // 章节列表
+const chapterList = () => import('@/lineCourse/secondPart/chapterList') // 在线课堂--章节列表
+const simulationList = () => import('@/lineCourse/secondPart/simulationList') // 在线课堂--模拟列表
+const specialItem = () => import('@/lineCourse/secondPart/specialItem') // 在线课堂--专项列表
+const overYearsZT = () => import('@/lineCourse/secondPart/overYearsZT') // 在线课堂--历年真题列表
+const xitiStatistics = () => import('@/lineCourse/secondPart/xitiStatistics') // 在线课堂--习题统计
+const wrongQues = () => import('@/lineCourse/secondPart/wrongQues') // 在线课堂--错题积累
+const xtcollect = () => import('@/lineCourse/secondPart/xtcollect') // 在线课堂--错题积累
+const doQuesRecord = () => import('@/lineCourse/thirdPart/doQuesRecord') // 在线课堂--做题记录
+const studyReport = () => import('@/lineCourse/thirdPart/studyReport') // 在线课堂--学习报告
+const myMedal = () => import('@/lineCourse/thirdPart/myMedal') // 在线课堂--我的勋章
+const chapterExercise = () => import('@/lineCourse/secondPart/chapterExercise') // 在线课堂--章节列表--章节练习
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
 const score = () => import('@/menus/score')
@@ -173,6 +181,70 @@ export default new Router({
       },
       name: 'chapterExercise',
       meta: { tab: 'chapterExercise', title: 'chapterExercise' }
+    },
+    {
+      path: '/overYearsZT', // 历年真题
+      components: {
+        default: overYearsZT
+      },
+      name: 'overYearsZT',
+      meta: { tab: 'overYearsZT', title: 'overYearsZT' }
+    },
+    {
+      path: '/specialItem', // 专项列表
+      components: {
+        default: specialItem
+      },
+      name: 'specialItem',
+      meta: { tab: 'specialItem', title: 'specialItem' }
+    },
+    {
+      path: '/xitiStatistics', // 习题统计
+      components: {
+        default: xitiStatistics
+      },
+      name: 'xitiStatistics',
+      meta: { tab: 'xitiStatistics', title: 'xitiStatistics' }
+    },
+    {
+      path: '/wrongQues', // 习题统计
+      components: {
+        default: wrongQues
+      },
+      name: 'wrongQues',
+      meta: { tab: 'wrongQues', title: 'wrongQues' }
+    },
+    {
+      path: '/xtcollect', // 在线课程--我的收藏
+      components: {
+        default: xtcollect
+      },
+      name: 'xtcollect',
+      meta: { tab: 'xtcollect', title: 'xtcollect' }
+    },
+    {
+      path: '/doQuesRecord', // 在线课程--做题记录
+      components: {
+        default: doQuesRecord
+      },
+      name: 'doQuesRecord',
+      meta: { tab: 'doQuesRecord', title: 'doQuesRecord' }
+    },
+    {
+      path: '/myMedal', // 在线课程--我的勋章
+      components: {
+        default: myMedal
+      },
+      name: 'myMedal',
+      meta: { tab: 'myMedal', title: 'myMedal' }
+    },
+    {
+      path: '/studyReport', // 在线课程--学习报告
+      components: {
+        default: studyReport
+      },
+      name: 'studyReport',
+      meta: { tab: 'studyReport', title: 'studyReport' }
     },
     {
       path: '/add',

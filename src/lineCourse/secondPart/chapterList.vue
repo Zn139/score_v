@@ -38,12 +38,15 @@ export default {
     return {
       chapterList: [],
       sectionList: [],
-      subject: '生物'
+      // subject: '生物'
     }
   },
   computed: {
     openid () {
       return this.$store.state.exam.openid
+    },
+    selectsub () {
+      return this.$store.state.lineCourse.select_sub
     }
   },
   mounted () {
@@ -58,9 +61,10 @@ export default {
     //   this.$router.push('/chapterExercise')
     // },
     getChapter () { // 获取所有章
+      console.log('所有章', this.selectsub)
       getChapter({
         levelName: '高1',
-        subject: this.subject
+        subject: this.selectsub
       }).then(res => {
         this.chapterList = res.data.data.map((item, index) => {
           return {
@@ -78,7 +82,7 @@ export default {
         getSection({
           levelName: '高1',
           chapter: item.name,
-          subject: this.subject
+          subject: this.selectsub
         }).then(res => {
           this.chapterList[item.index].children = []
           this.sectionList = res.data.data
@@ -96,7 +100,7 @@ export default {
         name: 'chapterExercise',
         params: {
           paperName: val,
-          subject: this.subject
+          // subject: this.selectsub
         }
       })
       // getOneSectionQues({

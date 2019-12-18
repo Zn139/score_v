@@ -208,3 +208,17 @@ export function getOneSectionQues (req) { // 在线课程--获取一节题
     params: req
   })
 }
+export function getCurrentRecord (req) { // 在线课程--获取当前答题记录（练习界面最下面的黄色条）
+  return request({
+    url: 'exam/doQuestionInfo',
+    method: 'get',
+    params: req
+  })
+}
+export function getNoSelectCurrentRecord (req) { // 在线课程--获取当前答题记录（未选题时练习界面最下面的黄色条）
+  return request({
+    url: 'exam/getDoQuestionInfo',
+    method: 'get',
+    params: req
+  })
+}

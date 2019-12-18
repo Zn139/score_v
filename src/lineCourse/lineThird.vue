@@ -14,13 +14,24 @@
       </div>
     </div>
     <div class="line-third_second">
-      <div class="line-third_second_item" @click="bindAccount"><i class="iconfont icon_lulurenyuanbangding"></i><span>做题记录</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+      <div class="line-third_second_item" @click="gotoPage('doQuesRecord')"><i class="iconfont icon_lulujiludanzilishijilu"></i><span>做题记录</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+      <div class="line-third_second_item" @click="gotoPage('studyReport')"><i class="iconfont icon_luluxuexibaogao"></i><span>学习报告</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+      <div class="line-third_second_item" @click="gotoPage('myMedal')"><i class="iconfont icon_lulumedal"></i><span>我的勋章</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
     </div>
   </div>
 </template>
 <script>
 export default {
+  data () {
+    return {
 
+    }
+  },
+  methods: {
+    gotoPage (name) {
+      this.$router.push({name: name})
+    }
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -79,18 +90,29 @@ export default {
   }
   .line-third_second_item {
     /*padding-left: 20px;*/
+    font-size: 15px;
     background-color: #fff;
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #ececec;
     .iconfont:first-child {
-      /*margin-left: 10px;*/
+      /*font-size: 17px;*/
+      /*margin-top: 3px;*/
     }
     span {
       margin-left: 10px;
     }
   }
-  .line-third_second_item i:nth-child(2) {
-    margin-left: 65%;
+  .icon_lulujiludanzilishijilu {
+    color: rgb(113, 167, 239);
+  }
+  .icon_luluxuexibaogao {
+    color: rgb(151, 204, 174);
+  }
+  .icon_lulumedal {
+    color: rgb(2239, 202, 0);
+  }
+  .icon_luluchangyongtubiao-xianxingdaochu-zhuanqu- {
+    float: right;
   }
 </style>
