@@ -93,18 +93,42 @@
       <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>
       <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
     </div>
-<!--    <group>-->
-<!--      <x-switch title="scroll top on show" inline-desc="custom scrollable div" v-model="show16"></x-switch>-->
-<!--    </group>-->
+    <div v-transfer-dom class="section_exec_third_tan">
+      <popup v-model="showSum" position="bottom" max-height="50%">
+        <div class="section_exec_third">
+          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>
+          <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>
+          <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
+        </div>
+        <group>
+          <div class="section_exec_third_title">
+            {{paperName.split('\\n')[1]}}
+          </div>
+          <div v-for="(i, index) in allSum" :key="index" class="section_exec_third_content">
+            <cell v-if="currentRightList.indexOf(i) > -1" :key="i" :title="i" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i) > -1" :key="i" :title="i" class="section_exec_cell error"></cell>
+            <cell v-else :key="i" :title="i" class="section_exec_cell nodo"></cell>
+          </div>
+        </group>
+<!--        <div style="padding: 15px;">-->
+<!--          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>-->
+<!--        </div>-->
+      </popup>
+    </div>
   </div>
 </template>
 <script>
 import BScroll from 'better-scroll'
-import {LoadMore} from 'vux'
 import {getOneSectionQues, getCurrentRecord, getNoSelectCurrentRecord} from '@/api/index'
+import { LoadMore, TransferDom, Group, XSwitch, Cell } from 'vux'
+// import ToggleText from './ToggleText'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
-    LoadMore
+    LoadMore, Group, XSwitch, Cell
+    // ToggleText
   },
   data () {
     return {
@@ -122,6 +146,7 @@ export default {
       currentNotList: [], // 当前未做的列表
       currentError: 0, // 当前错误的个数
       allSum: 0, // 此份卷子所有的题的个数
+      showSum: false, // 此份卷子所有未做的
       id: -1 // 当前题的id
     }
   },
@@ -145,6 +170,7 @@ export default {
   mounted () {
     this.init()
     this.getOneSectionQues()
+    this.getNoSelect_allQues()
     // this.getNoSelect_allQues()
   },
   methods: {
@@ -158,16 +184,34 @@ export default {
         })
       })
     },
-    get_noselect_current () {
+    getNoSelect_allQues () {
       getNoSelectCurrentRecord({
         studentNumber: this.schoolNumber,
         paperName: this.paperName,
         subject: this.subject_online
       }).then(res => {
-        this.currentRightList = res.data.data.doRightList
-        this.currentErrorList = res.data.data.doErrorList
-        this.currentNotList = res.data.data.notDoList
+        console.log(res.data.data)
+        this.currentRight = res.data.data.doRight
+        this.currentError = res.data.data.doError
+        // this.currentNotList = res.data.data.notDoList
       })
+    },
+    get_noselect_current () {
+      if (this.showSum === false) {
+        getNoSelectCurrentRecord({
+          studentNumber: this.schoolNumber,
+          paperName: this.paperName,
+          subject: this.subject_online
+        }).then(res => {
+          console.log(res.data.data)
+          this.currentRightList = res.data.data.doRightList
+          this.currentErrorList = res.data.data.doErrorList
+          this.currentNotList = res.data.data.notDoList
+        })
+        this.showSum = true
+      } else {
+        this.showSum = false
+      }
     },
     // getNoSelect_allQues () {
     //   getNoSelectCurrentRecord({
@@ -179,6 +223,7 @@ export default {
     //   })
     // },
     swiperleft: function () {
+      this.n = -1 // 左滑或者右滑时，所选选项变为-1
       if (this.selectIndex < this.one_section_content.length - 1) {
         this.selectIndex += 1
         console.log('展示的题：', this.selectIndex)
@@ -189,6 +234,7 @@ export default {
       }
     },
     swiperright: function () {
+      this.n = -1 // 左滑或者右滑时，所选选项变为-1
       if (this.selectIndex > 0) {
         this.selectIndex -= 1
         this.selectRight = 0
@@ -206,28 +252,86 @@ export default {
       })
     },
     changeList (answer, index) {
-      console.log(answer)
       this.n = index // index为选项的索引
-      if (answer.split('．')[1] === this.one_section_content[this.selectIndex].question.correctText) {
-        this.selectRight = 1 // 答对
-        console.log('right')
-      } else {
-        console.log('答错')
-        const options = this.one_section_content[this.selectIndex].randomOption
-        console.log(options)
-        for (const item in options) {
-          if (options[item].split('．')[0] === this.one_section_content[this.selectIndex].rightOption) {
-            console.log('正确选项：', typeof item)
-            this.rightOp = parseInt(item)
+      const that = this
+      setTimeout(function () {
+        if (answer.split('．')[1] === that.one_section_content[that.selectIndex].question.correctText) {
+          that.selectRight = 1 // 答对
+          console.log('right')
+        } else {
+          console.log('答错')
+          const options = that.one_section_content[that.selectIndex].randomOption
+          console.log(options)
+          for (const item in options) {
+            if (options[item].split('．')[0] === that.one_section_content[that.selectIndex].rightOption) {
+              console.log('正确选项：', typeof item)
+              that.rightOp = parseInt(item)
+            }
           }
+          that.selectRight = 2 // 答错
         }
-        this.selectRight = 2 // 答错
-      }
-      this.id = this.one_section_content[this.selectIndex].question.id
+        that.id = that.one_section_content[that.selectIndex].question.id
+        that.getCurrentRecord(answer)
+      }, 400)
+      console.log(answer)
+      // this.n = index // index为选项的索引
+      // if (answer.split('．')[1] === this.one_section_content[this.selectIndex].question.correctText) {
+      //   this.selectRight = 1 // 答对
+      //   console.log('right')
+      // } else {
+      //   console.log('答错')
+      //   const options = this.one_section_content[this.selectIndex].randomOption
+      //   console.log(options)
+      //   for (const item in options) {
+      //     if (options[item].split('．')[0] === this.one_section_content[this.selectIndex].rightOption) {
+      //       console.log('正确选项：', typeof item)
+      //       this.rightOp = parseInt(item)
+      //     }
+      //   }
+      //   this.selectRight = 2 // 答错
+      // }
+      // this.id = this.one_section_content[this.selectIndex].question.id
       // this.answer = answer
-      console.log('id:', typeof this.id)
-      this.getCurrentRecord(answer)
+      // console.log('id:', typeof this.id)
+      // const that = this
+      // setTimeout(function () {
+      //
+      // }, 3000)
+      // that.getCurrentRecord(answer)
+      // this.n = -1
     },
+    // changeList (answer, index) {
+    //   // const that = this
+    //   // setTimeout(function () {
+    //   //
+    //   // }, 3000)
+    //   console.log(answer)
+    //   this.n = index // index为选项的索引
+    //   if (answer.split('．')[1] === this.one_section_content[this.selectIndex].question.correctText) {
+    //     this.selectRight = 1 // 答对
+    //     console.log('right')
+    //   } else {
+    //     console.log('答错')
+    //     const options = this.one_section_content[this.selectIndex].randomOption
+    //     console.log(options)
+    //     for (const item in options) {
+    //       if (options[item].split('．')[0] === this.one_section_content[this.selectIndex].rightOption) {
+    //         console.log('正确选项：', typeof item)
+    //         this.rightOp = parseInt(item)
+    //       }
+    //     }
+    //     this.selectRight = 2 // 答错
+    //   }
+    //   this.id = this.one_section_content[this.selectIndex].question.id
+    //   // this.answer = answer
+    //   console.log('id:', typeof this.id)
+    //   // const that = this
+    //   // setTimeout(function () {
+    //   //
+    //   // }, 3000)
+    //   this.getCurrentRecord(answer)
+    //   // this.n = -1
+    // },
     getCurrentRecord (ans) {
       getCurrentRecord({
         id: this.id,
@@ -348,23 +452,28 @@ export default {
       /*border:2px #9c9c9c solid;*/
       border-radius: 50%;
     }
+    /*选择当前选项时，出现checked属性，并且变色*/
+    .checked {
+      color: #42b983;
+      /*background-color:  #CCFF99;;*/
+    }
     /*span.checked {*/
     /*  !*color:#0CF;*!*/
-    /*  !*color:#42b983;*!*/
-    /*  !*background-color: #42b983;*!*/
+    /*  color:#42b983;*/
+    /*  background-color: #42b983;*/
     /*}*/
-    span.checked:before{
-      background-color:#42b983;
-      /*background-color:#0CF;*/
-      /*border:2px #9c9c9c solid;*/
-    }
+    /*span.checked:before{*/
+    /*  background-color:#42b983;*/
+    /*  !*background-color:#0CF;*!*/
+    /*  border:2px #9c9c9c solid;*/
+    /*}*/
     /*span:before{*/
     /*  display:inline-block;*/
-    /*  !*width:10px;*!*/
-    /*  !*height:10px;*!*/
-    /*  !*line-height:10px;*!*/
-    /*  !*content:"";*!*/
-    /*  !*border:2px #9c9c9c solid;*!*/
+    /*  width:10px;*/
+    /*  height:10px;*/
+    /*  line-height:10px;*/
+    /*  content:"";*/
+    /*  border:2px #9c9c9c solid;*/
     /*  border-radius: 10px;*/
     /*  margin-right:10px;*/
     /*  transition:all 0.3s linear;*/
@@ -442,7 +551,7 @@ export default {
   }
   .section_exec_third {
     height: 25px;
-    background-color: rgb(255,255, 223);
+    background-color: rgba(255,255, 223, 0.7);
     font-size: 13px;
     .iconfont {
       font-size: 14px;
@@ -476,6 +585,58 @@ export default {
     display: inline-block;
     .iconfont {
       margin-left: 30px;
+    }
+  }
+  .section_exec_third_title {
+    /*background-color: rgba(255,255, 223, 0.7);*/
+    /*margin-left: 20px;*/
+    text-align: center;
+    margin-top: 5px;
+    font-size: 15px;
+    /*font-weight: bold;*/
+  }
+  .section_exec_third_content {
+    margin-top: 15px;
+    display: inline-block;
+    margin-left: 25px;
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    line-height: 40px;
+  }
+  .section_exec_cell {
+    padding: unset;
+  }
+  .section_exec_third_tan >>> .weui-cells {
+    background-color: #FFF;
+    /*background-color: rgba(255,255, 223, 0.7);*/
+    margin-top: unset;
+    padding: 10px 0 25px;
+  }
+  .section_exec_third_tan {
+    .right {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ececec;
+      border-radius: 50%;
+      /*background-color: #c4dfb8;*/
+      background-color: #CCFF99;
+    }
+    .error {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ececec;
+      border-radius: 50%;
+      /*background-color: #ec8b89;*/
+      background-color: #FFCC99;
+    }
+    .nodo {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ececec;
+      border-radius: 50%;
+      background-color: #fff;
+      /*background-color: #ccc;*/
     }
   }
 </style>

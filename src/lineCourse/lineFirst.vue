@@ -1,6 +1,6 @@
 <template>
   <div class="line_first_info">
-    <div>
+    <div class="line-first-tab">
       <tab :line-width=2>
         <tab-item :selected="select_sub === item" v-for="(item, index) in sub_lists" @on-item-click="selectSub(item)" :key="index">{{item}}</tab-item>
 <!--        <tab-item :selected="select_sub === index" v-for="(item, index) in sub_lists" @on-item-click="dianji(item)" @click="select_sub = index" :key="index">{{item}}</tab-item>-->
@@ -61,5 +61,8 @@ export default {
   }
   .vux-tab .vux-tab-item {
     line-height: 40px;
+  }
+  .line-first-tab {
+    -webkit-overflow-scrolling:touch;
   }
 </style>
