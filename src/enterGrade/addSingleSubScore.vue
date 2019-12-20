@@ -45,6 +45,7 @@
           <label v-else>
             <div class="aSSSI_third_camera_add">
               <i class="iconfont icon_luluxiangji5"></i>
+              <div class="uploadImg">点击上传图片</div>
             </div>
             <input type="file" class="uploadFile" accept="image/*" v-on:change="readLocalFile()">
           </label>

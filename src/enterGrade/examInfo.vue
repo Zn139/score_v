@@ -35,6 +35,7 @@
         </tr>
         </tbody>
       </x-table>
+
       <confirm v-model="showDel"
                title="删除提示"
                @on-cancel="onCancel"

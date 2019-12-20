@@ -222,3 +222,17 @@ export function getNoSelectCurrentRecord (req) { // 在线课程--获取当前�
     params: req
   })
 }
+export function collectCurrentQues (req) { // 在线课程--章节练习--收藏当前题
+  return request({
+    url: 'exam/insertCollect',
+    method: 'get',
+    params: req
+  })
+}
+export function cancelCollectCurrentQues (req) { // 在线课程--章节练习--取消收藏当前题
+  return request({
+    url: 'exam/cancelCollect',
+    method: 'get',
+    params: req
+  })
+}

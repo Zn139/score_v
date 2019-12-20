@@ -89,9 +89,8 @@
       </div>
     </div>
     <div class="section_exec_third">
-      <!--判断是否收藏 1表示收藏  2表示没有收藏-->
-      <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
-      <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
+      <div v-if="!showCollec" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
+      <div v-if="showCollec" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
       <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>
       <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
     </div>
@@ -122,7 +121,7 @@
 </template>
 <script>
 import BScroll from 'better-scroll'
-import {getOneSectionQues, getCurrentRecord, getNoSelectCurrentRecord, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
+import {getOneSectionQues, getCurrentRecord, getNoSelectCurrentRecord, collectCurrentQues} from '@/api/index'
 import { LoadMore, TransferDom, Group, XSwitch, Cell } from 'vux'
 // import ToggleText from './ToggleText'
 export default {
@@ -135,7 +134,7 @@ export default {
   },
   data () {
     return {
-      showCollec: 0, // 是否收藏此题
+      showCollec: false, // 是否收藏此题
       showDetail: false, // 是否展示答案详解
       selectRight: 0,
       one_section_content: [],
@@ -152,8 +151,7 @@ export default {
       allSum: 0, // 此份卷子所有的题的个数
       showSum: false, // 此份卷子所有未做的详情
       id: -1, // 当前题的id
-      paperid: -1, // 组卷id
-      quesList: [] // 所有题刚开始的情况，有没有选项啥的
+      paperid: -1 // 组卷id
     }
   },
   computed: {
@@ -175,23 +173,13 @@ export default {
   },
   mounted () {
     this.init()
-    // console.log()
     this.getOneSectionQues() // // 此试卷的所有题
     // this.getNoSelect_allQues() // 未点击时出现的正确错误个数
   },
-  watch: { // 监听题号的索引的变化
+  watch: {
     selectIndex (val, oldval) {
-      this.selectRight = this.quesList[this.selectIndex].selectRight
-      if (this.quesList[this.selectIndex].showDetail === true) {
-        // console.log('daduileme :', this.showDetail)
-        this.showDetail = true
-      } else {
-        this.showDetail = false
-      }
-      this.n = this.quesList[this.selectIndex].n
-      // console.log('索引李：', this.selectIndex)
-      this.showCollec = this.one_section_content[this.selectIndex].collect
-      // console.log('suoyinbianhuale :', val, oldval)
+      this.showCollec = false
+      console.log('suoyinbianhuale :', val, oldval)
     }
   },
   methods: {
@@ -206,42 +194,27 @@ export default {
       })
     },
     collectCurrentQues () { // 收藏当前题
-      // console.log('当前题是否收藏', this.showCollec)
-      // const collectStatus = this.one_section_content[this.selectIndex].collect
-      if (this.showCollec === 2) { // 表示未收藏
+      if (this.showCollec === false) {
         collectCurrentQues({
           id: this.one_section_content[this.selectIndex].question.id,
           studentNumber: this.schoolNumber,
           openid: this.openid,
           classification: ''
         }).then(res => {
-          // console.log('收藏', res.data)
-          this.$vux.toast.text('收藏成功')
-          this.showCollec = 1
+          console.log('收藏', res.data)
         })
-      } else if (this.showCollec === 1) {
-        cancelCollectCurrentQues({
-          id: this.one_section_content[this.selectIndex].question.id,
-          studentNumber: this.schoolNumber,
-          openid: this.openid,
-          paperName: this.paperName,
-          subject: this.subject_online,
-          cancel: 2
-        }).then(res => {
-          // console.log('cancel', res.data)
-          this.$vux.toast.text('取消收藏成功')
-          this.showCollec = 2
+        this.showCollec = true
+      } else {
+        this.$vux.alert.show({
+          title: '提示',
+          content: '您已收藏此题啦！'
         })
-        // this.$vux.alert.show({
-        //   title: '提示',
-        //   content: '您已收藏此题啦！'
-        // })
       }
     },
     selectNoItem (i) { // 下面的查看做题详情，点击其中的题号，跳到当前的题
-      // console.log(i)
-      // this.n = -1 // 未进行点击选项
-      // this.selectRight = 0 // 未选择状态
+      console.log(i)
+      this.n = -1 // 未进行点击选项
+      this.selectRight = 0 // 未选择状态
       this.showSum = false // 当前答题情况关闭==未查看
       this.selectIndex = i - 1 // 跳到下一个答题页面
     },
@@ -251,13 +224,13 @@ export default {
         paperName: this.paperName,
         subject: this.subject_online
       }).then(res => {
-        // console.log(res.data.data)
+        console.log(res.data.data)
         this.currentRight = res.data.data.doRight
         this.currentError = res.data.data.doError
         // this.currentNotList = res.data.data.notDoList
       })
     },
-    get_noselect_current () { // 当前所答题情况框，是否显示
+    get_noselect_current () {
       this.showSum = !this.showSum
       // if (this.showSum === false) {
       //   getNoSelectCurrentRecord({
@@ -285,26 +258,25 @@ export default {
     //   })
     // },
     swiperleft: function () {
-      // this.n = -1 // 左滑或者右滑时，所选选项变为-1
+      this.n = -1 // 左滑或者右滑时，所选选项变为-1
       if (this.selectIndex < this.one_section_content.length - 1) {
         this.selectIndex += 1
-        // console.log('展示的题：', this.selectIndex)
-        // this.selectRight = 0
-        // this.showDetail = false
+        console.log('展示的题：', this.selectIndex)
+        this.selectRight = 0
+        this.showDetail = false
         // this.$router.push({'path': '/home'})
-        // console.log('左划')
+        console.log('左划')
       }
     },
     swiperright: function () {
-      // this.n = -1 // 左滑或者右滑时，所选选项变为-1
+      this.n = -1 // 左滑或者右滑时，所选选项变为-1
       if (this.selectIndex > 0) {
         this.selectIndex -= 1
-        // this.selectRight = 0
-        // this.showDetail = false
+        this.selectRight = 0
+        this.showDetail = false
       }
     },
     getOneSectionQues () {
-      this.quesList = []
       getOneSectionQues({
         paperName: this.paperName,
         subject: this.subject_online,
@@ -313,49 +285,91 @@ export default {
       }).then(res => {
         this.one_section_content = res.data.data
         this.allSum = res.data.data.length // 所有题的个数
-        this.showCollec = this.one_section_content[this.selectIndex].collect
-        // 给每个题都加上一个字典，未做题的情况
-        for (const item in this.one_section_content) {
-          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0}
-          // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
-          this.quesList.push(oneDetail)
-          // console.log(parseInt(item) + 1)
-        }
-        // console.log(this.quesList)
-        // console.log('所有信息：', res.data)
-        // console.log('为啥子没有', this.one_section_content[this.selectIndex].collect)
+        console.log('所有信息：', res.data)
       })
     },
     changeList (answer, index) {
       this.n = index // index为选项的索引
-      this.quesList[this.selectIndex].n = index
-      console.log(this.quesList)
       const that = this
       setTimeout(function () {
         if (answer.split('．')[1] === that.one_section_content[that.selectIndex].question.correctText) {
           that.selectRight = 1 // 答对
-          that.quesList[that.selectIndex].selectRight = 1
-          // console.log('right')
+          console.log('right')
         } else {
-          // console.log('答错')
+          console.log('答错')
           const options = that.one_section_content[that.selectIndex].randomOption
           console.log(options)
           for (const item in options) {
             if (options[item].split('．')[0] === that.one_section_content[that.selectIndex].rightOption) {
-              // console.log('正确选项：', typeof item)
+              console.log('正确选项：', typeof item)
               that.rightOp = parseInt(item)
             }
           }
           that.selectRight = 2 // 答错
-          that.quesList[that.selectIndex].selectRight = 2
         }
         that.id = that.one_section_content[that.selectIndex].question.id
         that.paperid = that.one_section_content[that.selectIndex].sourcePaperId // 组卷id
-        // console.log('组卷id', typeof that.paperid, typeof that.id)
         that.getCurrentRecord(answer)
       }, 400)
-      // console.log(answer)
+      console.log(answer)
+      // this.n = index // index为选项的索引
+      // if (answer.split('．')[1] === this.one_section_content[this.selectIndex].question.correctText) {
+      //   this.selectRight = 1 // 答对
+      //   console.log('right')
+      // } else {
+      //   console.log('答错')
+      //   const options = this.one_section_content[this.selectIndex].randomOption
+      //   console.log(options)
+      //   for (const item in options) {
+      //     if (options[item].split('．')[0] === this.one_section_content[this.selectIndex].rightOption) {
+      //       console.log('正确选项：', typeof item)
+      //       this.rightOp = parseInt(item)
+      //     }
+      //   }
+      //   this.selectRight = 2 // 答错
+      // }
+      // this.id = this.one_section_content[this.selectIndex].question.id
+      // this.answer = answer
+      // console.log('id:', typeof this.id)
+      // const that = this
+      // setTimeout(function () {
+      //
+      // }, 3000)
+      // that.getCurrentRecord(answer)
+      // this.n = -1
     },
+    // changeList (answer, index) {
+    //   // const that = this
+    //   // setTimeout(function () {
+    //   //
+    //   // }, 3000)
+    //   console.log(answer)
+    //   this.n = index // index为选项的索引
+    //   if (answer.split('．')[1] === this.one_section_content[this.selectIndex].question.correctText) {
+    //     this.selectRight = 1 // 答对
+    //     console.log('right')
+    //   } else {
+    //     console.log('答错')
+    //     const options = this.one_section_content[this.selectIndex].randomOption
+    //     console.log(options)
+    //     for (const item in options) {
+    //       if (options[item].split('．')[0] === this.one_section_content[this.selectIndex].rightOption) {
+    //         console.log('正确选项：', typeof item)
+    //         this.rightOp = parseInt(item)
+    //       }
+    //     }
+    //     this.selectRight = 2 // 答错
+    //   }
+    //   this.id = this.one_section_content[this.selectIndex].question.id
+    //   // this.answer = answer
+    //   console.log('id:', typeof this.id)
+    //   // const that = this
+    //   // setTimeout(function () {
+    //   //
+    //   // }, 3000)
+    //   this.getCurrentRecord(answer)
+    //   // this.n = -1
+    // },
     getCurrentRecord (ans) {
       getCurrentRecord({
         id: this.id,
@@ -366,7 +380,7 @@ export default {
         subject: this.subject_online,
         sourcePaperId: this.paperid
       }).then(res => {
-        // console.log('当前大体情况', res.data.data)
+        console.log('当前大体情况', res.data.data)
         this.currentError = res.data.data.doError
         this.currentRight = res.data.data.doRight
         this.currentRightList = res.data.data.doRightList
@@ -378,13 +392,12 @@ export default {
     },
     gotoNextQues () {
       this.selectIndex += 1
-      // console.log('展示的题：', this.selectIndex)
-      // this.selectRight = 0
-      // this.showDetail = false
+      console.log('展示的题：', this.selectIndex)
+      this.selectRight = 0
+      this.showDetail = false
     },
     seeDetail () {
       this.showDetail = true
-      this.quesList[this.selectIndex].showDetail = true
     }
   }
 }
@@ -542,8 +555,8 @@ export default {
   .vux-loadmore.weui-loadmore_line:before, .vux-loadmore.weui-loadmore_line:after {
     margin-top: 0.9em;
   }
-  .section_exec_jiexi >>> .weui-loadmore_line .weui-loadmore__tips {
-    top: 0;
+  .weui-loadmore_line .weui-loadmore__tips {
+    top: unset;
   }
   .smallKuang {
     height: 15px;
