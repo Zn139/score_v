@@ -13,7 +13,9 @@ const exam = {
     enterScoreList: [], // 录入所有成绩-梦良
     singleScoreListW: [], // 单科所有成绩-我
     enterScoreListW: [], // 录入所有成绩-我
-    subjects_list: [] // 剩余科目
+    subjects_list: [], // 剩余科目
+    detail_to_add: [], // 成绩详情到继续添加页面
+    detail_to_addW: [] // 成绩详情到继续添加页面
   },
   // actions: {
   //   single_Score_List (ssl, ans) {
@@ -23,6 +25,12 @@ const exam = {
   mutations: {
     SET_EXAM_NAME: (state, name) => {
       state.exam_name = name
+    },
+    DETAIL_TO_ADD: (state, list) => {
+      state.detail_to_add = list
+    },
+    DETAIL_TO_ADDW: (state, list) => {
+      state.detail_to_addW = list
     },
     SET_SCORE_NAME: (state, name) => {
       state.exam_name = name

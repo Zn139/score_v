@@ -35,7 +35,7 @@
         </tr>
         </tbody>
       </x-table>
-
+      <div class="jixuAdd" v-if="content.length < 9" @click="gotoAdd">继续添加<i class="iconfont icon_lulushuangyoujiantou-"></i></div>
       <confirm v-model="showDel"
                title="删除提示"
                @on-cancel="onCancel"
@@ -54,7 +54,10 @@ export default {
       content: [],
       showDel: false,
       delItem: '', // 删除项
-      showToast: false
+      showToast: false,
+      submitListW: [],
+      submitList: [],
+      subList: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
       // edit: {
       //   subject: '',
       //   score: '',
@@ -92,9 +95,39 @@ export default {
         // examName: this.$route.params.examName
       }).then(res => {
         this.content = res.data.data
-        console.log(this.content)
+        console.log('222222222222', this.content)
       })
       // console.log('全称：', fullName)
+    },
+    gotoAdd () {
+      for (const item in this.content) {
+        // console.log('每节课：', this.content[item])
+        const gradew = {'wechat_openid': this.content[item].manuallyEnterGrades.wechatOpenid, 'student_number': this.content[item].manuallyEnterGrades.studentNumber, 'subject_name': this.content[item].manuallyEnterGrades.subjectName, 'score': this.content[item].manuallyEnterGrades.score, 'class_rank': this.content[item].manuallyEnterGrades.classRank, 'grade_rank': this.content[item].manuallyEnterGrades.gradeRank, 'exam_name': this.content[item].manuallyEnterGrades.examName, 'imgs': this.content[item].imgurllist}
+        const grade = {'wechat_openid': this.content[item].manuallyEnterGrades.wechatOpenid, 'student_number': this.content[item].manuallyEnterGrades.studentNumber, 'subject_name': this.content[item].manuallyEnterGrades.subjectName, 'score': this.content[item].manuallyEnterGrades.score, 'class_rank': this.content[item].manuallyEnterGrades.classRank, 'grade_rank': this.content[item].manuallyEnterGrades.gradeRank, 'exam_name': this.content[item].manuallyEnterGrades.examName, 'imgs': this.content[item].manuallyEnterGrades.imgs}
+        this.submitList.push(grade)
+        this.submitListW.push(gradew)
+        this.subList.splice(this.subList.indexOf(this.content[item].manuallyEnterGrades.subjectName), 1)
+      }
+      // console.log('存进去的值：', grade)
+      // console.log('剩余科目：', this.subList)
+      console.log(this.submitListW)
+      console.log(this.submitList)
+      // const gradew = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examName, 'imgs': this.imgsListW}
+      // this.submitList.push(grade)
+      // this.submitListW.push(gradew)
+
+      // localStorage.setItem('detail_to_add', this.content)
+      this.$store.commit('DETAIL_TO_ADDW', this.submitListW)
+      this.$store.commit('DETAIL_TO_ADD', this.submitList)
+      this.$store.commit('SET_SUBJECTS_LIST', this.subList) // 剩余的科目
+      // console.log('存进来了么：', localStorage.getItem('detail_to_add'))
+      // this.$router.push('/addScore')
+      this.$router.push({
+        name: 'addScore',
+        params: {
+          type: 2
+        }
+      })
     },
     delData (item) { // 删除操作
       this.showDel = true
@@ -221,5 +254,16 @@ export default {
   .enter_action {
     font-size: 13px;
     color: #72b7e4;
+  }
+  .jixuAdd {
+    margin-top: 20px;
+    font-size: 15px;
+    color: #42b982;
+    font-weight: bold;
+    padding-bottom: 15px;
+    .iconfont {
+      margin-left: 5px;
+      font-size: 15px;
+    }
   }
 </style>

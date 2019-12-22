@@ -80,7 +80,7 @@
 <!--        </div>-->
         <x-button class="enter_submit" v-if="submitListW.length === 0" disabled>立即提交</x-button> <!--提交成绩单-->
         <x-button class="enter_submit" @click.native="submitTranscript" v-if="submitListW.length > 0">立即提交</x-button> <!--提交成绩单-->
-        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> <!--测试相机-->
+<!--        <x-button class="enter_submit" @click.native="submitCamera" >测试相机</x-button> &lt;!&ndash;测试相机&ndash;&gt;-->
         <toast v-model="showToast" :time="1000">录入成功</toast>
       </div>
     </div>
@@ -113,23 +113,105 @@ export default {
     }
   },
   mounted () { // 或者created也可以
-    console.log('时间还有吗：', this.$store.state.exam.examination)
-    if (this.$store.state.exam.examination.length > 0) {
-      this.examTime = this.$store.state.exam.examination.split(',')[0]
-      this.showTime = false
-      this.$nextTick(() => {
-        this.showTime = true
-      })
-      this.examName = this.$store.state.exam.examination.split(',')[1]
-    }
     this.init()
-    console.log('1111111', this.$store.state.exam.singleScoreListW)
-    if (this.$store.state.exam.singleScoreList.length > 0) {
-      this.submitListW = this.$store.state.exam.singleScoreListW
-      this.submitList = this.$store.state.exam.singleScoreList
-      this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList) // 添加之前的已经添加过的成绩
-      this.$store.commit('enter_Score_ListW', this.$store.state.exam.singleScoreListW) // 添加之前的已经添加过的成绩
+    if (this.$route.params.type === 0 || this.$route.params.type === 1) { // 首页添加成绩--保存--继续添加
+      console.log('首页添加成绩--保存--继续添加')
+      if (this.$store.state.exam.singleScoreList !== '') {
+        this.submitListW = this.$store.state.exam.singleScoreListW
+        this.submitList = this.$store.state.exam.singleScoreList
+        this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList) // 添加之前的已经添加过的成绩
+        this.$store.commit('enter_Score_ListW', this.$store.state.exam.singleScoreListW) // 添加之前的已经添加过的成绩
+      }
+      // console.log('时间存在吗：', this.examTime)
+      // console.log('格式：', this.submitListW)
+      // console.log('格式2：', this.submitList)
+      console.log(this.submitListW[0].exam_name.split('月'))
+      if (this.examTime === '') {
+        if (this.submitListW[0].exam_name.split('月').length > 2) {
+          this.examName = this.submitListW[0].exam_name.split('月')[1] + '月' + this.submitListW[0].exam_name.split('月')[2]
+        } else if (this.submitListW[0].exam_name.split('月').length === 2) {
+          this.examName = this.submitListW[0].exam_name.split('月')[1]
+        }
+        this.examTime = this.submitListW[0].exam_name.split('月')[0] + '月'
+        this.showTime = false
+        this.$nextTick(() => {
+          this.showTime = true
+        })
+      }
+      // if (this.examTime)
+    } else if (this.$route.params.type === 2) { // 首页--录入统计--继续添加
+      console.log('首页--录入统计--继续添加')
+      if (this.$store.state.exam.detail_to_add !== '') {
+        this.submitListW = this.$store.state.exam.detail_to_addW
+        this.submitList = this.$store.state.exam.detail_to_add
+        this.$store.commit('enter_Score_List', this.submitList) // 添加之前的已经添加过的成绩
+        this.$store.commit('enter_Score_ListW', this.submitListW) // 添加之前的已经添加过的成绩
+        // this.$store.commit('single_Score_List', this.submitList)
+        // this.$store.commit('single_Score_ListW', this.submitListW)
+        console.log('考试名称', this.submitListW[0].exam_name)
+        if (this.examTime === '') {
+          if (this.submitListW[0].exam_name.split('月').length > 2) {
+            this.examName = this.submitListW[0].exam_name.split('月')[1] + '月' + this.submitListW[0].exam_name.split('月')[2]
+          } else if (this.submitListW[0].exam_name.split('月').length === 2) {
+            this.examName = this.submitListW[0].exam_name.split('月')[1]
+          }
+          this.examTime = this.submitListW[0].exam_name.split('月')[0] + '月'
+          this.showTime = false
+          this.$nextTick(() => {
+            this.showTime = true
+          })
+        }
+        // this.examTime = this.submitListW[0].exam_name.split('月')[0] + '月'
+        // this.showTime = false
+        // this.$nextTick(() => {
+        //   this.showTime = true
+        // })
+        // this.examName = this.submitListW[0].exam_name.split('月')[1]
+        // console.log(this.submitListW)
+        // console.log(this.submitList)
+      }
     }
+    // else if (this.$route.params.type === 1) { // 正在录入编辑
+    //   if (this.$store.state.exam.singleScoreList !== '') {
+    //     this.submitListW = this.$store.state.exam.singleScoreListW
+    //     this.submitList = this.$store.state.exam.singleScoreList
+    //     this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList) // 添加之前的已经添加过的成绩
+    //     this.$store.commit('enter_Score_ListW', this.$store.state.exam.singleScoreListW) // 添加之前的已经添加过的成绩
+    //   }
+    //   // console.log('时间存在吗：', this.examTime)
+    //   // console.log('格式：', this.submitListW)
+    //   // console.log('格式2：', this.submitList)
+    //   if (this.examTime === '') {
+    //     this.examTime = this.submitListW[0].exam_name.split('月')[0] + '月'
+    //     this.showTime = false
+    //     this.$nextTick(() => {
+    //       this.showTime = true
+    //     })
+    //     this.examName = this.submitListW[0].exam_name.split('月')[1]
+    //   }
+    // }
+    // console.log('111111111', this.$store.state.exam.detail_to_add)
+    // if (this.$store.state.exam.detail_to_add !== '') {
+    //   this.submitListW = this.$store.state.exam.detail_to_add
+    //   console.log(this.submitListW)
+    //   console.log('详情到添加。')
+    // }
+    // console.log('时间还有吗：', this.$store.state.exam.examination)
+    // if (this.$store.state.exam.examination.length > 0) { // 录入成绩首页考试名称
+    //   this.examTime = this.$store.state.exam.examination.split(',')[0]
+    //   this.showTime = false
+    //   this.$nextTick(() => {
+    //     this.showTime = true
+    //   })
+    //   this.examName = this.$store.state.exam.examination.split(',')[1]
+    // }
+    // console.log('222222222', this.$store.state.exam.singleScoreListW)
+    // if (this.$store.state.exam.singleScoreList !== '') {
+    //   this.submitListW = this.$store.state.exam.singleScoreListW
+    //   this.submitList = this.$store.state.exam.singleScoreList
+    //   this.$store.commit('enter_Score_List', this.$store.state.exam.singleScoreList) // 添加之前的已经添加过的成绩
+    //   this.$store.commit('enter_Score_ListW', this.$store.state.exam.singleScoreListW) // 添加之前的已经添加过的成绩
+    // }
   },
   methods: {
     init () {
@@ -148,20 +230,27 @@ export default {
     },
     gotoEdit (index, item) {
       console.log('要编辑了：', this.$store.state.exam.subjects_list)
+      if (this.$route.params.type === 2) {
+        this.$vux.alert.show({
+          title: '提示',
+          content: '请到成绩详情页进行编辑哦！'
+        })
+      } else {
+        this.$router.push({
+          name: 'addSingleSubScore',
+          params: {
+            type: 1, // 指定是现在编辑类型
+            id: index, // 当前数据的索引
+            remainSub: this.$store.state.exam.subjects_list, // 加上当前学科
+            currentSub: item.subject_name,
+            allContent: this.submitListW
+          }
+        })
+      }
       // const a = this.$store.state.exam.subjects_list
       // console.log(val.subject_name)
       // const b = a.push(val.subject_name)
       // console.log('要编辑了：', b)
-      this.$router.push({
-        name: 'addSingleSubScore',
-        params: {
-          type: 1, // 指定是现在编辑类型
-          id: index, // 当前数据的索引
-          remainSub: this.$store.state.exam.subjects_list, // 加上当前学科
-          currentSub: item.subject_name,
-          allContent: this.submitListW
-        }
-      })
     },
     gotoRecord () {
       this.$router.push({path: '/record'})
@@ -175,7 +264,7 @@ export default {
       } else {
         // const kName = this.examTime.split('-')[0] + '年' + this.examTime.split('-')[1] + '月' + this.examName
         // this.$store.commit('SET_examination', kName)
-        this.$store.commit('SET_examination', this.examTime + ' ,' + this.examName)
+        this.$store.commit('SET_examination', this.examTime + this.examName)
         // localStorage.setItem('SET_examination', this.examTime + ' ,' + this.examName)
         this.$router.push({
           name: 'addSingleSubScore',
@@ -187,11 +276,14 @@ export default {
       }
     },
     submitTranscript () { // 提交时，将考试时间和考试名称放入每个单科列中
-      const rightTimeList = this.examTime.split('-')
-      const rightT = rightTimeList[0] + '年' + rightTimeList[1] + '月'
-      console.log(this.examName, rightT)
-      for (const item in this.submitList) {
-        this.submitList[item].exam_name = rightT + this.examName
+      console.log(this.examTime)
+      if (this.examTime.indexOf('月') === -1) {
+        const rightTimeList = this.examTime.split('-')
+        const rightT = rightTimeList[0] + '年' + rightTimeList[1] + '月'
+        console.log(this.examName, rightT)
+        for (const item in this.submitList) {
+          this.submitList[item].exam_name = rightT + this.examName
+        }
       }
       console.log('提交了：', this.submitList)
       enterGradeList(this.submitList).then(res => {

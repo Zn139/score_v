@@ -161,7 +161,7 @@ export default {
           this.subList = this.$route.params.remainSub
         }
       } else if (this.$route.params.type === 1) { // 正在录入成绩编辑
-        console.log('正在录入编辑：', this.$route.params.remainSub)
+        console.log('正在录入编辑：', this.$route.params)
         if (this.$route.params.remainSub.length > 0) { // 剩余的科目
           this.subList = this.$route.params.remainSub
           this.subList.push(this.$route.params.currentSub)
@@ -245,8 +245,8 @@ export default {
           console.log('heheheh', res.data)
           const a = 'http://47.93.225.12:8081/downloadbyfastdfspath?fastdfspath=' + res.data.filemap[0].fastdfspath
           // console.log(a)
-          console.log('wwwwww', this.imgsList)
-          console.log('asdsadsdfdsfsdfsdfgfhfjkjkjl', this.imgsListW)
+          // console.log('wwwwww', this.imgsList)
+          // console.log('asdsadsdfdsfsdfsdfgfhfjkjkjl', this.imgsListW)
           this.imgsList += a + ','
           this.imgsListW.push(a)
           // this.imgsList.push(a)
@@ -316,7 +316,13 @@ export default {
         this.$store.commit('single_Score_List', this.submitList) // 所有的给孟良
         this.$store.commit('single_Score_ListW', this.submitListW) // 所有的给我
         // this.$store.dispatch('single_Score_List', this.submitList)
-        this.$router.push('/addScore')
+        // this.$router.push('/addScore')
+        this.$router.push({
+          name: 'addScore',
+          params: {
+            type: 1
+          }
+        })
         this.submitList = []
         this.submitListW = []
       } else if (this.$route.params.type === 0) { // 添加
@@ -337,7 +343,9 @@ export default {
             }
           }
           const grade = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examination, 'imgs': this.imgsList}
-          const gradew = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examName, 'imgs': this.imgsListW}
+          const gradew = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examination, 'imgs': this.imgsListW}
+          console.log('当前添加的：', grade)
+          console.log('当前添加的w：', gradew)
           this.submitList.push(grade)
           this.submitListW.push(gradew)
           this.subList.splice(this.subList.indexOf(this.selectSub), 1)
@@ -347,7 +355,13 @@ export default {
           this.$store.commit('single_Score_List', this.submitList)
           this.$store.commit('single_Score_ListW', this.submitListW)
           // this.$store.dispatch('single_Score_List', this.submitList)
-          this.$router.push('/addScore')
+          this.$router.push({
+            name: 'addScore',
+            params: {
+              type: 0
+            }
+          })
+          // this.$router.push('/addScore')
           this.submitList = []
           this.submitListW = []
         }
