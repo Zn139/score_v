@@ -546,4 +546,7 @@ export default {
     /*opacity: 0.8;*/
     /*background-color: rgba(66, 185, 130, 0.3);*/
   }
+  .weui-btn:after {
+    border: 1px solid rgba(47, 204, 11, 0.8);
+  }
 </style>

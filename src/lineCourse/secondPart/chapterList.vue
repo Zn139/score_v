@@ -17,7 +17,8 @@
           <div class="year-sub" v-show="item.show">
             <div class="month-item" v-for="(sub, inde) in item.children" :key="inde" v-if="item.children.length> 0">
               <div class="month-item-name">
-                <div class="month-item_sty" @click="getExamInfo(item.name + '\\n' + sub)">
+                <div class="month-item_sty" @click="getExamInfo(sub)">
+<!--                <div class="month-item_sty" @click="getExamInfo(item.name + '\\n' + sub)">-->
                   <!--                  <div class="month-item_sty" @click="getAllName(sub, inde, item)">-->
                   <span>{{sub}}</span>
                 </div>

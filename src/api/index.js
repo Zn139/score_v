@@ -236,3 +236,24 @@ export function cancelCollectCurrentQues (req) { // 在线课程--章节练习--
     params: req
   })
 }
+export function recordCurrentAnsToQues (req) { // 在线课程--章节练习--退出时--记录当次所做所有题
+  return request({
+    url: 'exam/fullPaperRecord',
+    method: 'post',
+    params: req
+  })
+}
+export function getPreRecord (req) { // 在线课程--章节练习--进来时--记录上次所做题的情况
+  return request({
+    url: 'exam/echoPaperInfo',
+    method: 'get',
+    params: req
+  })
+}
+export function getShowCollect (req) { // 在线课程--章节练习--进来时--某个题是否收藏过
+  return request({
+    url: 'exam/findCollectInfo',
+    method: 'get',
+    params: req
+  })
+}

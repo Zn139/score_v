@@ -33,8 +33,7 @@
                       <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
                       <div v-if="index !== n"><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
                     </div>
-                    <x-button v-if="selectIndex !== allSum - 1" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
-<!--                    <x-button v-if="selectIndex === allSum" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>-->
+                    <x-button class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
                   </div>
                   <!--选择错误时，selectRight为2-->
                   <div v-if="selectRight === 2">
@@ -104,9 +103,7 @@
     <div v-transfer-dom class="section_exec_third_tan">
       <popup v-model="showSum" position="bottom" max-height="50%">
         <div class="section_exec_third">
-          <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
-          <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
-          <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
+          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>
           <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>
           <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
         </div>
@@ -119,16 +116,8 @@
             <cell v-if="currentRightList.indexOf(i) > -1" :key="i" :title="i" class="section_exec_cell right"></cell>
             <cell v-else-if="currentErrorList.indexOf(i) > -1" :key="i" :title="i" class="section_exec_cell error"></cell>
             <cell v-else :key="i" :title="i" class="section_exec_cell nodo"></cell>
-<!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
-          </div>
-          <div class="redoQues" v-if="currentNotList.length === 0">
-            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>
-          </div>
-          <div class="redoQues" v-if="currentNotList.length > 0">
-            <x-button class="enter_submit1" disabled>重新做题</x-button>
           </div>
         </group>
-<!--        <div class="redoQues">重新做题</div>-->
 <!--        <div style="padding: 15px;">-->
 <!--          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>-->
 <!--        </div>-->
@@ -246,8 +235,6 @@ export default {
         }).then(res => {
           this.$router.go(-1)
         })
-      } else {
-        this.$router.go(-1)
       }
     },
     init () {
@@ -256,19 +243,6 @@ export default {
           click: true
         })
       })
-    },
-    redoQues () {
-      this.showSum = false
-      this.selectRight = 0
-      this.selectIndex = 0
-      this.n = -1
-      // this.selectToRight = 0
-      this.currentError = 0
-      this.currentErrorList = []
-      this.currentNotList = []
-      this.currentRight = 0
-      this.currentRightList = []
-      this.getOneSectionQues()
     },
     getCollect () {
       getShowCollect({
@@ -286,16 +260,67 @@ export default {
         subject: this.subject_online,
         paperName: this.paperName
       }).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         // console.log(res.data.data[0].effective)
         if (res.data.code === 0) { // 做过题
           this.allSum = res.data.data[0].list.length // 所有题的个数
           // this.flag = 1 // 做过题
-          if (res.data.data[0].effective === 1) { // 上次记录做完了
-            this.showSum = true
-            this.selectIndex = this.allSum - 1
+          // if (res.data.data[0].effective === 1) { // 上次记录做完了
+          //   this.showSum = true
+          //   this.selectIndex = this.allSum - 1
+          //   this.one_section_content = res.data.data[0].list
+          //   console.log(this.one_section_content)
+          //   this.currentRightList = []
+          //   this.currentError = 0
+          //   this.currentRight = 0
+          //   this.currentErrorList = []
+          //   this.currentNotList = []
+          //   for (const item in this.one_section_content) {
+          //     // this.showCollec = this.one_section_content[item].echoPaperDTO.collect
+          //     this.userOption = -1
+          //     this.selectToRight = 0
+          //     if (this.one_section_content[item].userOption === 'A') {
+          //       this.userOption = 0
+          //     } else if (this.one_section_content[item].userOption === 'B') {
+          //       this.userOption = 1
+          //     } else if (this.one_section_content[item].userOption === 'C') {
+          //       this.userOption = 2
+          //     } else if (this.one_section_content[item].userOption === 'D') {
+          //       this.userOption = 3
+          //     }
+          //     // console.log('this.userOption:', this.userOption)
+          //     // console.log(res.data.data[0].list[item].userOption, res.data.data[0].list[item].question.rightOption)
+          //     if (this.one_section_content[item].userOption === this.one_section_content[item].question.rightOption) {
+          //       this.selectToRight = 1 // right
+          //       this.currentRight += 1
+          //       this.currentRightList.push(parseInt(item) + 1)
+          //     } else {
+          //       this.selectToRight = 2 // error
+          //       for (const j in this.one_section_content[item].randomOption) {
+          //         // console.log(666666666)
+          //         if (this.one_section_content[item].randomOption[j].split('．')[0] === this.one_section_content[item].rightOption) {
+          //           this.rightOp = parseInt(j)
+          //         }
+          //       }
+          //       // console.log(66666666, this.rightOp)
+          //       this.currentError += 1
+          //       this.currentErrorList.push(parseInt(item) + 1)
+          //     }
+          //     // console.log('this.selectToRight:', this.selectToRight)
+          //     const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id}
+          //     // console.log('当前选项：', oneDetail)
+          //     this.quesList.push(oneDetail)
+          //     this.answer_to_ques[item] = this.one_section_content[item].userOption
+          //     // if (res.data.data[0].list[item].complete === 2) { // 表示这道题没做,默认跳到的题目索引
+          //     //   this.selectIndex = item
+          //     //   continue
+          //     // }
+          //   }
+          //   // this.showTanTip = true
+          // } else { // 上次记录没做完，做一半或者做了几个题
+            this.selectIndex = 9
+            // this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
             this.one_section_content = res.data.data[0].list
-            console.log(this.one_section_content)
             this.currentRightList = []
             this.currentError = 0
             this.currentRight = 0
@@ -303,49 +328,6 @@ export default {
             this.currentNotList = []
             for (const item in this.one_section_content) {
               // this.showCollec = this.one_section_content[item].echoPaperDTO.collect
-              this.userOption = -1
-              this.selectToRight = 0
-              if (this.one_section_content[item].userOption === 'A') {
-                this.userOption = 0
-              } else if (this.one_section_content[item].userOption === 'B') {
-                this.userOption = 1
-              } else if (this.one_section_content[item].userOption === 'C') {
-                this.userOption = 2
-              } else if (this.one_section_content[item].userOption === 'D') {
-                this.userOption = 3
-              }
-              // console.log('this.userOption:', this.userOption)
-              // console.log(res.data.data[0].list[item].userOption, res.data.data[0].list[item].question.rightOption)
-              if (this.one_section_content[item].userOption === this.one_section_content[item].question.rightOption) {
-                this.selectToRight = 1 // right
-                this.currentRight += 1
-                this.currentRightList.push(parseInt(item) + 1)
-              } else {
-                this.selectToRight = 2 // error
-                for (const j in this.one_section_content[item].randomOption) {
-                  if (this.one_section_content[item].randomOption[j].split('．')[0] === this.one_section_content[item].rightOption) {
-                    this.rightOp = parseInt(j)
-                  }
-                }
-                this.currentError += 1
-                this.currentErrorList.push(parseInt(item) + 1)
-              }
-              // console.log('this.selectToRight:', this.selectToRight)
-              const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id}
-              // console.log('当前选项：', oneDetail)
-              this.quesList.push(oneDetail)
-              this.answer_to_ques[item] = this.one_section_content[item].userOption
-            }
-            // this.showTanTip = true
-          } else { // 上次记录没做完，做一半或者做了几个题
-            this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
-            this.one_section_content = res.data.data[0].list
-            this.currentRightList = []
-            this.currentError = 0
-            this.currentRight = 0
-            this.currentErrorList = []
-            this.currentNotList = []
-            for (const item in this.one_section_content) {
               this.userOption = -1
               this.selectToRight = 0
               if (this.one_section_content[item].complete === 1) { // 表示这道题做了
@@ -358,6 +340,8 @@ export default {
                 } else if (this.one_section_content[item].userOption === 'D') {
                   this.userOption = 3
                 }
+                // console.log('this.userOption:', this.userOption)
+                // console.log(res.data.data[0].list[item].userOption, res.data.data[0].list[item].question.rightOption)
                 if (this.one_section_content[item].userOption === this.one_section_content[item].question.rightOption) {
                   this.selectToRight = 1 // right
                   this.currentRight += 1
@@ -365,10 +349,12 @@ export default {
                 } else {
                   this.selectToRight = 2 // error
                   for (const j in this.one_section_content[item].randomOption) {
+                    // console.log(666666666)
                     if (this.one_section_content[item].randomOption[j].split('．')[0] === this.one_section_content[item].rightOption) {
                       this.rightOp = parseInt(j)
                     }
                   }
+                  // console.log(66666666, this.rightOp)
                   this.currentError += 1
                   this.currentErrorList.push(parseInt(item) + 1)
                 }
@@ -382,8 +368,16 @@ export default {
               // console.log('当前选项：', oneDetail)
               this.quesList.push(oneDetail)
               this.answer_to_ques[item] = this.one_section_content[item].userOption
+              // if (res.data.data[0].list[item].complete === 2) { // 表示这道题没做,默认跳到的题目索引
+              //   this.selectIndex = item
+              //   continue
+              // }
             }
-          }
+            // console.log('111111', this.currentErrorList)
+            // console.log('111111', this.currentRightList)
+            // console.log('111111', this.currentNotList)
+            // console.log('所有选项', this.quesList)
+          // }
         } else {
           // this.flag = 0 // 没做过题
           this.getOneSectionQues()
@@ -511,14 +505,15 @@ export default {
         // 给每个题都加上一个字典，未做题的情况
         for (const item in this.one_section_content) {
           const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id}
-          this.currentNotList.push(parseInt(item) + 1)
           // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
           this.quesList.push(oneDetail)
           this.answer_to_ques[item] = ''
           // console.log(parseInt(item) + 1)
         }
-        console.log(this.currentNotList)
-        console.log(this.currentNotList.length)
+        // console.log(this.answer_to_ques)
+        // console.log(this.quesList)
+        // console.log('所有信息：', res.data)
+        // console.log('为啥子没有', this.one_section_content[this.selectIndex].collect)
       })
     },
     changeList (answer, index) {
@@ -869,34 +864,5 @@ export default {
       background-color: #fff;
       /*background-color: #ccc;*/
     }
-  }
-  .redoQues {
-    background-color: #fff;
-    margin-top: 35px;
-  }
-  .enter_submit {
-    width: 88%;
-    color: #fff;
-    font-size: 16px;
-    /*margin-left: 70%;*/
-    margin-top: 45px;
-    background-color: #42b982;
-    /*opacity: 0.8;*/
-    /*background-color: rgb(66, 185, 130);*/
-    /*background-color: rgba(66, 185, 130, 0.7);*/
-  }
-  .enter_submit1 {
-    width: 88%;
-    /*color: #fff;*/
-    font-size: 16px;
-    /*margin-left: 70%;*/
-    margin-top: 45px;
-    background-color: #ececec;
-    /*opacity: 0.8;*/
-    /*background-color: rgb(66, 185, 130);*/
-    /*background-color: rgba(66, 185, 130, 0.7);*/
-  }
-  .weui-btn:after {
-    border: unset;
   }
 </style>
