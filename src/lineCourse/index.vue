@@ -43,13 +43,13 @@ export default {
           click: true
         })
       })
-    },
-    gotoChapter () {
-      this.$router.push('/chapterList')
-    },
-    gotoSimulate () {
-      this.$router.push('/simulationList')
     }
+    // gotoChapter () {
+    //   this.$router.push('/chapterList')
+    // },
+    // gotoSimulate () {
+    //   this.$router.push('/simulationList')
+    // }
   }
 }
 </script>

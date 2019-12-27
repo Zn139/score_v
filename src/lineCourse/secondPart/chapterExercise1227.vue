@@ -291,26 +291,19 @@ export default {
         if (res.data.code === 0) { // 做过题
           this.allSum = res.data.data[0].list.length // 所有题的个数
           // this.flag = 1 // 做过题
-          // if (res.data.data[0].effective === 1) { // 上次记录做完了
-          // this.showSum = true
-          // this.selectIndex = this.allSum - 1
-          if (parseInt(res.data.data[0].firstNoDoneNum) === this.allSum) {
+          if (res.data.data[0].effective === 1) { // 上次记录做完了
             this.showSum = true
             this.selectIndex = this.allSum - 1
-          } else {
-            this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
-          }
-          this.one_section_content = res.data.data[0].list
-          console.log(this.one_section_content)
-          this.currentRightList = []
-          this.currentError = 0
-          this.currentRight = 0
-          this.currentErrorList = []
-          this.currentNotList = []
-          for (const item in this.one_section_content) {
-            this.userOption = -1
-            this.selectToRight = 0
-            if (this.one_section_content[item].complete === 1) { // 表示这道题做了
+            this.one_section_content = res.data.data[0].list
+            console.log(this.one_section_content)
+            this.currentRightList = []
+            this.currentError = 0
+            this.currentRight = 0
+            this.currentErrorList = []
+            this.currentNotList = []
+            for (const item in this.one_section_content) {
+              this.userOption = -1
+              this.selectToRight = 0
               if (this.one_section_content[item].userOption === 'A') {
                 this.userOption = 0
               } else if (this.one_section_content[item].userOption === 'B') {
@@ -334,18 +327,60 @@ export default {
                 this.currentError += 1
                 this.currentErrorList.push(parseInt(item) + 1)
               }
-              // console.log('this.selectToRight:', this.selectToRight)
-            } else if (res.data.data[0].list[item].complete === 2) { // 这道题没做
-              this.currentNotList.push(parseInt(item) + 1)
-              this.selectToRight = 0
-              this.userOption = -1
+              const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id}
+              this.quesList.push(oneDetail)
+              this.answer_to_ques[item] = this.one_section_content[item].userOption
             }
-            const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id}
-            // console.log('当前选项：', oneDetail)
-            this.quesList.push(oneDetail)
-            this.answer_to_ques[item] = this.one_section_content[item].userOption
+            // this.showTanTip = true
+          } else { // 上次记录没做完，做一半或者做了几个题
+            this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
+            this.one_section_content = res.data.data[0].list
+            this.currentRightList = []
+            this.currentError = 0
+            this.currentRight = 0
+            this.currentErrorList = []
+            this.currentNotList = []
+            for (const item in this.one_section_content) {
+              this.userOption = -1
+              this.selectToRight = 0
+              if (this.one_section_content[item].complete === 1) { // 表示这道题做了
+                if (this.one_section_content[item].userOption === 'A') {
+                  this.userOption = 0
+                } else if (this.one_section_content[item].userOption === 'B') {
+                  this.userOption = 1
+                } else if (this.one_section_content[item].userOption === 'C') {
+                  this.userOption = 2
+                } else if (this.one_section_content[item].userOption === 'D') {
+                  this.userOption = 3
+                }
+                if (this.one_section_content[item].userOption === this.one_section_content[item].question.rightOption) {
+                  this.selectToRight = 1 // right
+                  this.currentRight += 1
+                  this.currentRightList.push(parseInt(item) + 1)
+                } else {
+                  this.selectToRight = 2 // error
+                  for (const j in this.one_section_content[item].randomOption) {
+                    if (this.one_section_content[item].randomOption[j].split('．')[0] === this.one_section_content[item].rightOption) {
+                      this.rightOp = parseInt(j)
+                    }
+                  }
+                  this.currentError += 1
+                  this.currentErrorList.push(parseInt(item) + 1)
+                }
+                // console.log('this.selectToRight:', this.selectToRight)
+              } else if (res.data.data[0].list[item].complete === 2) { // 这道题没做
+                this.currentNotList.push(parseInt(item) + 1)
+                this.selectToRight = 0
+                this.userOption = -1
+              }
+              const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id}
+              // console.log('当前选项：', oneDetail)
+              this.quesList.push(oneDetail)
+              this.answer_to_ques[item] = this.one_section_content[item].userOption
+            }
           }
-        } else { // 没做过题
+        } else {
+          // this.flag = 0 // 没做过题
           this.getOneSectionQues()
         }
         // console.log('之前的记录~~~~', res.data.data)
@@ -412,7 +447,31 @@ export default {
     // },
     get_noselect_current () { // 当前所答题情况框，是否显示
       this.showSum = !this.showSum
+      // if (this.showSum === false) {
+      //   getNoSelectCurrentRecord({
+      //     studentNumber: this.schoolNumber,
+      //     paperName: this.paperName,
+      //     subject: this.subject_online
+      //   }).then(res => {
+      //     console.log(res.data.data)
+      //     this.currentRightList = res.data.data.doRightList
+      //     this.currentErrorList = res.data.data.doErrorList
+      //     this.currentNotList = res.data.data.notDoList
+      //   })
+      //   this.showSum = true
+      // } else {
+      //   this.showSum = false
+      // }
     },
+    // getNoSelect_allQues () {
+    //   getNoSelectCurrentRecord({
+    //     studentNumber: this.schoolNumber,
+    //     paperName: this.paperName,
+    //     subject: this.subject_online
+    //   }).then(res => {
+    //     this.allSum = res.data.data.questionCount
+    //   })
+    // },
     swiperleft: function () {
       // this.n = -1 // 左滑或者右滑时，所选选项变为-1
       if (this.selectIndex < this.one_section_content.length - 1) {
@@ -619,10 +678,37 @@ export default {
       color: #42b983;
       /*background-color:  #CCFF99;;*/
     }
+    /*span.checked {*/
+    /*  !*color:#0CF;*!*/
+    /*  color:#42b983;*/
+    /*  background-color: #42b983;*/
+    /*}*/
+    /*span.checked:before{*/
+    /*  background-color:#42b983;*/
+    /*  !*background-color:#0CF;*!*/
+    /*  border:2px #9c9c9c solid;*/
+    /*}*/
+    /*span:before{*/
+    /*  display:inline-block;*/
+    /*  width:10px;*/
+    /*  height:10px;*/
+    /*  line-height:10px;*/
+    /*  content:"";*/
+    /*  border:2px #9c9c9c solid;*/
+    /*  border-radius: 10px;*/
+    /*  margin-right:10px;*/
+    /*  transition:all 0.3s linear;*/
+    /*}*/
   }
   .ques_option {
     margin-left: 20px;
+    /*text-align: left;*/
+    /*margin-left: 50%;
+    transform: translateX(-50%);*/
   }
+  /*.select-right {*/
+  /*  color: red;*/
+  /*}*/
   .right_button {
     margin-top: 15px;
     font-size: 16px;
@@ -790,21 +876,22 @@ export default {
     /*margin-left: 70%;*/
     margin-top: 45px;
     background-color: #42b982;
+    /*opacity: 0.8;*/
+    /*background-color: rgb(66, 185, 130);*/
+    /*background-color: rgba(66, 185, 130, 0.7);*/
   }
   .enter_submit1 {
-    width: 90%;
-    font-size: 16px;
-    margin-top: 45px;
+    width: 88%;
     /*color: #fff;*/
-    /*background-color: #ececec;*/
-    /*.weui-btn:after {*/
-    /*  border: unset;*/
-    /*}*/
+    font-size: 16px;
+    /*margin-left: 70%;*/
+    margin-top: 45px;
+    background-color: #ececec;
+    /*opacity: 0.8;*/
+    /*background-color: rgb(66, 185, 130);*/
+    /*background-color: rgba(66, 185, 130, 0.7);*/
   }
-  /*.enter_submit1 >>> .weui-btn {*/
-  /*  border: unset;*/
-  /*}*/
-  /*.weui-btn:after {*/
-  /*  border: unset;*/
-  /*}*/
+  .weui-btn:after {
+    border: unset;
+  }
 </style>

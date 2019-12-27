@@ -71,9 +71,34 @@ export default {
 
     }
   },
+  computed: {
+    // paperName () {
+    //   // console.log(this.$route.params.fullName)
+    //   return this.$route.params.paperName
+    // },
+    subject_online () {
+      // console.log(this.$route.params.fullName)
+      // return this.$route.params.subject
+      return this.$store.state.lineCourse.select_sub
+    },
+    openid () {
+      return this.$store.state.exam.openid
+    },
+    schoolNumber () {
+      return this.$store.state.exam.schoolNum
+    }
+  },
   methods: {
     gotoPage (name) {
-      this.$router.push({name: name})
+      console.log('学号：', this.schoolNumber)
+      if (this.schoolNumber === '') {
+        this.$vux.alert.show({
+          title: '提示',
+          content: '您还未绑定学号，请到‘我的-->绑定账号’去绑定'
+        })
+      } else {
+        this.$router.push({name: name})
+      }
     }
     // gotoChapter () {
     //   this.$router.push('/chapterList')

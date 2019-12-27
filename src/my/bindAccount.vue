@@ -11,7 +11,7 @@
         <x-input class="bind_school" title="学号" placeholder="请输入学号" text-align="right" placeholder-align="right" v-model="schoolNum" @on-change="changeSchoolNum"></x-input>
         <!--      <x-button plain class="bind_school_button">确定</x-button>-->
       </div>
-      <div v-if="schoolMember === 0">
+      <div v-if="schoolMember === 0"> <!-- 不是学校合作学生 -->
         <popup-picker class="bind_school" title="选择学校" :data="[schoolList]" v-model="schoolValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="输入学校名称"></popup-picker>
         <popup-picker class="bind_school" title="选择阶段" :data="[levelList]" v-model="levelValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="选择学习阶段"></popup-picker>
         <calendar class="bind_school" v-model="startYear" title="入学年份"></calendar>
@@ -21,12 +21,12 @@
         <x-input class="bind_school" type="password" title="确认密码" placeholder="再次输入密码" text-align="right" placeholder-align="right" v-model="passwod" @on-blur="confirmPassword"></x-input>
         <x-button plain class="bind_school_button" @click.native="bindOutUser">完成</x-button>
       </div>
-      <div class="bind_school_tip" v-if="schoolMember === 1">
+      <div class="bind_school_tip" v-if="schoolMember === 1"> <!-- 是学校合作学生，所以需要验证下 -->
         <!--      <alert title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>-->
         <alert v-model="schVerify" title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>
         <!--      若为学校购买服务器用户，提示验证初始密码-->
       </div>
-      <div v-if="schoolMember === 2">
+      <div v-if="schoolMember === 2"> <!-- 是学校合作学生，所以需要验证下 -->
         <x-input class="bind_school" title="验证初始密码" placeholder="请输入初始密码" text-align="right" placeholder-align="right" v-model="schoolPasswod" ></x-input>
         <x-button plain class="bind_school_button" @click.native="bindUser">完成</x-button>
       </div>
@@ -100,6 +100,8 @@ export default {
             title: '提示',
             content: '您已经绑定过学号啦！'
           })
+          // this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
+          // localStorage.setItem('schoolNum', res.data.userLogin.diyid)
           this.stuInfoContent = res.data.userLogin
           this.flag = 1
           this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.stuInfoContent.diyid).then(resp => {
@@ -117,7 +119,7 @@ export default {
         }
       })
     },
-    changeSchoolNum (val) {
+    changeSchoolNum (val) { // 根据输入的学号，查看是否存在（是否是合作学校学生）
       this.$axios({
         method: 'get',
         url: 'http://www.kgai.tech/getAllInfoByDiyid',
@@ -186,8 +188,8 @@ export default {
       this.schoolMember = 2
     },
     bindUser () {
-      this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      localStorage.setItem('schoolNum', this.schoolNum)
+      // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
+      // localStorage.setItem('schoolNum', this.schoolNum)
       this.$axios({
         method: 'post',
         url: 'http://www.kgai.tech/rest/userRegister',
@@ -216,8 +218,8 @@ export default {
       })
     },
     bindOutUser () {
-      this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
+      // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
+      // localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
       this.$axios({
         method: 'post',
         url: 'http://www.kgai.tech/rest/userRegister',
