@@ -43,7 +43,8 @@
                       <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
                       <div v-else><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
                     </div>
-                    <x-button class="right_button">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}</x-button>
+                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}，跳至下题</x-button>
+                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}</x-button>
                   </div>
                 </div>
               </div>
@@ -98,7 +99,8 @@
       <!--判断是否收藏 1表示收藏  2表示没有收藏-->
       <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
       <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
-<!--      <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>-->
+      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues">删除</span></div>
+      <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
       <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
     </div>
     <div v-transfer-dom class="section_exec_third_tan">
@@ -107,7 +109,8 @@
           <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
           <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
           <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
-<!--          <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>-->
+          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues">删除</span></div>
+          <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
           <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
         </div>
         <group>
@@ -115,8 +118,8 @@
             {{section}}
           </div>
           <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
-            <cell v-if="currentRightList.indexOf(i) > -1" :key="i.index" :title="i.id" class="section_exec_cell right"></cell>
-            <cell v-else-if="currentErrorList.indexOf(i) > -1" :key="i.index" :title="i.id" class="section_exec_cell error"></cell>
+            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell error"></cell>
             <cell v-else :key="i.index" :title="i.id" class="section_exec_cell nodo"></cell>
             <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
           </div>
@@ -192,6 +195,7 @@ export default {
       return this.$route.params.section
     },
     ifMastered () {
+      console.log('掌握了么', this.$route.params.ifMastered)
       return this.$route.params.ifMastered
     }
   },
@@ -237,7 +241,10 @@ export default {
     getCollect () { // 此题的收藏情况
       console.log(232423234)
       getShowCollect({
-        id: this.quesList[this.selectIndex].id
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        question_id: this.quesList[this.selectIndex].id
       }).then(res => {
         this.showCollec = res.data.data.collect
         console.log('当前题的收藏状态：', this.showCollec)
@@ -246,7 +253,10 @@ export default {
     get_noselect_current () { // 当前所答题情况框，是否显示
       this.showSum = !this.showSum
     },
-    getErrorDetail () {
+    delCurrentQues () {
+      console.log(this.selectIndex)
+    },
+    getErrorDetail () { // 得到错误题详细信息
       // console.log('88888888888888', this.chapter, this.section)
       getSectionDetail({
         studentNumber: this.schoolNumber,
@@ -273,6 +283,7 @@ export default {
       })
     },
     collectCurrentQues () { // 收藏当前题
+      console.log('点击了么')
       if (this.showCollec === 2) { // 表示未收藏
         collectCurrentQues({
           id: this.errorSectionList[this.selectIndex].id,
@@ -325,7 +336,9 @@ export default {
         if (answer.split('.')[1] === that.errorSectionList[that.selectIndex].correct_text) {
           that.selectRight = 1 // 答对
           that.currentRight += 1 // 做对的个数加1
+          that.currentRightList.push(that.selectIndex)
           that.quesList[that.selectIndex].selectRight = 1
+          console.log('正确列表', that.currentRightList)
         } else {
           const options = that.errorSectionList[that.selectIndex].question_option
           for (const item in options) {
@@ -337,6 +350,8 @@ export default {
           }
           that.selectRight = 2 // 答错
           that.currentError += 1 // 做对的个数加1
+          that.currentErrorList.push(that.selectIndex)
+          console.log('错误列表', that.currentErrorList)
           that.quesList[that.selectIndex].selectRight = 2
         }
         that.id = that.errorSectionList[that.selectIndex].id
@@ -529,6 +544,7 @@ export default {
     height: 25px;
     background-color: rgba(255,255, 223, 0.7);
     font-size: 13px;
+    text-align: center;
     .iconfont {
       font-size: 14px;
       margin-right: 7px;
@@ -540,37 +556,68 @@ export default {
       color: red;
     }
   }
+  /*.section_exec_third_left {*/
+  /*  line-height: 25px;*/
+  /*  width: 40%;*/
+  /*  text-align: left;*/
+  /*  display: inline-block;*/
+  /*}*/
+  /*.section_exec_third_left {*/
+  /*  .icon_luluenjoy1 {*/
+  /*    color: red;*/
+  /*    margin-left: 30px;*/
+  /*  }*/
+  /*  .icon_lulucollect {*/
+  /*    margin-left: 30px;*/
+  /*  }*/
+  /*}*/
+  /*!*.section_exec_third_center {*!*/
+  /*!*  line-height: 25px;*!*/
+  /*!*  width: 40%;*!*/
+  /*!*  text-align: center;*!*/
+  /*!*  display: inline-block;*!*/
+  /*!*  span {*!*/
+  /*!*    margin-right: 20px;*!*/
+  /*!*  }*!*/
+  /*!*}*!*/
+  /*.section_exec_third_right {*/
+  /*  width: 50%;*/
+  /*  line-height: 25px;*/
+  /*  display: inline-block;*/
+  /*  text-align: right;*/
+  /*  .iconfont {*/
+  /*    margin-left: 50px;*/
+  /*  }*/
+  /*}*/
   .section_exec_third_left {
     line-height: 25px;
-    width: 40%;
-    text-align: left;
+    width: 25%;
+    text-align: center;
+    /*margin-left: 10px;*/
     display: inline-block;
   }
   .section_exec_third_left {
     .icon_luluenjoy1 {
       color: red;
-      margin-left: 30px;
-    }
-    .icon_lulucollect {
-      margin-left: 30px;
     }
   }
-  /*.section_exec_third_center {*/
-  /*  line-height: 25px;*/
-  /*  width: 40%;*/
-  /*  text-align: center;*/
-  /*  display: inline-block;*/
-  /*  span {*/
-  /*    margin-right: 20px;*/
-  /*  }*/
-  /*}*/
-  .section_exec_third_right {
-    width: 50%;
+  .section_exec_third_center {
     line-height: 25px;
+    width: 45%;
+    text-align: center;
     display: inline-block;
-    text-align: right;
+    span {
+      /*margin-right: 20px;*/
+    }
+  }
+  .section_exec_third_right {
+    width: 25%;
+    line-height: 25px;
+    text-align: center;
+    display: inline-block;
+    /*padding-right: 5px;*/
     .iconfont {
-      margin-left: 50px;
+      /*margin-left: 30px;*/
     }
   }
   .section_exec_third_title {

@@ -273,7 +273,11 @@ export default {
     },
     getCollect () {
       getShowCollect({
-        id: this.quesList[this.selectIndex].id
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        question_id: this.quesList[this.selectIndex].id
+        // id: this.quesList[this.selectIndex].id
       }).then(res => {
         this.showCollec = res.data.data.collect
         // console.log('收藏了？', res.data.data.collect)
