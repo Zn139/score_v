@@ -14,11 +14,15 @@ const specialItem = () => import('@/lineCourse/secondPart/specialItem') // 在�
 const overYearsZT = () => import('@/lineCourse/secondPart/overYearsZT') // 在线课堂--历年真题列表
 const xitiStatistics = () => import('@/lineCourse/secondPart/xitiStatistics') // 在线课堂--习题统计
 const wrongQues = () => import('@/lineCourse/secondPart/wrongQues') // 在线课堂--错题积累
-const xtcollect = () => import('@/lineCourse/secondPart/xtcollect') // 在线课堂--错题积累
+const xtcollect = () => import('@/lineCourse/secondPart/xtcollect') // 在线课堂--我的收藏
 const doQuesRecord = () => import('@/lineCourse/thirdPart/doQuesRecord') // 在线课堂--做题记录
 const studyReport = () => import('@/lineCourse/thirdPart/studyReport') // 在线课堂--学习报告
 const myMedal = () => import('@/lineCourse/thirdPart/myMedal') // 在线课堂--我的勋章
 const chapterExercise = () => import('@/lineCourse/secondPart/chapterExercise') // 在线课堂--章节列表--章节练习
+const sectionCollectDetail = () => import('@/lineCourse/secondPart/collect/sectionCollectDetail') // 在线课堂--收藏--章节详情
+const examCollectDetail = () => import('@/lineCourse/secondPart/collect/examCollectDetail') // 在线课堂--收藏--考试详情
+const sectionErrorDetail = () => import('@/lineCourse/secondPart/wrong/sectionErrorDetail') // 在线课堂--错题--章节详情
+const examErrorDetail = () => import('@/lineCourse/secondPart/wrong/examErrorDetail') // 在线课堂--错题--章节详情
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
 const score = () => import('@/menus/score')
@@ -360,6 +364,42 @@ export default new Router({
       },
       name: 'camera',
       meta: { tab: 'camera', title: 'camera' }
+    },
+    // 在线课程--收藏--练习题收藏章节详情
+    {
+      path: '/sectionCollectDetail', // 节收藏详情
+      components: {
+        default: sectionCollectDetail
+      },
+      name: 'sectionCollectDetail',
+      meta: { tab: 'sectionCollectDetail', title: 'sectionCollectDetail' }
+    },
+    // 在线课程--收藏--考试题收藏详情
+    {
+      path: '/examCollectDetail', // 每次收藏详情
+      components: {
+        default: examCollectDetail
+      },
+      name: 'examCollectDetail',
+      meta: { tab: 'examCollectDetail', title: 'examCollectDetail' }
+    },
+    // 在线课程--错题--练习题错题章节详情
+    {
+      path: '/sectionErrorDetail', // 节错题详情
+      components: {
+        default: sectionErrorDetail
+      },
+      name: 'sectionErrorDetail',
+      meta: { tab: 'sectionErrorDetail', title: 'sectionErrorDetail' }
+    },
+    // 在线课程--错题--考试题错题详情
+    {
+      path: '/examErrorDetail', // 错题详情
+      components: {
+        default: examErrorDetail
+      },
+      name: 'examErrorDetail',
+      meta: { tab: 'examErrorDetail', title: 'examErrorDetail' }
     },
     // {
     //   path: '/ceshiCamera', // 测试相机

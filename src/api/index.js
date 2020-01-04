@@ -257,3 +257,73 @@ export function getShowCollect (req) { // 在线课程--章节练习--进来时-
     params: req
   })
 }
+export function getExecNum (req) { // 在线课程--错题统计--进来时--默认练习章的数量
+  return request({
+    url: 'exam/getChapterErrNumber',
+    method: 'get',
+    params: req
+  })
+}
+export function getSectionExecNum (req) { // 在线课程--错题统计--进来时--默认练习通过章--获取节名称及数量
+  return request({
+    url: 'exam/getSectionErrNumber',
+    method: 'get',
+    params: req
+  })
+}
+export function getSectionDetail (req) { // 在线课程--错题统计--默认练习点击章节名称获取错题详细信息
+  return request({
+    url: 'exam-two/getSectionErrorProblems',
+    method: 'get',
+    params: req
+  })
+}
+export function getMyCollectNum (req) { // 在线课程--我的收藏--进来时--默认考试和练习收藏错题
+  return request({
+    url: 'exam-two/getCollectProblemsNum',
+    method: 'get',
+    params: req
+  })
+}
+export function getMyCollectChapExecNum (req) { // 在线课程--我的收藏--进来时--默认练习获取章的名称及数量
+  return request({
+    url: 'exam-two/getChapterCollectNumber',
+    method: 'get',
+    params: req
+  })
+}
+export function getMyCollectSectionNum (req) { // 在线课程--我的收藏--进来时--默认练习点击章，获取节的名称及数量
+  return request({
+    url: 'exam-two/getSectionCollectNumber',
+    method: 'get',
+    params: req
+  })
+}
+export function getMyCollectSectionDetail (req) { // 在线课程--我的收藏--根据给的章和节名称，得到该节的收藏详细信息
+  return request({
+    url: 'exam-two/getChapterCollectProblems',
+    method: 'get',
+    params: req
+  })
+}
+export function getMyCollectExamDetail (req) { // 在线课程--我的收藏--根据给的章和节名称，得到某次考试的收藏详细信息
+  return request({
+    url: 'exam-two/getExamCollectProblems',
+    method: 'get',
+    params: req
+  })
+}
+export function getErrorNumDetail (req) { // 在线课程--我的错题--默认得到的已掌握和未掌握各个数值
+  return request({
+    url: 'exam-two/getErrorProblemsNum',
+    method: 'get',
+    params: req
+  })
+}
+export function getExamErrorDetail (req) { // 在线课程--我的错题--点击考试错题，显示考试错题详情
+  return request({
+    url: 'exam-two/getExamErrorProblems',
+    method: 'get',
+    params: req
+  })
+}

@@ -8,7 +8,7 @@ import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
 import axios from 'axios'
-import { Alert, AlertPlugin, Popup, XDialog, Datetime, Selector, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
+import { Alert, AlertPlugin, Search, Popup, XDialog, Datetime, Selector, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 // import Vuex from 'vuex'
 import VDistpicker from 'v-distpicker'
@@ -33,6 +33,7 @@ Vue.use(vueTap)
 Vue.use(ConfigPlugin, {
   $layout: 'VIEW_BOX'
 })
+Vue.component('search', Search)
 Vue.component('popup', Popup)
 Vue.component('selector', Selector)
 Vue.component('datetime', Datetime)

@@ -181,8 +181,8 @@ export default {
     }
   },
   computed: {
-    paperName () {
-      // console.log(this.$route.params.fullName)
+    paperName () { // 表示节的名称
+      console.log('paperName:', this.$route.params.paperName)
       return this.$route.params.paperName
     },
     subject_online () {
@@ -251,6 +251,7 @@ export default {
       }
     },
     init () {
+      console.log('初始化：', this.$refs.section_exec_second)
       this.$nextTick(() => {
         this.exerScroll = new BScroll(this.$refs.section_exec_second, {
           click: true
@@ -352,9 +353,6 @@ export default {
       })
     },
     collectCurrentQues () { // 收藏当前题
-      // console.log('nengbuneng')
-      // console.log('当前题是否收藏', this.showCollec)
-      // const collectStatus = this.one_section_content[this.selectIndex].collect
       if (this.showCollec === 2) { // 表示未收藏
         collectCurrentQues({
           id: this.one_section_content[this.selectIndex].question.id,
