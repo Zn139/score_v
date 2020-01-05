@@ -45,6 +45,7 @@
         <div class="line-second-first_title">
           <i class="iconfont icon_lulufengefu"></i><strong>未掌握</strong>
         </div>
+        <!--标志是练习还是考试 1是练习，2是考试-->
         <div v-for="(item, index) in allChapterInfoListNoMaster" :key="index" class="chapter_list_second_info" v-if="flag === 1">
           <div class="record_year_name">
             <div class="record_year_sty" @click="getAllSections(item, '未掌握')">

@@ -123,12 +123,12 @@
             <cell v-else :key="i.index" :title="i.id" class="section_exec_cell nodo"></cell>
             <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
           </div>
-<!--          <div class="redoQues" v-if="currentNotList.length === 0">-->
-<!--            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>-->
-<!--          </div>-->
-<!--          <div class="redoQues" v-if="currentNotList.length > 0">-->
-<!--            <x-button class="enter_submit1" disabled>重新做题</x-button>-->
-<!--          </div>-->
+          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError === allSum">
+            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>
+          </div>
+          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError !== allSum">
+            <x-button class="enter_submit1" disabled>重新做题</x-button>
+          </div>
         </group>
         <!--        <div class="redoQues">重新做题</div>-->
         <!--        <div style="padding: 15px;">-->
@@ -231,6 +231,19 @@ export default {
     onConfirm () {
       this.$router.push({name: 'wrongQues'})
     },
+    redoQues () { // 重新做题
+      this.showSum = false
+      this.selectRight = 0
+      this.selectIndex = 0
+      this.n = -1
+      // this.selectToRight = 0
+      this.currentError = 0
+      this.currentErrorList = []
+      // this.currentNotList = []
+      this.currentRight = 0
+      this.currentRightList = []
+      this.getErrorDetail()
+    },
     selectNoItem (i) { // 下面的查看做题详情，点击其中的题号，跳到当前的题
       // console.log(i)
       // this.n = -1 // 未进行点击选项
@@ -239,7 +252,7 @@ export default {
       this.selectIndex = i // 跳到下一个答题页面
     },
     getCollect () { // 此题的收藏情况
-      console.log(232423234)
+      // console.log(232423234)
       getShowCollect({
         studentNumber: this.schoolNumber,
         openid: this.openid,
@@ -257,7 +270,7 @@ export default {
       console.log(this.selectIndex)
     },
     getErrorDetail () { // 得到错误题详细信息
-      // console.log('88888888888888', this.chapter, this.section)
+      this.quesList = []
       getSectionDetail({
         studentNumber: this.schoolNumber,
         openid: this.openid,
@@ -266,6 +279,7 @@ export default {
         section: this.section,
         ifMastered: this.ifMastered
       }).then(res => {
+        // this.quesList = []
         console.log('错题情况：', res.data.data)
         if (res.data.code === 0) {
           this.errorSectionList = res.data.data
@@ -483,7 +497,7 @@ export default {
     margin-top: 15px;
     font-size: 16px;
     /*border-color: #42b983;*/
-    width: 90%;
+    width: 95%;
   }
   .weui-btn:after {
     border: 1px solid #42b983;
@@ -681,13 +695,13 @@ export default {
     color: #fff;
     font-size: 16px;
     /*margin-left: 70%;*/
-    margin-top: 45px;
+    margin-top: 35px;
     background-color: #42b982;
   }
   .enter_submit1 {
     width: 90%;
     font-size: 16px;
-    margin-top: 45px;
+    margin-top: 35px;
     /*color: #fff;*/
     /*background-color: #ececec;*/
     /*.weui-btn:after {*/

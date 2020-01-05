@@ -44,7 +44,10 @@
                       <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
                       <div v-else><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
                     </div>
-                    <x-button class="right_button">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}</x-button>
+<!--                    <x-button class="right_button">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}</x-button>-->
+                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}，跳至下题</x-button>
+                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.correct_option}}，你的答案是{{item.question_option[n].split('.')[0]}}</x-button>
+
                   </div>
                 </div>
               </div>
@@ -95,6 +98,53 @@
         </div>
       </div>
     </div>
+    <div class="section_exec_third">
+      <!--判断是否收藏 1表示收藏  2表示没有收藏-->
+      <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
+      <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
+      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues">删除</span></div>
+      <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
+      <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
+    </div>
+    <div v-transfer-dom class="section_exec_third_tan">
+      <popup v-model="showSum" position="bottom" max-height="50%">
+        <div class="section_exec_third">
+          <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
+          <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
+          <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
+          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues">删除</span></div>
+          <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
+          <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
+        </div>
+        <group>
+          <div class="section_exec_third_title">
+            {{exname}}
+          </div>
+          <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
+            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell error"></cell>
+            <cell v-else :key="i.index" :title="i.id" class="section_exec_cell nodo"></cell>
+            <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
+          </div>
+          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError === allSum">
+            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>
+          </div>
+          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError !== allSum">
+            <x-button class="enter_submit1" disabled>重新做题</x-button>
+          </div>
+          <!--          <div class="redoQues" v-if="currentNotList.length === 0">-->
+          <!--            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>-->
+          <!--          </div>-->
+          <!--          <div class="redoQues" v-if="currentNotList.length > 0">-->
+          <!--            <x-button class="enter_submit1" disabled>重新做题</x-button>-->
+          <!--          </div>-->
+        </group>
+        <!--        <div class="redoQues">重新做题</div>-->
+        <!--        <div style="padding: 15px;">-->
+        <!--          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>-->
+        <!--                </div>-->
+      </popup>
+    </div>
     <confirm
       v-model="showConfirm"
       :show-cancel-button="false"
@@ -104,15 +154,19 @@
   </div>
 </template>
 <script>
-import {getExamErrorDetail} from '@/api/index'
+import {getExamErrorDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
 import BScroll from 'better-scroll'
-import { LoadMore } from 'vux'
+import { LoadMore, TransferDom, Group, Cell } from 'vux'
 export default {
-  components: {LoadMore},
+  directives: {
+    TransferDom
+  },
+  components: {LoadMore, Group, Cell},
   data () {
     return {
       showConfirm: false, // 当用户进来时，未携带学号等信息，变没有错题的信息，提示框出现
       showTitle: '', // 提示框内容
+      showCollec: 0, // 是否收藏此题
       errorSectionList: [], // 错题详情
       selectIndex: 0, // 索引
       collectSectionList: [], // 收藏详情
@@ -123,6 +177,12 @@ export default {
       rightOp: -1, // 选错以后正确选项的判断
       exerScroll: null,
       allSum: 0, // 此份卷子所有的题的个数
+      showSum: false, // 此份卷子所有做的详情--下面的题号的情况
+      currentRight: 0, // 当前正确的个数
+      currentError: 0, // 当前错误的个数
+      currentRightList: [], // 当前做对的题号
+      currentErrorList: [], // 当前做错的题号
+      allQuesNum: [] // 所有题号
     }
   },
   computed: {
@@ -148,20 +208,12 @@ export default {
     selectIndex (val, oldval) {
       this.selectRight = this.quesList[this.selectIndex].selectRight
       if (this.quesList[this.selectIndex].showDetail === true) {
-        // console.log('daduileme :', this.showDetail)
         this.showDetail = true
       } else {
         this.showDetail = false
       }
       this.n = this.quesList[this.selectIndex].n
-      // console.log('索引李：', this.selectIndex)
-      // if (this.flag === 0) {
-      // this.getCollect()
-      // this.showCollec = this.quesList[this.selectIndex].showCollec
-      // this.showCollec = this.one_section_content[this.selectIndex].collect
-      // } else {
-      //   this.showCollec = this.one_section_content[this.selectIndex].collection
-      // }
+      this.getCollect()
     }
   },
   mounted () {
@@ -183,7 +235,46 @@ export default {
     onConfirm () {
       this.$router.push({name: 'wrongQues'})
     },
+    selectNoItem (i) { // 下面的查看做题详情，点击其中的题号，跳到当前的题
+      // console.log(i)
+      // this.n = -1 // 未进行点击选项
+      // this.selectRight = 0 // 未选择状态
+      this.showSum = false // 当前答题情况关闭==未查看
+      this.selectIndex = i // 跳到下一个答题页面
+    },
+    redoQues () { // 重新做题
+      this.showSum = false
+      this.selectRight = 0
+      this.selectIndex = 0
+      this.n = -1
+      // this.selectToRight = 0
+      this.currentError = 0
+      this.currentErrorList = []
+      // this.currentNotList = []
+      this.currentRight = 0
+      this.currentRightList = []
+      this.getErrorDetail()
+    },
+    getCollect () { // 此题的收藏情况
+      // console.log(232423234)
+      getShowCollect({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        question_id: this.quesList[this.selectIndex].id
+      }).then(res => {
+        this.showCollec = res.data.data.collect
+        console.log('当前题的收藏状态：', this.showCollec)
+      })
+    },
+    get_noselect_current () { // 当前所答题情况框，是否显示
+      this.showSum = !this.showSum
+    },
+    delCurrentQues () {
+      console.log(this.selectIndex)
+    },
     getErrorDetail () {
+      this.quesList = []
       getExamErrorDetail({
         studentNumber: this.schoolNumber,
         openid: this.openid,
@@ -191,22 +282,53 @@ export default {
         examName: this.exname,
         ifMastered: this.ifMastered
       }).then(res => {
+        // this.quesList = []
         console.log('考试错题情况：', res.data.data)
         if (res.data.code === 0) {
           this.errorSectionList = res.data.data
           this.allSum = res.data.data.length // 所有题的个数
+          this.showCollec = this.errorSectionList[this.selectIndex].ifCollect
           for (const item in this.errorSectionList) {
             const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.errorSectionList[item].id}
-            // this.currentNotList.push(parseInt(item) + 1)
-            // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
             this.quesList.push(oneDetail)
-            // console.log('错题情况：', res.data.data)
           }
         } else {
           this.showConfirm = true
           this.showTitle = res.data.data
         }
       })
+    },
+    collectCurrentQues () { // 收藏当前题
+      console.log('点击了么')
+      if (this.showCollec === 2) { // 表示未收藏
+        collectCurrentQues({
+          id: this.errorSectionList[this.selectIndex].id,
+          studentNumber: this.schoolNumber,
+          openid: this.openid,
+          classification: ''
+        }).then(res => {
+          // console.log('收藏', res.data)
+          this.$vux.toast.text('收藏成功')
+          this.showCollec = 1
+        })
+      } else if (this.showCollec === 1) {
+        cancelCollectCurrentQues({
+          id: this.errorSectionList[this.selectIndex].id,
+          studentNumber: this.schoolNumber,
+          openid: this.openid,
+          paperName: this.section,
+          subject: this.subject_online,
+          cancel: 2
+        }).then(res => {
+          // console.log('cancel', res.data)
+          this.$vux.toast.text('取消收藏成功')
+          this.showCollec = 2
+        })
+        // this.$vux.alert.show({
+        //   title: '提示',
+        //   content: '您已收藏此题啦！'
+        // })
+      }
     },
     swiperleft: function () {
       // this.n = -1 // 左滑或者右滑时，所选选项变为-1
@@ -229,6 +351,8 @@ export default {
       setTimeout(function () {
         if (answer.split('.')[1] === that.errorSectionList[that.selectIndex].correct_text) {
           that.selectRight = 1 // 答对
+          that.currentRight += 1 // 做对的个数加1
+          that.currentRightList.push(that.selectIndex)
           that.quesList[that.selectIndex].selectRight = 1
         } else {
           const options = that.errorSectionList[that.selectIndex].question_option
@@ -240,6 +364,8 @@ export default {
             }
           }
           that.selectRight = 2 // 答错
+          that.currentError += 1 // 做对的个数加1
+          that.currentErrorList.push(that.selectIndex)
           that.quesList[that.selectIndex].selectRight = 2
         }
         that.id = that.errorSectionList[that.selectIndex].id
@@ -371,7 +497,7 @@ export default {
     margin-top: 15px;
     font-size: 16px;
     /*border-color: #42b983;*/
-    width: 90%;
+    width: 95%;
   }
   .weui-btn:after {
     border: 1px solid #42b983;
@@ -443,10 +569,39 @@ export default {
       color: red;
     }
   }
+  /*.section_exec_third_left {*/
+  /*  line-height: 25px;*/
+  /*  width: 27%;*/
+  /*  text-align: center;*/
+  /*  display: inline-block;*/
+  /*}*/
+  /*.section_exec_third_left {*/
+  /*  .icon_luluenjoy1 {*/
+  /*    color: red;*/
+  /*  }*/
+  /*}*/
+  /*.section_exec_third_center {*/
+  /*  line-height: 25px;*/
+  /*  width: 40%;*/
+  /*  text-align: center;*/
+  /*  display: inline-block;*/
+  /*  span {*/
+  /*    margin-right: 20px;*/
+  /*  }*/
+  /*}*/
+  /*.section_exec_third_right {*/
+  /*  width: 30%;*/
+  /*  line-height: 25px;*/
+  /*  display: inline-block;*/
+  /*  .iconfont {*/
+  /*    margin-left: 30px;*/
+  /*  }*/
+  /*}*/
   .section_exec_third_left {
     line-height: 25px;
-    width: 27%;
+    width: 25%;
     text-align: center;
+    /*margin-left: 10px;*/
     display: inline-block;
   }
   .section_exec_third_left {
@@ -456,19 +611,21 @@ export default {
   }
   .section_exec_third_center {
     line-height: 25px;
-    width: 40%;
+    width: 45%;
     text-align: center;
     display: inline-block;
     span {
-      margin-right: 20px;
+      /*margin-right: 20px;*/
     }
   }
   .section_exec_third_right {
-    width: 30%;
+    width: 25%;
     line-height: 25px;
+    text-align: center;
     display: inline-block;
+    /*padding-right: 5px;*/
     .iconfont {
-      margin-left: 30px;
+      /*margin-left: 30px;*/
     }
   }
   .section_exec_third_title {
@@ -532,13 +689,13 @@ export default {
     color: #fff;
     font-size: 16px;
     /*margin-left: 70%;*/
-    margin-top: 45px;
+    margin-top: 35px;
     background-color: #42b982;
   }
   .enter_submit1 {
     width: 90%;
     font-size: 16px;
-    margin-top: 45px;
+    margin-top: 35px;
     /*color: #fff;*/
     /*background-color: #ececec;*/
     /*.weui-btn:after {*/

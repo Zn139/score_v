@@ -43,7 +43,9 @@
                       <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
                       <div v-else><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
                     </div>
-                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>
+<!--                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
+                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}，跳至下题</x-button>
+                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>
                   </div>
                 </div>
               </div>
@@ -629,7 +631,7 @@ export default {
     margin-top: 15px;
     font-size: 16px;
     /*border-color: #42b983;*/
-    width: 90%;
+    width: 95%;
   }
   .weui-btn:after {
     border: 1px solid #42b983;

@@ -382,7 +382,7 @@ export default {
           }
         ]
       })
-    },
+    }
   }
 }
 </script>
@@ -429,6 +429,9 @@ export default {
     height: 160px;
     width: 100%;
   }
+  .chapter_list_second {
+    background-color: #fff;
+  }
   .chapter_list_second_info {
     text-align: left;
     /*height: 40px;*/
@@ -445,7 +448,7 @@ export default {
     /*border-radius: 10px;*/
   }
   .chapter_list_second_info1 {
-    margin: 5px 0 5px 25px;
+    margin: 15px 0 5px 25px;
     /*padding: 5px 0 5px 25px;*/
     padding-bottom: 5px;
     border-bottom: 1px solid #ececec;
