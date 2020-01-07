@@ -6,6 +6,7 @@
       </div>
       <div class="title">练习收藏</div>
     </div>
+    <!-- 没做过 -->
     <div class="section_exec_second" ref="section_exec_second">
       <div>
         <div v-for="(item, index) in collectSectionList" :key="index">
@@ -97,6 +98,96 @@
         </div>
       </div>
     </div>
+<!--    <div class="section_exec_second" ref="section_exec_second" v-show="doQues === 1">-->
+<!--      &lt;!&ndash;    <div class="section_exec_second" ref="section_exec_second" @dblclick="collectCurrentQues">&ndash;&gt;-->
+<!--      <div>-->
+<!--        <div v-for="(item, index) in collectSectionList" :key="index">-->
+<!--          <v-touch v-on:swipeleft="swiperleft" v-on:swiperight="swiperright" class="wrapper">-->
+<!--            <div class="menu-container" ref="menuContainer">-->
+<!--              &lt;!&ndash; 这个是内容 &ndash;&gt;-->
+<!--              <div v-if="selectIndex === index" class="section_exec_ques">-->
+<!--                <span>{{item.question.questionType}}</span>-->
+<!--                {{item.question.questionContext}}-->
+<!--                <div class="section_exec_second_img" v-if="item.question.questionImgs !== ''">-->
+<!--                  <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">-->
+<!--                </div>-->
+<!--                &lt;!&ndash;{{item.question.questionContext.split('）')[0] + '）'}}&ndash;&gt;-->
+<!--                &lt;!&ndash;          <div class="choose-box" v-for="(a,index) in item.option" :key="index">&ndash;&gt;-->
+<!--                &lt;!&ndash;            <input name="biological" type="radio" value="" />&ndash;&gt;-->
+<!--                &lt;!&ndash;            <label style="cursor:pointer">{{a}}</label>&ndash;&gt;-->
+<!--                &lt;!&ndash;          </div>&ndash;&gt;-->
+<!--                <div class="box">-->
+<!--                  &lt;!&ndash;未选择选项时，selectRight为0&ndash;&gt;-->
+<!--                  <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>-->
+<!--                  &lt;!&ndash;选择正确时，selectRight为1&ndash;&gt;-->
+<!--                  <div v-if="selectRight === 1">-->
+<!--                    <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">-->
+<!--                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>-->
+<!--                      <div v-if="index !== n"><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>-->
+<!--                    </div>-->
+<!--                    <x-button v-if="selectIndex !== allSum - 1" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>-->
+<!--                    &lt;!&ndash;                    <x-button v-if="selectIndex === allSum" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>&ndash;&gt;-->
+<!--                  </div>-->
+<!--                  &lt;!&ndash;选择错误时，selectRight为2&ndash;&gt;-->
+<!--                  <div v-if="selectRight === 2">-->
+<!--                    <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">-->
+<!--                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('．')[1]}}</div>-->
+<!--                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>-->
+<!--                      <div v-else><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash;                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>&ndash;&gt;-->
+<!--                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}，跳至下题</x-button>-->
+<!--                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="section_exec_jiexi" v-if="selectIndex === index && selectRight !== 0">-->
+<!--                <div v-if="selectRight === 1">-->
+<!--                  <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
+<!--                  <div v-if="showDetail">-->
+<!--                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>解析</h4>-->
+<!--                      <div class="jiexi_content">-->
+<!--                        {{item.question.correctAnalysis.split('】')[1]}}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>知识点</h4>-->
+<!--                      <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>-->
+<!--                      &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div v-if="selectRight === 2">-->
+<!--                  &lt;!&ndash;              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>&ndash;&gt;-->
+<!--                  <div>-->
+<!--                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>解析</h4>-->
+<!--                      <div class="jiexi_content">-->
+<!--                        {{item.question.correctAnalysis.split('】')[1]}}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>知识点</h4>-->
+<!--                      <div class="jiexi_knowledge_point"><span>{{item.question.questionAttribute}}</span></div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question.questionDifficult}}</span>-->
+<!--                      &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </v-touch>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="section_exec_third">
       <!--判断是否收藏 1表示收藏  2表示没有收藏-->
       <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
@@ -120,9 +211,9 @@
             {{section}}
           </div>
           <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
-            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell right"></cell>
-            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell error"></cell>
-            <cell v-else :key="i.index" :title="i.id" class="section_exec_cell nodo"></cell>
+            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>
+            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>
             <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
           </div>
           <div class="redoQues">
@@ -143,7 +234,7 @@
 <script>
 import BScroll from 'better-scroll'
 import { LoadMore, TransferDom, Group, Cell } from 'vux'
-import {getMyCollectSectionDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
+import {getMyCollectSectionDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues, recordCurrentAnsToQues, getPreRecord} from '@/api/index'
 export default {
   directives: {
     TransferDom
@@ -166,6 +257,9 @@ export default {
       currentRightList: [], // 当前做对的题号
       currentErrorList: [], // 当前做错的题号
       allSum: 0, // 此份卷子所有的题的个数
+      answer_to_ques: {}, // 用户返回时的答卷信息
+      flag: -1, // 获取上一次的记录时，answer_to_ques是否有值
+      doQues: -1 // 因为要保存记录，所以进来时要判断是否做过这套题 1表示做过 0表示没做过
     }
   },
   computed: {
@@ -210,11 +304,37 @@ export default {
   },
   mounted () {
     this.init()
-    this.getCollectionDetail()
+    // this.getPreRecord() // 得到上次的记录
+    this.getCollectionDetail() // 默认获取所有收藏的题
   },
   methods: {
     returnBack () {
       this.$router.go(-1)
+      // console.log('记录：', this.answer_to_ques)
+      // for (const a in this.answer_to_ques) {
+      //   console.log(this.answer_to_ques[a])
+      //   if (this.answer_to_ques[a] === '') {
+      //     this.flag = 0 // 全是空，则不保存
+      //   } else {
+      //     this.flag = 1 // 但凡有一个不为空，即保存
+      //     break
+      //   }
+      // }
+      // if (this.flag === 1) {
+      //   recordCurrentAnsToQues({
+      //     studentNumber: this.schoolNumber,
+      //     openid: this.openid,
+      //     paperName: this.section,
+      //     subject: this.subject_online,
+      //     examPaperContent: JSON.stringify(this.collectSectionList),
+      //     examPaperAnwer: this.answer_to_ques
+      //   }).then(res => {
+      //     console.log('7894561378945613', res.data.data)
+      //     this.$router.go(-1)
+      //   })
+      // } else {
+      //   this.$router.go(-1)
+      // }
     },
     init () {
       console.log('初始化：', this.$refs.section_exec_second)
@@ -224,6 +344,81 @@ export default {
         })
       })
     },
+    // getPreRecord () {
+    //   this.quesList = []
+    //   getPreRecord({
+    //     studentNumber: this.schoolNumber,
+    //     openid: this.openid,
+    //     subject: this.subject_online,
+    //     paperName: this.section
+    //   }).then(res => {
+    //     console.log('做没做过这个题：', res.data)
+    //     // console.log(res.data.data[0].effective)
+    //     if (res.data.code === 0) { // 做过题
+    //       this.doQues = 1
+    //       this.allSum = res.data.data[0].list.length // 所有题的个数
+    //       // this.flag = 1 // 做过题
+    //       // if (res.data.data[0].effective === 1) { // 上次记录做完了
+    //       // this.showSum = true
+    //       // this.selectIndex = this.allSum - 1
+    //       if (parseInt(res.data.data[0].firstNoDoneNum) === this.allSum) {
+    //         this.showSum = true
+    //         this.selectIndex = this.allSum - 1
+    //       } else {
+    //         this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
+    //       }
+    //       this.collectSectionList = res.data.data[0].list
+    //       console.log('返回成果', this.collectSectionList)
+    //       this.currentRightList = []
+    //       this.currentError = 0
+    //       this.currentRight = 0
+    //       this.currentErrorList = []
+    //       this.currentNotList = []
+    //       for (const item in this.collectSectionList) {
+    //         this.userOption = -1
+    //         this.selectToRight = 0
+    //         if (this.collectSectionList[item].complete === 1) { // 表示这道题做了
+    //           if (this.collectSectionList[item].userOption === 'A') {
+    //             this.userOption = 0
+    //           } else if (this.collectSectionList[item].userOption === 'B') {
+    //             this.userOption = 1
+    //           } else if (this.collectSectionList[item].userOption === 'C') {
+    //             this.userOption = 2
+    //           } else if (this.collectSectionList[item].userOption === 'D') {
+    //             this.userOption = 3
+    //           }
+    //           if (this.collectSectionList[item].userOption === this.collectSectionList[item].question.rightOption) {
+    //             this.selectToRight = 1 // right
+    //             this.currentRight += 1
+    //             this.currentRightList.push(parseInt(item) + 1)
+    //           } else {
+    //             this.selectToRight = 2 // error
+    //             for (const j in this.collectSectionList[item].randomOption) {
+    //               if (this.collectSectionList[item].randomOption[j].split('．')[0] === this.collectSectionList[item].rightOption) {
+    //                 this.rightOp = parseInt(j)
+    //               }
+    //             }
+    //             this.currentError += 1
+    //             this.currentErrorList.push(parseInt(item) + 1)
+    //           }
+    //           // console.log('this.selectToRight:', this.selectToRight)
+    //         } else if (res.data.data[0].list[item].complete === 2) { // 这道题没做
+    //           this.currentNotList.push(parseInt(item) + 1)
+    //           this.selectToRight = 0
+    //           this.userOption = -1
+    //         }
+    //         const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.collectSectionList[item].question.id}
+    //         // console.log('当前选项：', oneDetail)
+    //         this.quesList.push(oneDetail)
+    //         this.answer_to_ques[item] = this.collectSectionList[item].userOption
+    //       }
+    //     } else { // 没做过题
+    //       this.doQues = 0
+    //       this.getCollectionDetail()
+    //     }
+    //     // console.log('之前的记录~~~~', res.data.data)
+    //   })
+    // },
     redoQues () { // 重新做题
       this.showSum = false
       this.selectRight = 0
@@ -267,6 +462,7 @@ export default {
         chapter: this.chapter,
         section: this.section
       }).then(res => {
+        console.log('对比', res.data)
         // this.quesList = []
         // this.$router.push({name: 'sectionCollectDetail'})
         if (res.data.code === 0) {
@@ -274,12 +470,9 @@ export default {
           this.collectSectionList = res.data.data
           this.showCollec = this.collectSectionList[this.selectIndex].ifCollect
           for (const item in this.collectSectionList) {
-            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.collectSectionList[item].id}
-            // this.currentNotList.push(parseInt(item) + 1)
-            // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
+            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.collectSectionList[item].id, 'question_id': this.collectSectionList[item].question_id}
             this.quesList.push(oneDetail)
-            // this.answer_to_ques[item] = ''
-            // console.log(parseInt(item) + 1)
+            this.answer_to_ques[item] = ''
           }
         } else {
           console.log('返回不为零')
@@ -339,7 +532,7 @@ export default {
       this.n = index // index为选项的索引
       this.quesList[this.selectIndex].n = index
       // console.log(this.quesList)
-      // this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
+      this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
       const that = this
       setTimeout(function () {
         if (answer.split('.')[1] === that.collectSectionList[that.selectIndex].correct_text) {

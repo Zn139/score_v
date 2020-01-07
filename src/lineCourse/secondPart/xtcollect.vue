@@ -431,6 +431,7 @@ export default {
   }
   .chapter_list_second {
     background-color: #fff;
+    padding-bottom: 20px;
   }
   .chapter_list_second_info {
     text-align: left;

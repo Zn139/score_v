@@ -49,7 +49,7 @@
         <div v-for="(item, index) in allChapterInfoListNoMaster" :key="index" class="chapter_list_second_info" v-if="flag === 1">
           <div class="record_year_name">
             <div class="record_year_sty" @click="getAllSections(item, '未掌握')">
-              <div class="record_year_sty_name">{{item.name}}<span>{{item.num}}</span></div>
+              <div class="record_year_sty_name">{{item.name}}<span v-if="item.num !== 0">{{item.num}}</span></div>
               <i class="iconfont icon_lulujiantou-copy-copy" v-if="item.show"></i>
               <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" v-else></i>
             </div>
@@ -71,17 +71,17 @@
         <div v-for="(item, inde) in allChapterInfoListNoMaster" :key="'second_info1' + inde" class="chapter_list_second_info1" v-if="flag === 2">
           <div class="record_year_name">
             <div class="record_year_sty" @click="getExamDetail(item.name, '未掌握')">
-              <div class="record_year_sty_name">{{item.name}}<span>{{item.num}}</span></div>
+              <div class="record_year_sty_name">{{item.name}}<span v-if="item.num !== 0">{{item.num}}</span></div>
             </div>
           </div>
         </div>
         <div class="line-second-first_title">
           <i class="iconfont icon_lulufengefu"></i><strong>已掌握</strong>
         </div>
-        <div v-for="(item, index) in allChapterInfoListMaster" :key="'second_info' +index" class="chapter_list_second_info" v-if="flag === 1">
+        <div v-for="(item, index) in allChapterInfoListMaster" :key="'second_info' +index" class="chapter_list_second_info" v-if="flag === 1 && item.num !== 0">
           <div class="record_year_name">
             <div class="record_year_sty" @click="getAllSections(item, '已掌握')">
-              <div class="record_year_sty_name">{{item.name}}<span>{{item.num}}</span></div>
+              <div class="record_year_sty_name">{{item.name}}<span v-if="item.num !== 0">{{item.num}}</span></div>
               <i class="iconfont icon_lulujiantou-copy-copy" v-if="item.show"></i>
               <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" v-else></i>
             </div>
@@ -100,10 +100,17 @@
             <!--        <div @click="getAllSections(item)">{{item.name}}</div>-->
           </div>
         </div>
+        <div v-for="(item, index) in allChapterInfoListMaster" :key="'second_info' +index" class="chapter_list_second_info2" v-if="flag === 1 && item.num === 0">
+          <div class="record_year_name">
+            <div class="record_year_sty" @click="getAllSections(item, '已掌握')">
+              <div class="record_year_sty_name">{{item.name}}<span v-if="item.num !== 0">{{item.num}}</span></div>
+            </div>
+          </div>
+        </div>
         <div v-for="(item, inde) in allChapterInfoListMaster" :key="'info1' + inde" class="chapter_list_second_info1" v-if="flag === 2">
           <div class="record_year_name">
             <div class="record_year_sty" @click="getExamDetail(item.name, '已掌握')">
-              <div class="record_year_sty_name">{{item.name}}<span>{{item.num}}</span></div>
+              <div class="record_year_sty_name">{{item.name}}<span v-if="item.num !== 0">{{item.num}}</span></div>
             </div>
           </div>
         </div>
@@ -225,20 +232,21 @@ export default {
         } else { // 考试
           this.flag = 2
         }
-        console.log('werwer', res.data.data)
+        console.log('werwer', res.data.data.mastered)
+        console.log('werwer', Object.keys(res.data.data.mastered).length)
         for (const item in res.data.data.notMastered) {
           console.log(item)
         }
         this.allChapterInfoNoMaster = []
         // this.allChapterInfoMaster = []
-        for (const item in Object.keys(res.data.data.notMastered)) {
-          const val = {'key': Object.keys(res.data.data.notMastered)[item], 'value': res.data.data.notMastered[Object.keys(res.data.data.notMastered)[item]]}
-          this.allChapterInfoNoMaster.push(val)
+        if (Object.keys(res.data.data.notMastered).length === 0) {
+          this.allChapterInfoNoMaster.push({'key': '暂无未掌握的题', 'value': 0})
+        } else {
+          for (const item in Object.keys(res.data.data.notMastered)) {
+            const val = {'key': Object.keys(res.data.data.notMastered)[item], 'value': res.data.data.notMastered[Object.keys(res.data.data.notMastered)[item]]}
+            this.allChapterInfoNoMaster.push(val)
+          }
         }
-        // for (const item in Object.keys(res.data.data.Mastered)) {
-        //   const val = {'key': Object.keys(res.data.data.Mastered)[item], 'value': res.data.data.Mastered[Object.keys(res.data.data.Mastered)[item]]}
-        //   this.allChapterInfoMaster.push(val)
-        // }
         this.allChapterInfoListNoMaster = this.allChapterInfoNoMaster.map((item, index) => {
           return {
             show: false,
@@ -249,9 +257,16 @@ export default {
           }
         })
         this.allChapterInfoMaster = []
-        for (const item in Object.keys(res.data.data.mastered)) {
-          const val = {'key': Object.keys(res.data.data.mastered)[item], 'value': res.data.data.mastered[Object.keys(res.data.data.mastered)[item]]}
-          this.allChapterInfoMaster.push(val)
+        if (Object.keys(res.data.data.mastered).length === 0) {
+          this.allChapterInfoMaster.push({'key': '暂无已掌握的题', 'value': 0})
+        } else {
+          for (const item in Object.keys(res.data.data.mastered)) {
+            const val = {
+              'key': Object.keys(res.data.data.mastered)[item],
+              'value': res.data.data.mastered[Object.keys(res.data.data.mastered)[item]]
+            }
+            this.allChapterInfoMaster.push(val)
+          }
         }
         this.allChapterInfoListMaster = this.allChapterInfoMaster.map((item, index) => {
           return {
@@ -302,7 +317,7 @@ export default {
             chapterName: chapterName.name,
             ifMastered: master
           }).then(res => {
-            console.log(res.data.data)
+            console.log('掌握', res.data.data)
             this.allSectionInfo = []
             for (const item in Object.keys(res.data.data.sectionNumber)) {
               const val = {'key': Object.keys(res.data.data.sectionNumber)[item], 'value': res.data.data.sectionNumber[Object.keys(res.data.data.sectionNumber)[item]]}
@@ -588,6 +603,7 @@ function getResult (val) {
   /*}*/
   .chapter_list_second {
     background-color: #fff;
+    padding-bottom: 20px;
   }
   strong {
     font-size: 15px;
@@ -616,6 +632,18 @@ function getResult (val) {
     /*box-shadow: 1px 1px 3px 2px rgba(66,185,130,0.4);*/
     border: 2px #ececec solid;
     /*border-radius: 10px;*/
+  }
+  .chapter_list_second_info2 {
+    text-align: left;
+    /*height: 40px;*/
+    width: 85%;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 50%;
+    padding-left: 15px;
+    min-height: 40px;
+    transform: translateX(-50%);
+    background-color: #fff;
   }
   .chapter_list_second_info1 {
     margin: 5px 0 5px 25px;

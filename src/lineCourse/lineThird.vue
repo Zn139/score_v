@@ -13,11 +13,11 @@
         </div>
       </div>
     </div>
-    <div class="line-third_second">
-      <div class="line-third_second_item" @click="gotoPage('doQuesRecord')"><i class="iconfont icon_lulujiludanzilishijilu"></i><span>做题记录</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="line-third_second_item" @click="gotoPage('studyReport')"><i class="iconfont icon_luluxuexibaogao"></i><span>学习报告</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="line-third_second_item" @click="gotoPage('myMedal')"><i class="iconfont icon_lulumedal"></i><span>我的勋章</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-    </div>
+<!--    <div class="line-third_second">-->
+<!--      <div class="line-third_second_item" @click="gotoPage('doQuesRecord')"><i class="iconfont icon_lulujiludanzilishijilu"></i><span>做题记录</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
+<!--      <div class="line-third_second_item" @click="gotoPage('studyReport')"><i class="iconfont icon_luluxuexibaogao"></i><span>学习报告</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
+<!--      <div class="line-third_second_item" @click="gotoPage('myMedal')"><i class="iconfont icon_lulumedal"></i><span>我的勋章</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
+<!--    </div>-->
   </div>
 </template>
 <script>

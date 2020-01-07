@@ -8,7 +8,7 @@
     </div>
     <div class="section_exec_second" ref="section_exec_second">
       <div>
-        <div v-for="(item, index) in errorSectionList" :key="index">
+        <div v-for="(item, index) in errorSectionList" :key="index" v-if="errorSectionList.length > 0">
           <v-touch v-on:swipeleft="swiperleft" v-on:swiperight="swiperright" class="wrapper">
             <div class="menu-container" ref="menuContainer">
               <!-- 这个是内容 -->
@@ -98,11 +98,11 @@
         </div>
       </div>
     </div>
-    <div class="section_exec_third">
+    <div class="section_exec_third" v-if="errorSectionList.length > 0">
       <!--判断是否收藏 1表示收藏  2表示没有收藏-->
       <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
       <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
-      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues">删除</span></div>
+      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
       <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
       <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
     </div>
@@ -112,7 +112,7 @@
           <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
           <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
           <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
-          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues">删除</span></div>
+          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
           <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
           <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
         </div>
@@ -121,9 +121,9 @@
             {{exname}}
           </div>
           <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
-            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell right"></cell>
-            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell error"></cell>
-            <cell v-else :key="i.index" :title="i.id" class="section_exec_cell nodo"></cell>
+            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>
+            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>
             <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
           </div>
           <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError === allSum">
@@ -151,10 +151,11 @@
       @on-confirm="onConfirm">
       <p style="text-align:center;">{{showTitle}}</p>
     </confirm>
+    <confirm v-model="delShow" @on-cancel="onCancel" @on-confirm="determineDel"><p style="text-align:center;">确定删除吗？</p></confirm>
   </div>
 </template>
 <script>
-import {getExamErrorDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
+import {getExamErrorDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues, delMasterErrorQues, notMasterToMaster} from '@/api/index'
 import BScroll from 'better-scroll'
 import { LoadMore, TransferDom, Group, Cell } from 'vux'
 export default {
@@ -182,7 +183,10 @@ export default {
       currentError: 0, // 当前错误的个数
       currentRightList: [], // 当前做对的题号
       currentErrorList: [], // 当前做错的题号
-      allQuesNum: [] // 所有题号
+      allQuesNum: [], // 所有题号
+      id: -1, // 针对所有题的当前题的题号
+      paperid: -1, // 试卷id
+      delShow: false // 是不是要真的删除，提示框
     }
   },
   computed: {
@@ -235,6 +239,31 @@ export default {
     onConfirm () {
       this.$router.push({name: 'wrongQues'})
     },
+    determineDel () {
+      delMasterErrorQues({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        questionId: this.quesList[this.selectIndex].id,
+        questionSource: 2 // 考试错题
+      }).then(res => {
+        if (res.data.code === 0) {
+          if (res.data.data.delete === 1) {
+            // this.$vux.toast.text('删除成功')
+            this.currentError -= 1
+            this.getErrorDetail()
+          }
+        }
+      })
+    },
+    delCurrentQues () {
+      // 确定删除吗？
+      this.delShow = true
+      // console.log(this.selectIndex)
+    },
+    onCancel () {
+      this.delShow = false
+    },
     selectNoItem (i) { // 下面的查看做题详情，点击其中的题号，跳到当前的题
       // console.log(i)
       // this.n = -1 // 未进行点击选项
@@ -270,9 +299,6 @@ export default {
     get_noselect_current () { // 当前所答题情况框，是否显示
       this.showSum = !this.showSum
     },
-    delCurrentQues () {
-      console.log(this.selectIndex)
-    },
     getErrorDetail () {
       this.quesList = []
       getExamErrorDetail({
@@ -289,12 +315,13 @@ export default {
           this.allSum = res.data.data.length // 所有题的个数
           this.showCollec = this.errorSectionList[this.selectIndex].ifCollect
           for (const item in this.errorSectionList) {
-            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.errorSectionList[item].id}
+            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.errorSectionList[item].id, 'question_id': this.errorSectionList[item].question_id}
             this.quesList.push(oneDetail)
           }
         } else {
-          this.showConfirm = true
-          this.showTitle = res.data.data
+          this.errorSectionList = []
+          // this.showConfirm = true
+          // this.showTitle = res.data.data
         }
       })
     },
@@ -368,11 +395,27 @@ export default {
           that.currentErrorList.push(that.selectIndex)
           that.quesList[that.selectIndex].selectRight = 2
         }
-        that.id = that.errorSectionList[that.selectIndex].id
+        that.id = that.errorSectionList[that.selectIndex].id // 针对所有题的题号
+        that.paperid = that.errorSectionList[that.selectIndex].exam_id // 试卷id
+        that.notMasterToMastered(answer.split('.')[1])
         // that.paperid = that.one_section_content[that.selectIndex].sourcePaperId // 组卷id
         // that.getCurrentRecord(answer)
       }, 400)
       // console.log('答案是：', this.answer_to_ques)
+    },
+    notMasterToMastered (ans) {
+      notMasterToMaster({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        questionId: this.id,
+        questionSource: '2', // 表示练习错题
+        userAnswer: ans,
+        examPaperId: this.paperid,
+        examPaperName: this.exname
+      }).then(res => {
+        console.log('sdfdfl;fghgfh', res.data.data)
+      })
     },
     gotoNextQues () { // 回答正确时，跳到下一个
       this.selectIndex += 1

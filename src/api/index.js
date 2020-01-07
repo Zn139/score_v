@@ -327,3 +327,17 @@ export function getExamErrorDetail (req) { // 在线课程--我的错题--点击
     params: req
   })
 }
+export function delMasterErrorQues (req) { // 在线课程--我的错题--已掌握错题--删除
+  return request({
+    url: 'exam-two/deleteMasteredQuestions',
+    method: 'post',
+    params: req
+  })
+}
+export function notMasterToMaster (req) { // 在线课程--我的错题--未掌握错题做对进入已掌握
+  return request({
+    url: 'exam-two/doNotMasteredQuestions',
+    method: 'post',
+    params: req
+  })
+}

@@ -121,9 +121,9 @@
             {{section}}
           </div>
           <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
-            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell right"></cell>
-            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.id" class="section_exec_cell error"></cell>
-            <cell v-else :key="i.index" :title="i.id" class="section_exec_cell nodo"></cell>
+            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>
+            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>
             <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
           </div>
           <div class="redoQues">
@@ -262,7 +262,7 @@ export default {
           this.collectSectionList = res.data.data
           this.showCollec = this.collectSectionList[this.selectIndex].ifCollect
           for (const item in this.collectSectionList) {
-            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.collectSectionList[item].id}
+            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.collectSectionList[item].id, 'question_id': this.collectSectionList[item].question_id}
             // this.currentNotList.push(parseInt(item) + 1)
             // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
             this.quesList.push(oneDetail)

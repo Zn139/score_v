@@ -308,7 +308,7 @@ export default {
             this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
           }
           this.one_section_content = res.data.data[0].list
-          console.log(this.one_section_content)
+          console.log('返回成果', this.one_section_content)
           this.currentRightList = []
           this.currentError = 0
           this.currentRight = 0
