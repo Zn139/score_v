@@ -4,7 +4,7 @@
       <div class="return__icon" @click="returnBack">
         <i class="iconfont icon_lulufanhui"></i>
       </div>
-      <div class="title">练习错题</div>
+      <div class="title">知识点练习</div>
     </div>
     <div class="section_exec_second" ref="section_exec_second">
       <div>
@@ -26,7 +26,7 @@
                 <!--          </div>-->
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
-                  <div v-if="selectRight === 0" v-for="(c,index) of item.question_option" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                  <div v-if="selectRight === 0" v-for="(c,index) of item.question_option" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
                   <!--选择正确时，selectRight为1-->
                   <div v-if="selectRight === 1">
                     <div v-for="(c,index) of item.question_option" :key="index" class="ques_option">
@@ -48,94 +48,94 @@
                   </div>
                 </div>
               </div>
-              <div class="section_exec_jiexi" v-if="selectIndex === index && selectRight !== 0">
-                <div v-if="selectRight === 1">
-                  <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>
-                  <div v-if="showDetail">
-                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
-                    <div class="jiexi_second">
-                      <div class="smallKuang"></div><h4>解析</h4>
-                      <div class="jiexi_content">
-                        {{item.correct_analysis.split('】')[1]}}
-                      </div>
-                    </div>
-                    <div class="jiexi_second">
-                      <div class="smallKuang"></div><h4>知识点</h4>
-                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>
-                    </div>
-                    <div class="jiexi_second">
-                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>
-                      <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
-                    </div>
-                  </div>
-                </div>
-                <div v-if="selectRight === 2">
-                  <!--              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
-                  <div>
-                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
-                    <div class="jiexi_second">
-                      <div class="smallKuang"></div><h4>解析</h4>
-                      <div class="jiexi_content">
-                        {{item.correct_analysis.split('】')[1]}}
-                      </div>
-                    </div>
-                    <div class="jiexi_second">
-                      <div class="smallKuang"></div><h4>知识点</h4>
-                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>
-                    </div>
-                    <div class="jiexi_second">
-                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>
-                      <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
-                    </div>
-                  </div>
-                </div>
-              </div>
+<!--              <div class="section_exec_jiexi" v-if="selectIndex === index && selectRight !== 0">-->
+<!--                <div v-if="selectRight === 1">-->
+<!--                  <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
+<!--                  <div v-if="showDetail">-->
+<!--                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>解析</h4>-->
+<!--                      <div class="jiexi_content">-->
+<!--                        {{item.correct_analysis.split('】')[1]}}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>知识点</h4>-->
+<!--                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>-->
+<!--                      &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div v-if="selectRight === 2">-->
+<!--                  &lt;!&ndash;              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>&ndash;&gt;-->
+<!--                  <div>-->
+<!--                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>解析</h4>-->
+<!--                      <div class="jiexi_content">-->
+<!--                        {{item.correct_analysis.split('】')[1]}}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>知识点</h4>-->
+<!--                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>-->
+<!--                    </div>-->
+<!--                    <div class="jiexi_second">-->
+<!--                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>-->
+<!--                      &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
           </v-touch>
         </div>
       </div>
     </div>
-    <div class="section_exec_third" v-if="errorSectionList.length > 0">
-      <!--判断是否收藏 1表示收藏  2表示没有收藏-->
-      <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
-      <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
-      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
-      <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
-      <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
-    </div>
-    <div v-transfer-dom class="section_exec_third_tan">
-      <popup v-model="showSum" position="bottom" max-height="50%">
-        <div class="section_exec_third">
-          <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
-          <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
-          <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
-          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
-          <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>
-          <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
-        </div>
-        <group>
-          <div class="section_exec_third_title">
-            {{section}}
-          </div>
-          <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
-            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>
-            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>
-            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>
-            <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
-          </div>
-          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError === allSum">
-            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>
-          </div>
-          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError !== allSum">
-            <x-button class="enter_submit1" disabled>重新做题</x-button>
-          </div>
-        </group>
-        <!--        <div class="redoQues">重新做题</div>-->
-        <!--        <div style="padding: 15px;">-->
-        <!--          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>-->
-<!--                </div>-->
-      </popup>
-    </div>
+<!--    <div class="section_exec_third" v-if="errorSectionList.length > 0">-->
+<!--      &lt;!&ndash;判断是否收藏 1表示收藏  2表示没有收藏&ndash;&gt;-->
+<!--      <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
+<!--      <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>-->
+<!--      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>-->
+<!--      <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>-->
+<!--      <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>-->
+<!--    </div>-->
+<!--    <div v-transfer-dom class="section_exec_third_tan">-->
+<!--      <popup v-model="showSum" position="bottom" max-height="50%">-->
+<!--        <div class="section_exec_third">-->
+<!--          <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
+<!--          <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>-->
+<!--          &lt;!&ndash;          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>&ndash;&gt;-->
+<!--          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>-->
+<!--          <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>-->
+<!--          <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>-->
+<!--        </div>-->
+<!--        <group>-->
+<!--          <div class="section_exec_third_title">-->
+<!--            {{section}}-->
+<!--          </div>-->
+<!--          <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">-->
+<!--            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>-->
+<!--            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>-->
+<!--            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>-->
+<!--            &lt;!&ndash;            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>&ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError === allSum">-->
+<!--            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>-->
+<!--          </div>-->
+<!--          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError !== allSum">-->
+<!--            <x-button class="enter_submit1" disabled>重新做题</x-button>-->
+<!--          </div>-->
+<!--        </group>-->
+<!--        &lt;!&ndash;        <div class="redoQues">重新做题</div>&ndash;&gt;-->
+<!--        &lt;!&ndash;        <div style="padding: 15px;">&ndash;&gt;-->
+<!--        &lt;!&ndash;          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>&ndash;&gt;-->
+<!--        &lt;!&ndash;                </div>&ndash;&gt;-->
+<!--      </popup>-->
+<!--    </div>-->
     <confirm
       v-model="showConfirm"
       :show-cancel-button="false"
@@ -146,7 +146,7 @@
   </div>
 </template>
 <script>
-import {getSectionDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues, delMasterErrorQues, notMasterToMaster} from '@/api/index'
+import {getKnowledgeInfo, getShowCollect, collectCurrentQues, cancelCollectCurrentQues, delMasterErrorQues, notMasterToMaster} from '@/api/index'
 import BScroll from 'better-scroll'
 import { LoadMore, TransferDom, Group, Cell } from 'vux'
 export default {
@@ -195,12 +195,11 @@ export default {
     chapter () {
       return this.$route.params.chapter
     },
-    section () {
-      return this.$route.params.section
+    knowledge () {
+      return this.$route.params.knowledge
     },
-    ifMastered () {
-      console.log('掌握了么', this.$route.params.ifMastered)
-      return this.$route.params.ifMastered
+    levelName () { // 年级
+      return this.$store.state.lineCourse.levelName
     }
   },
   watch: { // 监听题号的索引的变化
@@ -218,7 +217,7 @@ export default {
   },
   mounted () {
     this.init()
-    this.getErrorDetail()
+    this.getknowledgeDetail()
   },
   methods: {
     returnBack () {
@@ -246,7 +245,7 @@ export default {
       // this.currentNotList = []
       this.currentRight = 0
       this.currentRightList = []
-      this.getErrorDetail()
+      this.getknowledgeDetail()
     },
     selectNoItem (i) { // 下面的查看做题详情，点击其中的题号，跳到当前的题
       // console.log(i)
@@ -295,18 +294,18 @@ export default {
     onCancel () {
       this.delShow = false
     },
-    getErrorDetail () { // 得到错误题详细信息
+    getknowledgeDetail () { // 得到错误题详细信息
       this.quesList = []
-      getSectionDetail({
-        studentNumber: this.schoolNumber,
-        openid: this.openid,
+      getKnowledgeInfo({
+        // studentNumber: this.schoolNumber,
+        // openid: this.openid,
         subject: this.subject_online,
         chapter: this.chapter,
-        section: this.section,
-        ifMastered: this.ifMastered
+        levelName: this.levelName,
+        questionAttribute: this.knowledge
       }).then(res => {
         // this.quesList = []
-        console.log('错题情况：', res.data.data)
+        console.log('知识点情况：', res.data.data)
         if (res.data.code === 0) {
           this.errorSectionList = res.data.data
           this.allSum = res.data.data.length // 所有题的个数

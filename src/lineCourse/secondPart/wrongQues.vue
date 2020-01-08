@@ -667,9 +667,9 @@ function getResult (val) {
     display: inline-block;
   }
   .year-sub {
-    transition: all .2s;
-    padding: 8px 10px 0;
-  }
+     transition: all .2s;
+     padding: 8px 10px 0;
+   }
   .month-item-name {
     /*background-color: pink;*/
     min-height: 40px;

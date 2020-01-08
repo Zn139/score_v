@@ -23,6 +23,9 @@ const sectionCollectDetail = () => import('@/lineCourse/secondPart/collect/secti
 const examCollectDetail = () => import('@/lineCourse/secondPart/collect/examCollectDetail') // 在线课堂--收藏--考试详情
 const sectionErrorDetail = () => import('@/lineCourse/secondPart/wrong/sectionErrorDetail') // 在线课堂--错题--章节详情
 const examErrorDetail = () => import('@/lineCourse/secondPart/wrong/examErrorDetail') // 在线课堂--错题--章节详情
+// 专项练习
+const specialKnowledgeInfo = () => import('@/lineCourse/secondPart/specialItem/specialKnowledgeInfo') // 在线课堂--专项练习--点击章和知识点跳转到详情
+
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
 const score = () => import('@/menus/score')
@@ -400,6 +403,16 @@ export default new Router({
       },
       name: 'examErrorDetail',
       meta: { tab: 'examErrorDetail', title: 'examErrorDetail' }
+    },
+    // 专项练习
+    // 在线课程--专项练习--知识点题详情
+    {
+      path: '/specialKnowledgeInfo', // 知识点详情
+      components: {
+        default: specialKnowledgeInfo
+      },
+      name: 'specialKnowledgeInfo',
+      meta: { tab: 'specialKnowledgeInfo', title: 'specialKnowledgeInfo' }
     },
     // {
     //   path: '/ceshiCamera', // 测试相机

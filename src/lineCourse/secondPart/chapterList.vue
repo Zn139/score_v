@@ -48,6 +48,9 @@ export default {
     },
     selectsub () {
       return this.$store.state.lineCourse.select_sub
+    },
+    levelName () { // 年级
+      return this.$store.state.lineCourse.levelName
     }
   },
   mounted () {
@@ -64,7 +67,7 @@ export default {
     getChapter () { // 获取所有章
       console.log('所有章', this.selectsub)
       getChapter({
-        levelName: '高1',
+        levelName: this.levelName,
         subject: this.selectsub
       }).then(res => {
         this.chapterList = res.data.data.map((item, index) => {

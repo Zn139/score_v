@@ -341,3 +341,25 @@ export function notMasterToMaster (req) { // 在线课程--我的错题--未掌�
     params: req
   })
 }
+// 在线课程--专项练习
+export function getKnowledgeNumByChapter (req) { // 在线课程--专项练习--根据章节获取知识点数
+  return request({
+    url: 'exam-two/getQuestionsNumsByChapter',
+    method: 'get',
+    params: req
+  })
+}
+export function getKnowledgeNum (req) { // 在线课程--专项练习--根据章节获取知识点数
+  return request({
+    url: 'exam-two/getQuestionsNumsByAttributr',
+    method: 'get',
+    params: req
+  })
+}
+export function getKnowledgeInfo (req) { // 在线课程--专项练习--根据章节和知识点获取知识点详情
+  return request({
+    url: 'exam-two/getQuestionsByQuestionsAttribute',
+    method: 'get',
+    params: req
+  })
+}

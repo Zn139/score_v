@@ -69,7 +69,7 @@ export default {
     /*box-shadow: 0px 0px 6px 0px rgba(88, 88, 88, 0.35);*/
     display: inline-block;
     text-align: center;
-    position: relative;
+    /*position: relative;*/
   }
   .icon-text{
     font-size: 12px;
