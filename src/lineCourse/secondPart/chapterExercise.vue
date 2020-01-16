@@ -26,12 +26,12 @@
                 <!--          </div>-->
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
-                  <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                  <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
                   <!--选择正确时，selectRight为1-->
                   <div v-if="selectRight === 1">
                     <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
-                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
-                      <div v-if="index !== n"><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
+                      <div v-if="index !== n"><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
                     </div>
                     <x-button v-if="selectIndex !== allSum - 1" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
 <!--                    <x-button v-if="selectIndex === allSum" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>-->
@@ -39,13 +39,13 @@
                   <!--选择错误时，selectRight为2-->
                   <div v-if="selectRight === 2">
                     <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
-                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('．')[1]}}</div>
-                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('．')[1]}}</div>
-                      <div v-else><span>{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('.')[1]}}</div>
+                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
+                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
                     </div>
 <!--                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
-                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}，跳至下题</x-button>
-                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>
+                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}，跳至下题</x-button>
+                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}</x-button>
                   </div>
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default {
               } else {
                 this.selectToRight = 2 // error
                 for (const j in this.one_section_content[item].randomOption) {
-                  if (this.one_section_content[item].randomOption[j].split('．')[0] === this.one_section_content[item].rightOption) {
+                  if (this.one_section_content[item].randomOption[j].split('.')[0] === this.one_section_content[item].rightOption) {
                     this.rightOp = parseInt(j)
                   }
                 }
@@ -465,16 +465,16 @@ export default {
       this.n = index // index为选项的索引
       this.quesList[this.selectIndex].n = index
       // console.log(this.quesList)
-      this.answer_to_ques[this.selectIndex] = answer.split('．')[0]
+      this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
       const that = this
       setTimeout(function () {
-        if (answer.split('．')[1] === that.one_section_content[that.selectIndex].question.correctText) {
+        if (answer.split('.')[1] === that.one_section_content[that.selectIndex].question.correctText) {
           that.selectRight = 1 // 答对
           that.quesList[that.selectIndex].selectRight = 1
         } else {
           const options = that.one_section_content[that.selectIndex].randomOption
           for (const item in options) {
-            if (options[item].split('．')[0] === that.one_section_content[that.selectIndex].rightOption) {
+            if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
               that.rightOp = parseInt(item)
             }
           }

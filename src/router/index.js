@@ -13,6 +13,8 @@ const simulationList = () => import('@/lineCourse/secondPart/simulationList') //
 const specialItem = () => import('@/lineCourse/secondPart/specialItem') // 在线课堂--专项列表
 const overYearsZT = () => import('@/lineCourse/secondPart/overYearsZT') // 在线课堂--历年真题列表
 const xitiStatistics = () => import('@/lineCourse/secondPart/xitiStatistics') // 在线课堂--习题统计
+const staticDetail = () => import('@/lineCourse/secondPart/doQues/staticDetail') // 在线课堂--做题统计详情
+const studyRecord = () => import('@/lineCourse/secondPart/studyRecord') // 在线课堂--学习记录
 const wrongQues = () => import('@/lineCourse/secondPart/wrongQues') // 在线课堂--错题积累
 const xtcollect = () => import('@/lineCourse/secondPart/xtcollect') // 在线课堂--我的收藏
 const doQuesRecord = () => import('@/lineCourse/thirdPart/doQuesRecord') // 在线课堂--做题记录
@@ -52,7 +54,7 @@ const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
 const camera = () => import('@/camera/camera') // 录入--测试相机
 // const ceshiCamera = () => import('@/camera/upload') // 录入--测试lingyige相机
-const test = () => import('@/components/left_right_slide')
+const test = () => import('@/components/timing')
 
 export default new Router({
   routes: [
@@ -214,12 +216,28 @@ export default new Router({
       meta: { tab: 'xitiStatistics', title: 'xitiStatistics' }
     },
     {
-      path: '/wrongQues', // 习题统计
+      path: '/staticDetail', // 做题统计详情
+      components: {
+        default: staticDetail
+      },
+      name: 'staticDetail',
+      meta: { tab: 'staticDetail', title: 'staticDetail' }
+    },
+    {
+      path: '/wrongQues', // 错题统计
       components: {
         default: wrongQues
       },
       name: 'wrongQues',
       meta: { tab: 'wrongQues', title: 'wrongQues' }
+    },
+    {
+      path: '/studyRecord', // 习题统计
+      components: {
+        default: studyRecord
+      },
+      name: 'studyRecord',
+      meta: { tab: 'studyRecord', title: 'studyRecord' }
     },
     {
       path: '/xtcollect', // 在线课程--我的收藏

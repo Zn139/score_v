@@ -63,10 +63,15 @@ export default {
           // this.$store.commit('SET_USER_NAME', res.data.userLogin.userName)
           this.$store.commit('SET_USER_NAME', res.data.nickname)
           this.$store.commit('SET_USER_IMG', res.data.userLogin.headimgurl)
-          this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
+          if (res.data.userLogin.diyid !== '') {
+            this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
+          }
+          // else {
+          //   this.$store.commit('SET_SCHOOLNUM', '08047737')
+          // }
           console.log('name :', res.data.nickname)
           console.log('img: :', res.data.userLogin.headimgurl)
-          console.log('schoolNumber: :', res.data.userLogin.diyid)
+          // console.log('schoolNumber: :', res.data.userLogin.diyid)
           // if (this.$route.name !== 'my') {
           //   setTimeout(() => {
           //     this.$router.push({ path: '/my' })

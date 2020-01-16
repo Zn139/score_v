@@ -16,7 +16,7 @@
           <div class="icon-bac left">
             <i class="iconfont icon_luluyicuoti"></i>
           </div>
-            <div class="icon-text">易错题</div>
+          <div class="icon-text">易错题</div>
         </div>
         <div class="menu-icon_1" @click="gotoPage('hisAnalysis')">
           <div class="icon-bac right">

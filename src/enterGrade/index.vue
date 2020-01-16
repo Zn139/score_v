@@ -48,7 +48,7 @@
               <td v-if="item.imgs.length > 0"><i class="iconfont icon_luluxiangji" style="color: #42b983"></i></td>
             </tr>
             <tr v-if="submitListW.length === 0">
-              <td colspan="6" @click="addNew">
+              <td colspan="6" @click="addNew('first')">
                 <div class="tabbar-add-btn1">
                   <i class="iconfont icon_luluzanwushuju21"></i>
                   <div class="tabbar-add-btn_info">还未添加信息呦！</div>
@@ -57,7 +57,7 @@
               </td>
             </tr>
             <tr v-if="submitListW.length > 0">
-              <td colspan="6" @click="addNew">
+              <td colspan="6" @click="addNew('more')">
 <!--                <div class="tabbar-add-btn">-->
 <!--                  <i class="iconfont icon_luluzanwushuju21"></i>-->
 <!--                  <div class="tabbar-add-btn_info">还未添加信息呦！</div>-->
@@ -125,20 +125,29 @@ export default {
       // console.log('时间存在吗：', this.examTime)
       // console.log('格式：', this.submitListW)
       // console.log('格式2：', this.submitList)
+      console.log('考试名称到底是啥0：', this.submitListW[0].exam_name)
       console.log(this.submitListW[0].exam_name.split('月'))
-      if (this.examTime === '') {
-        if (this.submitListW[0].exam_name.split('月').length > 2) {
-          this.examName = this.submitListW[0].exam_name.split('月')[1] + '月' + this.submitListW[0].exam_name.split('月')[2]
-        } else if (this.submitListW[0].exam_name.split('月').length === 2) {
-          this.examName = this.submitListW[0].exam_name.split('月')[1]
+      if (this.submitListW[0].exam_name.indexOf('月') > -1) {
+        if (this.examTime === '') {
+          if (this.submitListW[0].exam_name.split('月').length > 2) {
+            this.examName = this.submitListW[0].exam_name.split('月')[1] + '月' + this.submitListW[0].exam_name.split('月')[2]
+          } else if (this.submitListW[0].exam_name.split('月').length === 2) {
+            this.examName = this.submitListW[0].exam_name.split('月')[1]
+          }
+          this.examTime = this.submitListW[0].exam_name.split('月')[0] + '月'
+          this.showTime = false
+          this.$nextTick(() => {
+            this.showTime = true
+          })
         }
-        this.examTime = this.submitListW[0].exam_name.split('月')[0] + '月'
+      } else {
+        this.examName = this.submitListW[0].exam_name.split(',')[1]
+        this.examTime = this.submitListW[0].exam_name.split(',')[0]
         this.showTime = false
         this.$nextTick(() => {
           this.showTime = true
         })
       }
-      // if (this.examTime)
     } else if (this.$route.params.type === 2) { // 首页--录入统计--继续添加
       console.log('首页--录入统计--继续添加')
       if (this.$store.state.exam.detail_to_add !== '') {
@@ -226,6 +235,8 @@ export default {
     },
     returnBack () {
       // this.$router.go(-1)
+      this.submitList = []
+      this.submitListW = []
       this.$router.push('/home')
     },
     gotoEdit (index, item) {
@@ -255,7 +266,11 @@ export default {
     gotoRecord () {
       this.$router.push({path: '/record'})
     },
-    addNew () {
+    addNew (val) {
+      console.log(this.submitList)
+      console.log(this.submitListW)
+      // this.submitListW = []
+      // this.submitList = []
       if (this.examTime.length === 0 || this.examName.length === 0) {
         this.$vux.alert.show({
           title: '提示',
@@ -264,13 +279,15 @@ export default {
       } else {
         // const kName = this.examTime.split('-')[0] + '年' + this.examTime.split('-')[1] + '月' + this.examName
         // this.$store.commit('SET_examination', kName)
-        this.$store.commit('SET_examination', this.examTime + this.examName)
+        console.log('还剩啥：', this.$store.state.exam.subjects_list)
+        this.$store.commit('SET_examination', this.examTime + ',' + this.examName)
         // localStorage.setItem('SET_examination', this.examTime + ' ,' + this.examName)
         this.$router.push({
           name: 'addSingleSubScore',
           params: {
             type: 0, // 指定是当前添加数据
-            remainSub: this.$store.state.exam.subjects_list // 剩余的科目，未加当前学科
+            remainSub: this.$store.state.exam.subjects_list, // 剩余的科目，未加当前学科
+            times: val // 判断是继续添加还是首次添加
           }
         })
       }

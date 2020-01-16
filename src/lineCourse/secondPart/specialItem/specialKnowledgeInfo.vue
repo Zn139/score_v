@@ -26,7 +26,7 @@
                 <!--          </div>-->
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
-                  <div v-if="selectRight === 0" v-for="(c,index) of item.question_option" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('．')[0]}}</span>{{c.split('．')[1]}}</div>
+                  <div v-if="selectRight === 0" v-for="(c,index) of item.question_option" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
                   <!--选择正确时，selectRight为1-->
                   <div v-if="selectRight === 1">
                     <div v-for="(c,index) of item.question_option" :key="index" class="ques_option">
@@ -48,105 +48,107 @@
                   </div>
                 </div>
               </div>
-<!--              <div class="section_exec_jiexi" v-if="selectIndex === index && selectRight !== 0">-->
-<!--                <div v-if="selectRight === 1">-->
-<!--                  <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
-<!--                  <div v-if="showDetail">-->
-<!--                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
-<!--                    <div class="jiexi_second">-->
-<!--                      <div class="smallKuang"></div><h4>解析</h4>-->
-<!--                      <div class="jiexi_content">-->
-<!--                        {{item.correct_analysis.split('】')[1]}}-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                    <div class="jiexi_second">-->
-<!--                      <div class="smallKuang"></div><h4>知识点</h4>-->
-<!--                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>-->
-<!--                    </div>-->
-<!--                    <div class="jiexi_second">-->
-<!--                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>-->
-<!--                      &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div v-if="selectRight === 2">-->
-<!--                  &lt;!&ndash;              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>&ndash;&gt;-->
-<!--                  <div>-->
-<!--                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>-->
-<!--                    <div class="jiexi_second">-->
-<!--                      <div class="smallKuang"></div><h4>解析</h4>-->
-<!--                      <div class="jiexi_content">-->
-<!--                        {{item.correct_analysis.split('】')[1]}}-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                    <div class="jiexi_second">-->
-<!--                      <div class="smallKuang"></div><h4>知识点</h4>-->
-<!--                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>-->
-<!--                    </div>-->
-<!--                    <div class="jiexi_second">-->
-<!--                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>-->
-<!--                      &lt;!&ndash;                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>&ndash;&gt;-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
+              <div class="section_exec_jiexi" v-if="selectIndex === index && selectRight !== 0">
+                <div v-if="selectRight === 1">
+                  <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>
+                  <div v-if="showDetail">
+                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>解析</h4>
+                      <div class="jiexi_content">
+                        {{item.correct_analysis.split('】')[1]}}
+                      </div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>知识点</h4>
+                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>
+                      <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
+                    </div>
+                  </div>
+                </div>
+                <div v-if="selectRight === 2">
+                  <!--              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
+                  <div>
+                    <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>解析</h4>
+                      <div class="jiexi_content">
+                        {{item.correct_analysis.split('】')[1]}}
+                      </div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>知识点</h4>
+                      <div class="jiexi_knowledge_point"><span>{{item.question_attribute}}</span></div>
+                    </div>
+                    <div class="jiexi_second">
+                      <div class="smallKuang"></div><h4>难度：</h4><span>{{item.question_difficult}}</span>
+                      <!--                  <div class="jiexi_knowledge_point"><span>{{item.question.questionDifficult}}</span></div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </v-touch>
         </div>
       </div>
     </div>
-<!--    <div class="section_exec_third" v-if="errorSectionList.length > 0">-->
-<!--      &lt;!&ndash;判断是否收藏 1表示收藏  2表示没有收藏&ndash;&gt;-->
-<!--      <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
-<!--      <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>-->
-<!--      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>-->
+    <div class="section_exec_third" v-if="errorSectionList.length > 0">
+      <!--判断是否收藏 1表示收藏  2表示没有收藏-->
+      <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
+      <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
+      <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>
+      <!--      <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>-->
 <!--      <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>-->
-<!--      <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>-->
-<!--    </div>-->
-<!--    <div v-transfer-dom class="section_exec_third_tan">-->
-<!--      <popup v-model="showSum" position="bottom" max-height="50%">-->
-<!--        <div class="section_exec_third">-->
-<!--          <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
-<!--          <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>-->
-<!--          &lt;!&ndash;          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>&ndash;&gt;-->
+      <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
+    </div>
+    <div v-transfer-dom class="section_exec_third_tan">
+      <popup v-model="showSum" position="bottom" max-height="50%">
+        <div class="section_exec_third">
+          <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
+          <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
+          <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
 <!--          <div class="section_exec_third_center" v-if="ifMastered === '已掌握'"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>-->
 <!--          <div class="section_exec_third_center" v-if="ifMastered === '未掌握'"></div>-->
-<!--          <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>-->
-<!--        </div>-->
-<!--        <group>-->
-<!--          <div class="section_exec_third_title">-->
-<!--            {{section}}-->
-<!--          </div>-->
-<!--          <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">-->
-<!--            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>-->
-<!--            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>-->
-<!--            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>-->
-<!--            &lt;!&ndash;            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>&ndash;&gt;-->
-<!--          </div>-->
-<!--          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError === allSum">-->
-<!--            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>-->
-<!--          </div>-->
-<!--          <div class="redoQues" v-if="ifMastered === '已掌握' && currentRight + currentError !== allSum">-->
-<!--            <x-button class="enter_submit1" disabled>重新做题</x-button>-->
-<!--          </div>-->
-<!--        </group>-->
-<!--        &lt;!&ndash;        <div class="redoQues">重新做题</div>&ndash;&gt;-->
-<!--        &lt;!&ndash;        <div style="padding: 15px;">&ndash;&gt;-->
-<!--        &lt;!&ndash;          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>&ndash;&gt;-->
-<!--        &lt;!&ndash;                </div>&ndash;&gt;-->
-<!--      </popup>-->
-<!--    </div>-->
+          <div class="section_exec_third_center"><i class="iconfont icon_luluduigou"></i><span>{{currentRight}}</span><i class="iconfont icon_luluchahao-copy-copy-copy"></i><span>{{currentError}}</span></div>
+          <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{currentRight + currentError}}/{{allSum}}</span></div>
+        </div>
+        <group>
+          <div class="section_exec_third_title">
+            {{knowledge}}
+          </div>
+          <div v-for="(i, index) in quesList" :key="index" class="section_exec_third_content" @click="selectNoItem(i.index)">
+            <cell v-if="currentRightList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell right"></cell>
+            <cell v-else-if="currentErrorList.indexOf(i.index) > -1" :key="i.index" :title="i.question_id" class="section_exec_cell error"></cell>
+            <cell v-else :key="i.index" :title="i.question_id" class="section_exec_cell nodo"></cell>
+            <!--            <x-button class="enter_submit" @click.native="submitTranscript">重新做题</x-button>-->
+          </div>
+          <div class="redoQues" v-if="currentRight + currentError === allSum">
+            <x-button class="enter_submit" @click.native="redoQues">重新做题</x-button>
+          </div>
+          <div class="redoQues" v-if="currentRight + currentError !== allSum">
+            <x-button class="enter_submit1" disabled>重新做题</x-button>
+          </div>
+        </group>
+        <!--        <div class="redoQues">重新做题</div>-->
+        <!--        <div style="padding: 15px;">-->
+        <!--          <x-button @click.native="showSum = false" plain type="primary"> Close Me </x-button>-->
+        <!--                </div>-->
+      </popup>
+    </div>
     <confirm
       v-model="showConfirm"
       :show-cancel-button="false"
       @on-confirm="onConfirm">
       <p style="text-align:center;">{{showTitle}}</p>
     </confirm>
-    <confirm v-model="delShow" @on-cancel="onCancel" @on-confirm="determineDel"><p style="text-align:center;">确定删除吗？</p></confirm>
+<!--    <confirm v-model="delShow" @on-cancel="onCancel" @on-confirm="determineDel"><p style="text-align:center;">确定删除吗？</p></confirm>-->
   </div>
 </template>
 <script>
-import {getKnowledgeInfo, getShowCollect, collectCurrentQues, cancelCollectCurrentQues, delMasterErrorQues, notMasterToMaster} from '@/api/index'
+import {getKnowledgeInfo, getShowCollect, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
 import BScroll from 'better-scroll'
 import { LoadMore, TransferDom, Group, Cell } from 'vux'
 export default {
@@ -177,7 +179,20 @@ export default {
       allQuesNum: [], // 所有题号
       delShow: false, // 是不是要真的删除，提示框
       id: -1, // 针对所有题的当前题的题号
-      paperid: -1 // 试卷id
+      paperid: -1, // 试卷id
+      // 计时
+      h: 0, // 定义时，分，秒，毫秒并初始化为0；
+      m: 0,
+      ms: 0,
+      s: 0,
+      time: 0,
+      str: '',
+      // str: '00:00:00:000',
+      mytime: '',
+      hour: '00',
+      min: '00',
+      sen: '00',
+      msen: '00'
     }
   },
   computed: {
@@ -213,6 +228,9 @@ export default {
       }
       this.n = this.quesList[this.selectIndex].n
       this.getCollect()
+      this.str = ''
+      this.reset()
+      this.start()
     }
   },
   mounted () {
@@ -230,6 +248,70 @@ export default {
           click: true
         })
       })
+    },
+    // 计时
+    timer () { // 定义计时函数
+      this.ms = this.ms + 50 // 毫秒
+      if (this.ms >= 1000) {
+        this.ms = 0
+        this.s = this.s + 1 // 秒
+      }
+      if (this.s >= 60) {
+        this.s = 0
+        this.m = this.m + 1 // 分钟
+      }
+      if (this.m >= 60) {
+        this.m = 0
+        this.h = this.h + 1 // 小时
+      }
+      this.str = this.toDub(this.h) + ':' + this.toDub(this.m) + ':' + this.toDub(this.s)
+      // this.str = this.toDub(this.h) + ':' + this.toDub(this.m) + ':' + this.toDub(this.s) + ' ' + this.toDubms(this.ms)
+      // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
+      this.hour = this.toDub(this.h)
+      this.min = this.toDub(this.m)
+      this.sen = this.toDub(this.s)
+      this.msen = this.toDubms(this.ms)
+    },
+    reset () { // 重置
+      clearInterval(this.time)
+      this.h = 0
+      this.m = 0
+      this.ms = 0
+      this.s = 0
+      this.str = '00:00:00'
+      // this.str = '00:00:00:000'
+      this.hour = '00'
+      this.min = '00'
+      this.sen = '00'
+      this.msen = '00'
+      console.log('重置时间：', this.time)
+    },
+
+    start () { // 开始
+      clearInterval(this.time)
+      this.time = setInterval(this.timer, 50)
+      console.log('开始时间：', this.time)
+    },
+
+    stop () { // 暂停
+      clearInterval(this.time)
+      console.log('结束时间：', this.time)
+    },
+
+    toDub (n) { // 补0操作
+      if (n < 10) {
+        return '0' + n
+      } else {
+        return '' + n
+      }
+    },
+
+    toDubms (n) { // 给毫秒补0操作
+      if (n < 10) {
+        return '00' + n
+      } else {
+        return '' + n
+      }
     },
     onConfirm () {
       this.$router.push({name: 'wrongQues'})
@@ -269,36 +351,11 @@ export default {
     get_noselect_current () { // 当前所答题情况框，是否显示
       this.showSum = !this.showSum
     },
-    determineDel () {
-      delMasterErrorQues({
-        studentNumber: this.schoolNumber,
-        openid: this.openid,
-        subject: this.subject_online,
-        questionId: this.quesList[this.selectIndex].id,
-        questionSource: 1 // 练习错题
-      }).then(res => {
-        if (res.data.code === 0) {
-          if (res.data.data.delete === 1) {
-            // this.$vux.toast.text('删除成功')
-            this.currentError -= 1
-            this.getErrorDetail()
-          }
-        }
-      })
-    },
-    delCurrentQues () {
-      // 确定删除吗？
-      this.delShow = true
-      // console.log(this.selectIndex)
-    },
-    onCancel () {
-      this.delShow = false
-    },
-    getknowledgeDetail () { // 得到错误题详细信息
+    getknowledgeDetail () { // 得到题详细信息
       this.quesList = []
       getKnowledgeInfo({
-        // studentNumber: this.schoolNumber,
-        // openid: this.openid,
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
         subject: this.subject_online,
         chapter: this.chapter,
         levelName: this.levelName,
@@ -308,6 +365,8 @@ export default {
         console.log('知识点情况：', res.data.data)
         if (res.data.code === 0) {
           this.errorSectionList = res.data.data
+          this.str = ''
+          this.start()
           this.allSum = res.data.data.length // 所有题的个数
           this.showCollec = this.errorSectionList[this.selectIndex].ifCollect
           for (const item in this.errorSectionList) {
@@ -340,7 +399,7 @@ export default {
           id: this.errorSectionList[this.selectIndex].id,
           studentNumber: this.schoolNumber,
           openid: this.openid,
-          paperName: this.section,
+          paperName: this.knowledge,
           subject: this.subject_online,
           cancel: 2
         }).then(res => {
@@ -396,27 +455,28 @@ export default {
         }
         that.id = that.errorSectionList[that.selectIndex].id // 针对所有题的题号
         that.paperid = that.errorSectionList[that.selectIndex].exam_id // 试卷id
-        if (that.ifMastered === '未掌握') { // 如果是未掌握，才调这个接口，已掌握的话，不调这个接口
-          that.notMasterToMastered(answer.split('.')[1])
-        }
+        console.log('总结用时：', that.str)
+        // if (that.ifMastered === '未掌握') { // 如果是未掌握，才调这个接口，已掌握的话，不调这个接口
+        //   that.notMasterToMastered(answer.split('.')[1])
+        // }
         // that.getCurrentRecord(answer)
       }, 400)
       // console.log('答案是：', this.answer_to_ques)
     },
-    notMasterToMastered (ans) {
-      notMasterToMaster({
-        studentNumber: this.schoolNumber,
-        openid: this.openid,
-        subject: this.subject_online,
-        questionId: this.id,
-        questionSource: '1', // 表示练习错题
-        userAnswer: ans,
-        examPaperId: this.paperid,
-        examPaperName: this.section
-      }).then(res => {
-        console.log('sdfdfl;fghgfh', res.data.data)
-      })
-    },
+    // notMasterToMastered (ans) {
+    //   notMasterToMaster({
+    //     studentNumber: this.schoolNumber,
+    //     openid: this.openid,
+    //     subject: this.subject_online,
+    //     questionId: this.id,
+    //     questionSource: '1', // 表示练习错题
+    //     userAnswer: ans,
+    //     examPaperId: this.paperid,
+    //     examPaperName: this.section
+    //   }).then(res => {
+    //     console.log('sdfdfl;fghgfh', res.data.data)
+    //   })
+    // },
     gotoNextQues () { // 回答正确时，跳到下一个
       this.selectIndex += 1
     },
@@ -664,6 +724,7 @@ export default {
     text-align: center;
     display: inline-block;
     span {
+      margin-right: 8px;
       /*margin-right: 20px;*/
     }
   }

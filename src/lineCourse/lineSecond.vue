@@ -49,9 +49,9 @@
       </div>
     </div>
     <div class="line-second-third">
-      <div class="menu-icon_1" @click="gotoPage('xitiStatistics')">
+      <div class="menu-icon_1" @click="gotoPage('studyRecord')">
         <i class="iconfont icon_lulutongji-copy1"></i>
-        <div class="icon-text">习题统计</div>
+        <div class="icon-text">学习记录</div>
       </div>
       <div class="menu-icon_1" @click="gotoPage('wrongQues')">
         <i class="iconfont icon_lulucuotiben"></i>
@@ -60,6 +60,10 @@
       <div class="menu-icon_1" @click="gotoPage('xtcollect')">
         <i class="iconfont icon_luluwodeshoucang2"></i>
         <div class="icon-text">我的收藏</div>
+      </div>
+      <div class="menu-icon_1" @click="gotoPage('xitiStatistics')">
+        <i class="iconfont icon_luluElecfansAPPiCON-"></i>
+        <div class="icon-text">做题统计</div>
       </div>
     </div>
   </div>
@@ -247,6 +251,10 @@ export default {
     .icon_luluwodeshoucang2 {
       font-size: 27px;
       color: rgb(239, 202, 0);
+    }
+    .icon_luluElecfansAPPiCON- {
+      font-size: 27px;
+      color: rgb(151, 204, 174);
     }
   }
 </style>

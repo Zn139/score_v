@@ -59,6 +59,28 @@ Vue.prototype.echarts = echarts
 //     FastClick.attach(document.body)
 //   }, false)
 // }
+// Vue.prototype.startTime = function () {
+//   clearInterval(this.time)
+//   this.time = setInterval(this.timer, 50)
+//   console.log('shijian:', this.time)
+// }
+// Vue.prototype.resetTime = function () {
+//   clearInterval(this.time)
+//   this.h = 0
+//   this.m = 0
+//   this.ms = 0
+//   this.s = 0
+//   this.str = '00:00:00:000'
+//   this.hour = '00'
+//   this.min = '00'
+//   this.sen = '00'
+//   this.msen = '00'
+//   console.log('重置时间：', this.time)
+// }
+// Vue.prototype.stopTime = function () {
+//   clearInterval(this.time)
+//   console.log('结束时间：', this.time)
+// }
 FastClick.attach(document.body)
 Vue.config.productionTip = false
 

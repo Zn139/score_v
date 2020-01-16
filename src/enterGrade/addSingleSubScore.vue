@@ -157,8 +157,13 @@ export default {
     },
     getInfos () {
       if (this.$route.params.type === 0) { // 添加成绩
-        if (this.$route.params.remainSub.length > 0) { // 剩余的科目
-          this.subList = this.$route.params.remainSub
+        if (this.$route.params.times === 'first') {
+          console.log('难道不是首次')
+          this.subList = ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
+        } else if (this.$route.params.times === 'more') {
+          if (this.$route.params.remainSub.length > 0) { // 剩余的科目
+            this.subList = this.$route.params.remainSub
+          }
         }
       } else if (this.$route.params.type === 1) { // 正在录入成绩编辑
         console.log('正在录入编辑：', this.$route.params)
@@ -326,20 +331,29 @@ export default {
         this.submitList = []
         this.submitListW = []
       } else if (this.$route.params.type === 0) { // 添加
+        // console.log('难道不是首次添加')
+        // if (this.$route.params.times === 'first') {
+        //   console.log('难道不是首次添加2')
+        //   this.submitListW = []
+        //   this.submitList = []
+        //   this.subList = ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
+        // }
         if (this.score === '' || this.classPai === '' || this.schoolPai === '') {
           this.$vux.alert.show({
             title: '提示',
             content: '分数或班排或年排必填！'
           })
         } else {
-          if (this.$store.state.exam.enterScoreList.length > 0) { // 添加当前科目之前添加的科目
-            for (const item in this.$store.state.exam.enterScoreList) {
-              this.submitList.push(this.$store.state.exam.enterScoreList[item])
+          if (this.$route.params.times === 'more') {
+            if (this.$store.state.exam.enterScoreList.length > 0) { // 添加当前科目之前添加的科目
+              for (const item in this.$store.state.exam.enterScoreList) {
+                this.submitList.push(this.$store.state.exam.enterScoreList[item])
+              }
             }
-          }
-          if (this.$store.state.exam.enterScoreListW.length > 0) { // 添加当前科目之前添加的科目
-            for (const item in this.$store.state.exam.enterScoreListW) {
-              this.submitListW.push(this.$store.state.exam.enterScoreListW[item])
+            if (this.$store.state.exam.enterScoreListW.length > 0) { // 添加当前科目之前添加的科目
+              for (const item in this.$store.state.exam.enterScoreListW) {
+                this.submitListW.push(this.$store.state.exam.enterScoreListW[item])
+              }
             }
           }
           const grade = {'wechat_openid': this.openid, 'student_number': this.schoolNumber, 'subject_name': this.selectSub, 'score': this.score, 'class_rank': this.classPai, 'grade_rank': this.schoolPai, 'exam_name': this.examination, 'imgs': this.imgsList}

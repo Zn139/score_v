@@ -363,3 +363,33 @@ export function getKnowledgeInfo (req) { // 在线课程--专项练习--根据�
     params: req
   })
 }
+// 做题记录
+export function getXTStaticInfo (req) { // 在线课程--做题统计
+  return request({
+    url: 'exam-two/getDoQuestionRecord',
+    method: 'get',
+    params: req
+  })
+}
+export function getXTStaticDetail (req) { // 在线课程--做题统计--点击获取做题详情
+  return request({
+    url: 'exam-two/getDoQuestionRecordDetail',
+    method: 'get',
+    params: req
+  })
+}
+// 学习记录
+export function getDoQuesInfo (req) { // 在线课程--学习记录--做题情况
+  return request({
+    url: 'exam-two/getDoQuestionsCount',
+    method: 'get',
+    params: req
+  })
+}
+export function getDoQuesTiming (req) { // 在线课程--学习记录--做题时长和正确率
+  return request({
+    url: 'exam-two/getRightRateAndClassHours',
+    method: 'get',
+    params: req
+  })
+}
