@@ -36,6 +36,12 @@
           </tr>
         </table>
       </div>
+      <confirm
+        v-model="showNoData"
+        :show-cancel-button="false"
+        @on-confirm="onConfirm">
+        <p style="text-align:center;">暂无做题详情！</p>
+      </confirm>
     </div>
   </div>
 </template>
@@ -44,7 +50,8 @@ import {getXTStaticDetail} from '@/api/index'
 export default {
   data () {
     return {
-      detailList: []
+      detailList: [],
+      showNoData: false // 是否有做题详情
     }
   },
   computed: {
@@ -62,6 +69,9 @@ export default {
     },
     exname () {
       return this.$route.params.exname
+    },
+    source () {
+      return this.$route.params.source
     }
   },
   mounted () {
@@ -71,16 +81,24 @@ export default {
     returnBack () {
       this.$router.push({name: 'xitiStatistics'})
     },
+    onConfirm () {
+      this.$router.push({name: 'xitiStatistics'})
+    },
     getDoQuesDetail () { // 获取做题详情
       getXTStaticDetail({
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
         levelName: this.levelName,
-        examName: this.exname
+        examName: this.exname,
+        source: this.source
       }).then(res => {
-        this.detailList = res.data.data
-        console.log(res.data.data)
+        if (res.data.code === 0) {
+          this.detailList = res.data.data
+        } else {
+          this.showNoData = true
+        }
+        console.log(res.data)
       })
     }
   }
@@ -186,6 +204,7 @@ export default {
           background-color: #99CCFF;
           padding: 1px 5px;
           border-radius: 5px;
+          font-size: 13px;
         }
       }
     }

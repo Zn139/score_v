@@ -8,7 +8,7 @@ import FastClick from 'fastclick'
 import vueTap from 'vue-js-tap'
 import echarts from 'echarts'
 import axios from 'axios'
-import { Alert, AlertPlugin, Search, Popup, XDialog, Datetime, Selector, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
+import { Alert, ButtonTab, ButtonTabItem, AlertPlugin, Search, Popup, XDialog, Datetime, Selector, ToastPlugin, XInput, XButton, ConfirmPlugin, LoadingPlugin, Calendar, XTable, Toast, PopupPicker, Tab, TabItem, ConfigPlugin, Confirm } from 'vux'
 import store from './store'
 // import Vuex from 'vuex'
 import VDistpicker from 'v-distpicker'
@@ -48,6 +48,8 @@ Vue.component('tab-item', TabItem)
 Vue.component('toast', Toast)
 Vue.component('calendar', Calendar)
 Vue.component('popup-picker', PopupPicker)
+Vue.component('button-tab', ButtonTab)
+Vue.component('button-tab-item', ButtonTabItem)
 Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)

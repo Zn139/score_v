@@ -379,6 +379,13 @@ export function getXTStaticDetail (req) { // 在线课程--做题统计--点击�
   })
 }
 // 学习记录
+export function getBasicInfo (req) { // 在线课程--学习记录--得到基本信息
+  return request({
+    url: 'exam-two/getPracticeRecord',
+    method: 'get',
+    params: req
+  })
+}
 export function getDoQuesInfo (req) { // 在线课程--学习记录--做题情况
   return request({
     url: 'exam-two/getDoQuestionsCount',
@@ -389,6 +396,28 @@ export function getDoQuesInfo (req) { // 在线课程--学习记录--做题情�
 export function getDoQuesTiming (req) { // 在线课程--学习记录--做题时长和正确率
   return request({
     url: 'exam-two/getRightRateAndClassHours',
+    method: 'get',
+    params: req
+  })
+}
+export function getCollectError (req) { // 在线课程--学习记录--错题和收藏图表数据
+  return request({
+    url: 'exam-two/getWrongCollectQuestionsCount',
+    method: 'get',
+    params: req
+  })
+}
+// 错题记录
+export function getWrongRecord (req) { // 在线课程--错题记录--获取所有分类的名称及数量
+  return request({
+    url: 'exam/getClassificationQuantity',
+    method: 'get',
+    params: req
+  })
+}
+export function getClassifyDetail (req) { // 在线课程--错题记录--获取某个分类下的题
+  return request({
+    url: 'exam/getNotMasteredInfo',
     method: 'get',
     params: req
   })

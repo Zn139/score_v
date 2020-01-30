@@ -31,11 +31,11 @@
     </div>
 <!--    <div class="barChart" ref="wrongBarChart"></div>-->
     <div class="xitStatic_third">
-      <div v-for="(item, index) in xtContent" :key="index" class="xitiStatic_third_info" @click="gotoStaticDetail(item.examPaperName)">
+      <div v-for="(item, index) in xtContent" :key="index" class="xitiStatic_third_info" @click="gotoStaticDetail(item.examPaperName, item.examSource)">
         <div class="xitiStatic_third_left">
           <div class="xitiStatic_third_left_top">{{item.examPaperName}}</div>
           <div class="xitiStatic_third_left_middle">
-            <span><i class="iconfont icon_lulunaozhong"></i>10'12"</span><span>{{item.examSource}}</span>
+            <span><i class="iconfont icon_lulunaozhong"></i>{{item.doTimeLength}}</span><span>{{item.examSource}}</span>
 <!--            <span><i class="iconfont icon_lulushijianlishijilujishizhongbiaomianxing"></i>10'12"</span><span>{{item.examSource}}</span>-->
           </div>
           <div class="xitiStatic_third_left_bottom">
@@ -73,12 +73,24 @@ export default {
       rightPercent: 0,
       barChart: '', // 练习和考试饼图
       dateValue: '', // 默认时间
-      startD: '', // 开始时间
-      endD: '', // 结束时间
+      // startD: '', // 开始时间
+      // endD: '', // 结束时间
       showDate: true,
       showDateEnd: false,
-      dateEndValue: 'TODAY', // 结束时间
+      dateEndValue: '', // 结束时间
       weekBeforeTime: ''
+    }
+  },
+  watch: { // 监听题号的索引的变化
+    dateValue (val, oldval) {
+      console.log('开始时间变了么：', val, oldval)
+      console.log(this.dateValue, this.dateEndValue)
+      this.getXTStaticInfo()
+    },
+    dateEndValue (val, oldval) {
+      console.log('结束时间变了么：', val, oldval)
+      console.log(this.dateValue, this.dateEndValue)
+      this.getXTStaticInfo()
     }
   },
   computed: {
@@ -96,23 +108,20 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(function () {
-      this.getCurrentTime()
-    })
+    // this.$nextTick(function () {
+    //   this.getCurrentTime()
+    // })
     this.getXTStaticInfo()
     // this.drawPie()
-    this.$nextTick(function () {
-      this.drawDoQues(0)
-    })
+    // this.$nextTick(function () {
+    //   this.drawDoQues(0)
+    // })
     // this.drawDoQues()
   },
   methods: {
     returnBack () {
       this.$router.push({name: 'lineCourse'})
     },
-    // gotoTest () {
-    //   this.$router.push('/test')
-    // },
     getCurrentTime () { // 得到系统时间
       let nowDate = new Date()
       let year = nowDate.getFullYear() // 得到当前年份
@@ -131,11 +140,12 @@ export default {
       console.log('echart_' + index)
       return 'echart_' + index
     },
-    gotoStaticDetail (val) { // 做题详情
+    gotoStaticDetail (val, source) { // 做题详情
       this.$router.push({
         name: 'staticDetail',
         params: {
-          exname: val
+          exname: val,
+          source: source
         }
       })
     },
@@ -144,7 +154,9 @@ export default {
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
-        levelName: this.levelName
+        levelName: this.levelName,
+        starTime: this.dateValue,
+        endTime: this.dateEndValue
       }).then(res => {
         this.xtContent = res.data.data
         console.log('做题记录', res.data.data)
@@ -153,7 +165,8 @@ export default {
           // console.log(this.xtContent[item].doRightNums)
           // console.log(this.xtContent[item].doQuestionsNums)
           // this.rightPercent = (1 / this.xtContent[item].doQuestionsNums) * 100
-          this.rightPercent = parseFloat((1 / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
+          this.rightPercent = parseFloat((this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
+          // this.rightPercent = parseFloat((1 / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
           // this.rightPercent = (this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100 %
           console.log(this.rightPercent)
           this.$nextTick(function () {
@@ -165,12 +178,16 @@ export default {
     },
     change (value) {
       console.log('change', value)
+      console.log('change', this.dateValue, this.dateEndValue)
+      // this.getXTStaticInfo()
     },
     onChange (val) {
       console.log('val change', val)
     },
     changeEnd (val) {
       console.log('结束', val)
+      console.log('change', this.dateValue, this.dateEndValue)
+      // this.getXTStaticInfo()
     },
     onShow () {
       console.log('on show')
@@ -379,12 +396,12 @@ export default {
     border-bottom: 1px solid #ececec;
   }
   .xitiStatic_third_left {
+    width: 78%;
+    display: inline-block;
     .xitiStatic_third_left_top {
       margin-left: 5px;
-      font-size: 14px;
+      font-size: 13px;
     }
-    width: 75%;
-    display: inline-block;
     .xitiStatic_third_left_middle {
       margin-top: 5px;
       width: 80%;
@@ -416,7 +433,7 @@ export default {
     }
   }
   .xitiStatic_third_right {
-    width: 23%;
+    width: 20%;
     float: right;
     /*display: inline-block;*/
     .xitiStatic_third_right_chart {
