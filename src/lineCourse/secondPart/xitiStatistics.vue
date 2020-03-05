@@ -6,7 +6,10 @@
       </div>
       <div class="title">做题统计</div>
     </div>
-    <div class="xitiStatic_second">
+    <div class="noData" v-if="xtContent.length === 0">
+      该同学暂无做题统计数据
+    </div>
+    <div class="xitiStatic_second" v-if="xtContent.length > 0">
       <div class="xitiStatic_seconde_title">
         <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>
         <popup-picker class="grade_info" title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>
@@ -95,7 +98,8 @@ export default {
   },
   computed: {
     subject_online () {
-      return this.$store.state.lineCourse.select_sub
+      // return this.$store.state.lineCourse.select_sub
+      return localStorage.SET_SELECT_SUB
     },
     openid () {
       return this.$store.state.exam.openid
@@ -150,6 +154,7 @@ export default {
       })
     },
     getXTStaticInfo () { // 获取所有做题的记录
+      this.xtContent = []
       getXTStaticInfo({
         studentNumber: this.schoolNumber,
         openid: this.openid,
@@ -158,21 +163,23 @@ export default {
         starTime: this.dateValue,
         endTime: this.dateEndValue
       }).then(res => {
-        this.xtContent = res.data.data
-        console.log('做题记录', res.data.data)
-        for (const item in this.xtContent) {
-          console.log(item)
-          // console.log(this.xtContent[item].doRightNums)
-          // console.log(this.xtContent[item].doQuestionsNums)
-          // this.rightPercent = (1 / this.xtContent[item].doQuestionsNums) * 100
-          this.rightPercent = parseFloat((this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
-          // this.rightPercent = parseFloat((1 / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
-          // this.rightPercent = (this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100 %
-          console.log(this.rightPercent)
-          this.$nextTick(function () {
-            this.drawDoQues(item)
-          })
-          // this.drawPie()
+        if (res.data.code === 0) {
+          this.xtContent = res.data.data
+          console.log('做题记录', res.data)
+          for (const item in this.xtContent) {
+            console.log(item)
+            // console.log(this.xtContent[item].doRightNums)
+            // console.log(this.xtContent[item].doQuestionsNums)
+            // this.rightPercent = (1 / this.xtContent[item].doQuestionsNums) * 100
+            this.rightPercent = parseFloat((this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
+            // this.rightPercent = parseFloat((1 / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
+            // this.rightPercent = (this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100 %
+            console.log(this.rightPercent)
+            this.$nextTick(function () {
+              this.drawDoQues(item)
+            })
+            // this.drawPie()
+          }
         }
       })
     },
@@ -439,5 +446,11 @@ export default {
     .xitiStatic_third_right_chart {
       height: 75px;
     }
+  }
+  .noData {
+    margin-top: 15%;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    color: #9c9c9c;
   }
 </style>

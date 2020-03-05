@@ -16,9 +16,11 @@
               <div v-if="selectIndex === index" class="section_exec_ques">
                 <span>{{item.question.questionType}}</span>
                 {{item.question.questionContext}}
-                <div class="section_exec_second_img" v-if="item.question.questionImgs !== ''">
+                <div class="section_exec_second_img" v-if="item.imgList.length !== 0">
+<!--                  <img v-for="(j, inde) in item.imgList" :src="j" alt="" style="width: 100%;height: 100%;" :key="inde">-->
                   <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">
                 </div>
+<!--                {{str}}-->
                 <!--{{item.question.questionContext.split('）')[0] + '）'}}-->
                 <!--          <div class="choose-box" v-for="(a,index) in item.option" :key="index">-->
                 <!--            <input name="biological" type="radio" value="" />-->
@@ -54,7 +56,7 @@
                   <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>
                   <div v-if="showDetail">
                     <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
-                    <div class="jiexi_second">
+                    <div class="jiexi_second" v-if="item.question.correctAnalysis !== null">
                       <div class="smallKuang"></div><h4>解析</h4>
                       <div class="jiexi_content">
                         {{item.question.correctAnalysis.split('】')[1]}}
@@ -179,34 +181,55 @@ export default {
       answer_to_ques: {}, // 用户返回时的答卷信息
       userOption: -1, // 后台返回的用户的选项
       selectToRight: 0, // 后台返回的用户的选项是否正确
-      flag: 0 // 退出时要不要保存记录
+      flag: 0, // 退出时要不要保存记录
+      // 计时
+      h: 0, // 定义时，分，秒，毫秒并初始化为0；
+      m: 0,
+      ms: 0,
+      s: 0,
+      time: 0,
+      str: '',
+      // str: '00:00:00:000',
+      mytime: '',
+      hour: '00',
+      min: '00',
+      sen: '00',
+      msen: '00'
     }
   },
   computed: {
     paperName () { // 表示节的名称
       console.log('paperName:', this.$route.params.paperName)
-      return this.$route.params.paperName
+      return this.$route.query.paperName
+      // return this.$route.params.paperName
     },
     subject_online () {
       // console.log(this.$route.params.fullName)
       // return this.$route.params.subject
-      return this.$store.state.lineCourse.select_sub
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
+      // return localStorage.SET_SELECT_SUB
     },
     openid () {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
       return this.$store.state.exam.schoolNum
+    },
+    levelName () { // 年级
+      return this.$store.state.lineCourse.levelName
     }
   },
   mounted () {
     this.init()
     // this.getOneSectionQues() // // 此试卷的所有题
     this.getPreRecord() // 获取之前的记录
+    this.getInitTime()
     // this.getNoSelect_allQues() // 未点击时出现的正确错误个数
   },
   watch: { // 监听题号的索引的变化
     selectIndex (val, oldval) {
+      console.log(this.quesList)
       this.selectRight = this.quesList[this.selectIndex].selectRight
       if (this.quesList[this.selectIndex].showDetail === true) {
         // console.log('daduileme :', this.showDetail)
@@ -218,6 +241,9 @@ export default {
       // console.log('索引李：', this.selectIndex)
       // if (this.flag === 0) {
       this.getCollect()
+      this.str = ''
+      this.reset()
+      this.start()
       // this.showCollec = this.quesList[this.selectIndex].showCollec
       // this.showCollec = this.one_section_content[this.selectIndex].collect
       // } else {
@@ -260,6 +286,77 @@ export default {
         })
       })
     },
+    getInitTime () { // 获取当索引为0时的时间
+      if (this.selectIndex === 0) {
+        this.str = ''
+        this.reset()
+        this.start()
+      }
+    },
+    // 计时
+    timer () { // 定义计时函数
+      this.ms = this.ms + 50 // 毫秒
+      if (this.ms >= 1000) {
+        this.ms = 0
+        this.s = this.s + 1 // 秒
+      }
+      if (this.s >= 60) {
+        this.s = 0
+        this.m = this.m + 1 // 分钟
+      }
+      if (this.m >= 60) {
+        this.m = 0
+        this.h = this.h + 1 // 小时
+      }
+      this.str = this.toDub(this.h) + ':' + this.toDub(this.m) + ':' + this.toDub(this.s)
+      // this.str = this.toDub(this.h) + ':' + this.toDub(this.m) + ':' + this.toDub(this.s) + ' ' + this.toDubms(this.ms)
+      // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
+      this.hour = this.toDub(this.h)
+      this.min = this.toDub(this.m)
+      this.sen = this.toDub(this.s)
+      this.msen = this.toDubms(this.ms)
+    },
+    reset () { // 重置
+      clearInterval(this.time)
+      this.h = 0
+      this.m = 0
+      this.ms = 0
+      this.s = 0
+      this.str = '00:00:00'
+      // this.str = '00:00:00:000'
+      this.hour = '00'
+      this.min = '00'
+      this.sen = '00'
+      this.msen = '00'
+      console.log('重置时间：', this.time)
+    },
+
+    start () { // 开始
+      clearInterval(this.time)
+      this.time = setInterval(this.timer, 50)
+      console.log('开始时间：', this.time)
+    },
+
+    stop () { // 暂停
+      clearInterval(this.time)
+      console.log('结束时间：', this.time)
+    },
+
+    toDub (n) { // 补0操作
+      if (n < 10) {
+        return '0' + n
+      } else {
+        return '' + n
+      }
+    },
+
+    toDubms (n) { // 给毫秒补0操作
+      if (n < 10) {
+        return '00' + n
+      } else {
+        return '' + n
+      }
+    },
     redoQues () {
       this.showSum = false
       this.selectRight = 0
@@ -293,7 +390,7 @@ export default {
         subject: this.subject_online,
         paperName: this.paperName
       }).then(res => {
-        console.log(res.data)
+        console.log('所有信息：', res.data)
         // console.log(res.data.data[0].effective)
         if (res.data.code === 0) { // 做过题
           this.allSum = res.data.data[0].list.length // 所有题的个数
@@ -442,7 +539,8 @@ export default {
         paperName: this.paperName,
         subject: this.subject_online,
         studentNumber: this.schoolNumber,
-        openid: this.openid
+        openid: this.openid,
+        gradeLevel: this.levelName
       }).then(res => {
         this.one_section_content = res.data.data
         // console.log('所有题：', this.one_section_content)
@@ -471,6 +569,9 @@ export default {
         if (answer.split('.')[1] === that.one_section_content[that.selectIndex].question.correctText) {
           that.selectRight = 1 // 答对
           that.quesList[that.selectIndex].selectRight = 1
+          that.currentRight += 1 // 做对的个数加1
+          that.currentRightList.push(that.selectIndex + 1)
+          that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
         } else {
           const options = that.one_section_content[that.selectIndex].randomOption
           for (const item in options) {
@@ -480,10 +581,17 @@ export default {
           }
           that.selectRight = 2 // 答错
           that.quesList[that.selectIndex].selectRight = 2
+          that.currentError += 1 // 做对的个数加1
+          that.currentErrorList.push(that.selectIndex + 1)
+          that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
         }
+        console.log(that.currentRight, that.currentRightList)
+        console.log(that.currentError, that.currentErrorList)
+        console.log('未做的：', that.currentNotList)
         that.id = that.one_section_content[that.selectIndex].question.id
         that.paperid = that.one_section_content[that.selectIndex].sourcePaperId // 组卷id
         that.getCurrentRecord(answer)
+        console.log('总结用时：', that.str)
       }, 400)
       // console.log('答案是：', this.answer_to_ques)
     },
@@ -495,14 +603,16 @@ export default {
         commitString: ans,
         paperName: this.paperName,
         subject: this.subject_online,
-        sourcePaperId: this.paperid
+        sourcePaperId: this.paperid,
+        gradeLevel: this.levelName,
+        doTime: this.str
       }).then(res => {
         console.log('当前大体情况', res.data.data)
-        this.currentError = res.data.data.doError
-        this.currentRight = res.data.data.doRight
-        this.currentRightList = res.data.data.doRightList
-        this.currentErrorList = res.data.data.doErrorList
-        this.currentNotList = res.data.data.notDoList
+        // this.currentError = res.data.data.doError
+        // this.currentRight = res.data.data.doRight
+        // this.currentRightList = res.data.data.doRightList
+        // this.currentErrorList = res.data.data.doErrorList
+        // this.currentNotList = res.data.data.notDoList
       })
     },
     gotoNextQues () {

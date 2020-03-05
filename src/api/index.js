@@ -187,7 +187,14 @@ export function getSetTarValue (req) { // 定位对比--初始查询设定的目
   })
 }
 // 在线课堂
-export function getChapter (req) { // 在线课程--获取年级章
+
+export function recentExer (req) { // 在线课程--首页--获取最近练习
+  return request({
+    url: 'exam/continueLearn',
+    method: 'get',
+    params: req
+  })
+}export function getChapter (req) { // 在线课程--获取年级章
   return request({
     url: 'exam/getAllChapter',
     method: 'get',
@@ -278,6 +285,21 @@ export function getSectionDetail (req) { // 在线课程--错题统计--默认�
     params: req
   })
 }
+// GET /score_analysis/exam-three/master
+export function gotoMaster (req) { // 在线课程--错题统计--错题未掌握跳到已掌握
+  return request({
+    url: 'exam-three/master',
+    method: 'get',
+    params: req
+  })
+}
+export function gotoSearch (req) { // 在线课程--错题统计--搜索
+  return request({
+    url: 'exam-three/wrongRecordSearch',
+    method: 'get',
+    params: req
+  })
+}
 export function getMyCollectNum (req) { // 在线课程--我的收藏--进来时--默认考试和练习收藏错题
   return request({
     url: 'exam-two/getCollectProblemsNum',
@@ -341,8 +363,15 @@ export function notMasterToMaster (req) { // 在线课程--我的错题--未掌�
     params: req
   })
 }
-// 在线课程--专项练习
-export function getKnowledgeNumByChapter (req) { // 在线课程--专项练习--根据章节获取知识点数
+// 在线课程--专项练习 GET /score_analysis/exam-three/questionsearch
+
+export function searchPoint (req) { // 在线课程--专项练习--根据章节获取知识点数
+  return request({
+    url: 'exam-three/questionsearch',
+    method: 'get',
+    params: req
+  })
+}export function getKnowledgeNumByChapter (req) { // 在线课程--专项练习--根据章节获取知识点数
   return request({
     url: 'exam-two/getQuestionsNumsByChapter',
     method: 'get',
@@ -419,6 +448,58 @@ export function getClassifyDetail (req) { // 在线课程--错题记录--获取�
   return request({
     url: 'exam/getNotMasteredInfo',
     method: 'get',
+    params: req
+  })
+}
+export function getClassifyClassify (req) { // 在线课程--错题记录--获取某个分类下具体的分类情况
+  return request({
+    url: 'exam/getClassification',
+    method: 'get',
+    params: req
+  })
+}
+export function getErrorDetail (req) { // 在线课程--错题记录--错题跳转到详情
+  return request({
+    url: 'exam/getQuestionInfo',
+    method: 'get',
+    params: req
+  })
+}
+// 在线课程--专项练习--获取所有的知识点
+export function getAllKnowledge (req) { // 在线课程--专项练习--获取所有的知识点
+  return request({
+    url: 'exam/getAllKnowledge',
+    method: 'get',
+    params: req
+  })
+}
+export function getKnowledgeDetail (req) { // 在线课程--专项练习--获取某个知识点详情
+  return request({
+    url: 'exam/getAllQuestionByPoint',
+    method: 'get',
+    params: req
+  })
+}
+export function commitKnowledgeDoRecord (req) { // 在线课程--专项练习--获取某个知识点详情
+  return request({
+    url: 'exam/specialRecordId',
+    method: 'post',
+    params: req
+  })
+}
+// 模拟考试 GET /score_analysis/exam/getAllExamName
+export function getMockexamName (req) { // 在线课程--模拟考试--获取考试名称和题数
+  return request({
+    url: 'exam/getAllExamName',
+    method: 'get',
+    params: req
+  })
+}
+// POST /score_analysis/exam-three/examsubmit
+export function getMockSubmit (req) { // 在线课程--模拟考试--做完题之后点击提交的值
+  return request({
+    url: 'exam-three/examsubmit',
+    method: 'post',
     params: req
   })
 }

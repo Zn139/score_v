@@ -65,7 +65,11 @@ export default {
           this.$store.commit('SET_USER_IMG', res.data.userLogin.headimgurl)
           if (res.data.userLogin.diyid !== '') {
             this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
+            // this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
           }
+          // if (res.data.gradeLevel !== '') {
+          //   this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
+          // }
           // else {
           //   this.$store.commit('SET_SCHOOLNUM', '08047737')
           // }

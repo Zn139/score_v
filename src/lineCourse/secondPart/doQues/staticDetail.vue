@@ -56,7 +56,8 @@ export default {
   },
   computed: {
     subject_online () {
-      return this.$store.state.lineCourse.select_sub
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
     },
     openid () {
       return this.$store.state.exam.openid

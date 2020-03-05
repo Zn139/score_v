@@ -1,7 +1,8 @@
 const lineCourse = {
   state: {
     select_sub: '',
-    levelName: '高1'
+    levelName: '高1',
+    if_master: -1
   },
   mutations: {
     SET_SELECT_SUB: (state, name) => {
@@ -9,6 +10,9 @@ const lineCourse = {
     },
     SET_LEVEL_NAME: (state, name) => {
       state.levelName = name
+    },
+    SET_IF_MASTER: (state, val) => {
+      state.if_master = val
     }
   }
 }

@@ -13,12 +13,17 @@
             <div class="menu-container" ref="menuContainer">
               <!-- 这个是内容 -->
               <div v-if="selectIndex === index" class="section_exec_ques">
-                <span>{{item.question.questionType}}</span>
-                {{item.questionContext}}
+                <span>{{item.question_type}}</span>
+                {{item.question_context}}
                 <!--                {{item.question_imgs}}-->
                 <div class="section_exec_second_img" v-if="item.question_imgs !== ''">
                   <img :src="item.question_imgs" alt="" style="width: 100%;height: 100%;">
                 </div>
+                <!--{{item.question.questionContext.split('）')[0] + '）'}}-->
+                <!--          <div class="choose-box" v-for="(a,index) in item.option" :key="index">-->
+                <!--            <input name="biological" type="radio" value="" />-->
+                <!--            <label style="cursor:pointer">{{a}}</label>-->
+                <!--          </div>-->
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
                   <div v-if="selectRight === 0" v-for="(c,index) of item.question_option" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
@@ -143,7 +148,7 @@
   </div>
 </template>
 <script>
-import {getKnowledgeDetail, getShowCollect, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
+import {getKnowledgeInfo, getShowCollect, collectCurrentQues, cancelCollectCurrentQues} from '@/api/index'
 import BScroll from 'better-scroll'
 import { LoadMore, TransferDom, Group, Cell } from 'vux'
 export default {
@@ -194,8 +199,7 @@ export default {
     subject_online () {
       // console.log(this.$route.params.fullName)
       // return this.$route.params.subject
-      return localStorage.SET_SELECT_SUB
-      // return this.$store.state.lineCourse.select_sub
+      return this.$store.state.lineCourse.select_sub
     },
     openid () {
       return this.$store.state.exam.openid
@@ -203,11 +207,11 @@ export default {
     schoolNumber () {
       return this.$store.state.exam.schoolNum
     },
-    // chapter () {
-    //   return this.$route.params.chapter
-    // },
+    chapter () {
+      return this.$route.params.chapter
+    },
     knowledge () {
-      return this.$route.params.knowledgePoint
+      return this.$route.params.knowledge
     },
     levelName () { // 年级
       return this.$store.state.lineCourse.levelName
@@ -349,12 +353,13 @@ export default {
     },
     getknowledgeDetail () { // 得到题详细信息
       this.quesList = []
-      getKnowledgeDetail({
+      getKnowledgeInfo({
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
-        gradeLevel: this.levelName,
-        knowledgePoint: this.knowledge
+        chapter: this.chapter,
+        levelName: this.levelName,
+        questionAttribute: this.knowledge
       }).then(res => {
         // this.quesList = []
         console.log('知识点情况：', res.data.data)
@@ -363,9 +368,9 @@ export default {
           this.str = ''
           this.start()
           this.allSum = res.data.data.length // 所有题的个数
-          // this.showCollec = this.errorSectionList[this.selectIndex].ifCollect
+          this.showCollec = this.errorSectionList[this.selectIndex].ifCollect
           for (const item in this.errorSectionList) {
-            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.errorSectionList[item].question.id, 'question_id': this.errorSectionList[item].question.questionId}
+            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.errorSectionList[item].id, 'question_id': this.errorSectionList[item].question_id}
             this.quesList.push(oneDetail)
             // const quesInfo = {'index': parseInt(item), }
           }
@@ -427,7 +432,6 @@ export default {
       // this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
       const that = this
       setTimeout(function () {
-        console.log('选项及答案：', answer.split('.')[1], that.errorSectionList[that.selectIndex].correct_text)
         if (answer.split('.')[1] === that.errorSectionList[that.selectIndex].correct_text) {
           that.selectRight = 1 // 答对
           that.currentRight += 1 // 做对的个数加1

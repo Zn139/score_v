@@ -15,7 +15,13 @@ const overYearsZT = () => import('@/lineCourse/secondPart/overYearsZT') // 在�
 const xitiStatistics = () => import('@/lineCourse/secondPart/xitiStatistics') // 在线课堂--习题统计
 const staticDetail = () => import('@/lineCourse/secondPart/doQues/staticDetail') // 在线课堂--做题统计详情
 const studyRecord = () => import('@/lineCourse/secondPart/studyRecord') // 在线课堂--学习记录
+// 错题记录
+const sectionErrorDetail = () => import('@/lineCourse/secondPart/wrong/sectionErrorDetail') // 在线课堂--错题--章节详情
+const gotoSearchDetail = () => import('@/lineCourse/secondPart/wrong/gotoSearchDetail') // 在线课堂--错题--章节详情
+const examErrorDetail = () => import('@/lineCourse/secondPart/wrong/examErrorDetail') // 在线课堂--错题--章节详情
 const wrongQues = () => import('@/lineCourse/secondPart/wrongQues') // 在线课堂--错题积累
+const wrongDetail = () => import('@/lineCourse/secondPart/wrong/wrongDetail') // 在线课堂--错题记录--错题详情
+
 const xtcollect = () => import('@/lineCourse/secondPart/xtcollect') // 在线课堂--我的收藏
 const doQuesRecord = () => import('@/lineCourse/thirdPart/doQuesRecord') // 在线课堂--做题记录
 const studyReport = () => import('@/lineCourse/thirdPart/studyReport') // 在线课堂--学习报告
@@ -23,10 +29,12 @@ const myMedal = () => import('@/lineCourse/thirdPart/myMedal') // 在线课堂--
 const chapterExercise = () => import('@/lineCourse/secondPart/chapterExercise') // 在线课堂--章节列表--章节练习
 const sectionCollectDetail = () => import('@/lineCourse/secondPart/collect/sectionCollectDetail') // 在线课堂--收藏--章节详情
 const examCollectDetail = () => import('@/lineCourse/secondPart/collect/examCollectDetail') // 在线课堂--收藏--考试详情
-const sectionErrorDetail = () => import('@/lineCourse/secondPart/wrong/sectionErrorDetail') // 在线课堂--错题--章节详情
-const examErrorDetail = () => import('@/lineCourse/secondPart/wrong/examErrorDetail') // 在线课堂--错题--章节详情
+
 // 专项练习
 const specialKnowledgeInfo = () => import('@/lineCourse/secondPart/specialItem/specialKnowledgeInfo') // 在线课堂--专项练习--点击章和知识点跳转到详情
+
+// 模拟考试 mockDetail
+const mockDetail = () => import('@/lineCourse/secondPart/mock/mockDetail') // 在线课堂--专项练习--点击章和知识点跳转到详情
 
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
@@ -39,6 +47,7 @@ const classSchedule = () => import('@/menus/classSchedule')
 // const schoolInquire = () => import('@/school_o625/index')
 const schoolInquire = () => import('@/school/schoolInquire')
 const schoolInfo = () => import('@/school/schoolInfo')
+const schoolScore = () => import('@/school/schoolScore')
 const more = () => import('@/menus/more')
 const addScore = () => import('@/enterGrade/index')
 const addSingleSubScore = () => import('@/enterGrade/addSingleSubScore')
@@ -50,11 +59,19 @@ const collect = () => import('@/my/collect') // 我的--收藏
 const setInfo = () => import('@/my/setInfo') // 我的--设置
 const myInfoDetail = () => import('@/my/myInfoDetail') // 我的--我的详情
 const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
+const statement = () => import('@/my/statement') // 我的--免责声明
 const myBBS = () => import('@/my/myBBS') // 我的--圈子
 const bindAccount = () => import('@/my/bindAccount') // 我的--绑定账号
 const camera = () => import('@/camera/camera') // 录入--测试相机
 // const ceshiCamera = () => import('@/camera/upload') // 录入--测试lingyige相机
-const test = () => import('@/components/timing')
+const scanCode = () => import('@/home/scanCode') // 扫码
+
+// 学习圈
+const bbs = () => import('@/bbs/index')
+const bbsDetail = () => import('@/bbs/bbsDetail')
+const bbsAdd = () => import('@/bbs/bbsAdd')
+const myqz = () => import('@/bbs/myqz')
+const test2 = () => import('@/components/sao_sao')
 
 export default new Router({
   routes: [
@@ -150,6 +167,14 @@ export default new Router({
       },
       name: 'ideaFeedback',
       meta: { tab: 'ideaFeedback', title: 'ideaFeedback' }
+    },
+    {
+      path: '/statement', // 我的--意见反馈
+      components: {
+        default: statement
+      },
+      name: 'statement',
+      meta: { tab: 'statement', title: 'statement' }
     },
     {
       path: '/my',
@@ -351,6 +376,14 @@ export default new Router({
       name: 'schoolInfo',
       meta: { tab: 'schoolInfo', title: 'schoolInfo' }
     },
+    { // 专业详情
+      path: '/schoolScore/:schoolcode/:majorcode',
+      components: {
+        default: schoolScore
+      },
+      name: 'schoolScore',
+      meta: { tab: 'schoolScore', title: 'schoolScore' }
+    },
     {
       path: '/more',
       components: {
@@ -413,6 +446,14 @@ export default new Router({
       name: 'sectionErrorDetail',
       meta: { tab: 'sectionErrorDetail', title: 'sectionErrorDetail' }
     },
+    {
+      path: '/gotoSearchDetail', // 节错题详情
+      components: {
+        default: gotoSearchDetail
+      },
+      name: 'gotoSearchDetail',
+      meta: { tab: 'gotoSearchDetail', title: 'gotoSearchDetail' }
+    },
     // 在线课程--错题--考试题错题详情
     {
       path: '/examErrorDetail', // 错题详情
@@ -421,6 +462,14 @@ export default new Router({
       },
       name: 'examErrorDetail',
       meta: { tab: 'examErrorDetail', title: 'examErrorDetail' }
+    },
+    {
+      path: '/wrongDetail', // 错题详情
+      components: {
+        default: wrongDetail
+      },
+      name: 'wrongDetail',
+      meta: { tab: 'wrongDetail', title: 'wrongDetail' }
     },
     // 专项练习
     // 在线课程--专项练习--知识点题详情
@@ -442,13 +491,65 @@ export default new Router({
     //   meta: { tab: 'ceshiCamera', title: 'ceshiCamera' }
     // },
     {
-      path: '/test',
+      path: '/scanCode',
       // path: '/share/:exam_name',
       components: {
-        default: test
+        default: scanCode
       },
-      name: 'test',
-      meta: { tab: 'test', title: 'test' }
+      name: 'scanCode',
+      meta: { tab: 'scanCode', title: 'scanCode' }
+    },
+    {
+      path: '/test2',
+      // path: '/share/:exam_name',
+      components: {
+        default: test2
+      },
+      name: 'test2',
+      meta: { tab: 'test2', title: 'test2' }
+    },
+    // 模拟考试 mockDetail
+    {
+      path: '/mockDetail', // 模拟考试详情页
+      components: {
+        default: mockDetail
+      },
+      name: 'mockDetail',
+      meta: { tab: 'mockDetail', title: 'mockDetail' }
+    },
+    // 学习圈
+    {
+      path: '/bbs/:type',
+      components: {
+        default: bbs
+      },
+      name: 'bbs',
+      meta: { tab: 'bbs', title: 'bbs' }
+      // meta: { tab: 'bbs', title: 'bbs', keepAlive: true }
+    },
+    {
+      path: '/bbsDetail/:id',
+      components: {
+        default: bbsDetail
+      },
+      name: 'bbsDetail',
+      meta: { tab: 'bbsDetail', title: 'bbsDetail' }
+    },
+    {
+      path: '/bbsAdd',
+      components: {
+        default: bbsAdd
+      },
+      name: 'bbsAdd',
+      meta: { tab: 'bbsAdd', title: 'bbsAdd' }
+    },
+    {
+      path: '/myqz',
+      components: {
+        default: myqz
+      },
+      name: 'myqz',
+      meta: { tab: 'myqz', title: 'myqz' }
     }
   ]
 })

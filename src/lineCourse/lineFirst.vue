@@ -2,7 +2,7 @@
   <div class="line_first_info">
     <div class="line-first-tab">
       <tab :line-width=2>
-        <tab-item :selected="select_sub === item" v-for="(item, index) in sub_lists" @on-item-click="selectSub(item)" :key="index">{{item}}</tab-item>
+        <tab-item :selected="subject_online === item" v-for="(item, index) in sub_lists" @on-item-click="selectSub(item)" :key="index">{{item}}</tab-item>
 <!--        <tab-item :selected="select_sub === index" v-for="(item, index) in sub_lists" @on-item-click="dianji(item)" @click="select_sub = index" :key="index">{{item}}</tab-item>-->
       </tab>
 <!--        <swiper v-model="index" height="100px" :show-dots="false">-->
@@ -21,17 +21,31 @@ export default {
   data () {
     return {
       sub_lists: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治'],
-      select_sub: '生物'
+      // select_sub: '生物'
     }
   },
-  mounted () {
-    this.$store.commit('SET_SELECT_SUB', this.select_sub)
+  computed: {
+    subject_online () {
+      if (localStorage.SET_SELECT_SUB === '') {
+        localStorage.setItem('SET_SELECT_SUB', '生物')
+        return '生物'
+      } else {
+        return localStorage.SET_SELECT_SUB
+      }
+    },
   },
+  // mounted () {
+  //   this.$store.commit('SET_SELECT_SUB', this.select_sub)
+  //   // localStorage.setItem('')
+  //   localStorage.setItem('SET_SELECT_SUB', this.select_sub)
+  //   // localStorage.SET_SELECT_SUB
+  // },
   methods: {
     selectSub (item) {
       console.log('点击了么：', item)
       // this.$store.state.lineCourse
       this.$store.commit('SET_SELECT_SUB', item)
+      localStorage.setItem('SET_SELECT_SUB', item)
     }
   }
 }

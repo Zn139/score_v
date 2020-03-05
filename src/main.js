@@ -16,6 +16,8 @@ import VDistpicker from 'v-distpicker'
 import wcView from 'wc-view'
 import 'wc-view/style.css'
 import VueTouch from 'vue-touch'
+import Mui from 'vue-awesome-mui'
+Vue.use(Mui)
 Vue.use(VueTouch, {name: 'v-touch'})
 VueTouch.config.swipe = {
   threshold: 20 // 设置左右滑动的距离

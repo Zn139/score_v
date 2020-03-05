@@ -5,11 +5,11 @@
         <i class="iconfont icon_lulufengefu"></i><strong>最近练习</strong>
       </div>
       <div class="line-second-first_content">
-        <div class="line-third-title">第一章 走进细胞</div>
+        <div class="line-third-title">{{chapterName}}</div>
         <div class="line-third-con">
-          <div>第一节 从生物圈到细胞</div>
-          <div>1、生命体结构和功能的基本单位是？</div>
-          <x-button>继续学习</x-button>
+          <div>{{sectionName}}</div>
+<!--          <div>1、生命体结构和功能的基本单位是？</div>-->
+          <x-button @click.native="gotoChapterExer">继续学习</x-button>
         </div>
       </div>
     </div>
@@ -21,15 +21,51 @@
   </div>
 </template>
 <script>
+import {recentExer} from '@/api/index'
 export default {
   data () {
     return {
-
+      sectionName: '',
+      chapterName: ''
     }
+  },
+  computed: {
+    subject_online () {
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
+    },
+    openid () {
+      return this.$store.state.exam.openid
+    },
+    schoolNumber () {
+      return this.$store.state.exam.schoolNum
+    }
+  },
+  mounted () {
+    this.recentExer()
   },
   methods: {
     gotoPage (name) {
       this.$router.push({name: name})
+    },
+    recentExer () { // 最近练习
+      recentExer({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online
+      }).then(res => {
+        this.sectionName = res.data.data.sectionName
+        this.chapterName = res.data.data.examPaperName
+        console.log('最近练习：', res.data.data)
+      })
+    },
+    gotoChapterExer () {
+      this.$router.push({
+        name: 'chapterExercise',
+        params: {
+          paperName: this.sectionName
+        }
+      })
     }
   }
 }

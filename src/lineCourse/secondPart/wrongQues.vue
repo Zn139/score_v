@@ -6,21 +6,32 @@
       </div>
       <search
         v-show="showWrongSearch"
-        @result-click="resultClick"
+        @on-result-click="resultClick"
         @on-change="getResult"
         :results="results"
         v-model="key"
+        class="searchColor"
         :placeholder="placeholder"
         @on-submit="onSubmit"
         @on-cancel="cancelSearch"
         ref="search"></search>
+<!--      <search-->
+<!--        v-show="showWrongSearch"-->
+<!--        @result-click="resultClick"-->
+<!--        @on-change="getResult"-->
+<!--        :results="results"-->
+<!--        v-model="key"-->
+<!--        :placeholder="placeholder"-->
+<!--        @on-submit="onSubmit"-->
+<!--        @on-cancel="cancelSearch"-->
+<!--        ref="search"></search>-->
       <div class="title" v-show="!showWrongSearch">错题记录</div>
       <i v-show="!showWrongSearch" class="iconfont icon_luluicon-search" @click="searchWrong"></i>
     </div>
     <div class="wrongQues_second">
       <div class="wrongQues_second_firstInfo">
         <div class="wrongQues_second_first one">
-          年级：高一
+          年级：{{levelName}}
         </div>
         <div class="wrongQues_second_first two">
 <!--          <button-tab>-->
@@ -32,7 +43,7 @@
           </button-tab>
         </div>
         <div class="wrongQues_second_first three">
-          <popover placement="bottom">
+          <popover placement="bottom" :gutter="5" class="wrongQues">
             <div slot="content" class="popover-demo-content">
               <div class="add_score" @click="getClassifyContent('章节练习')">章节练习({{classifyContent.chapterNum}})</div>
               <div class="add_score" @click="getClassifyContent('模拟考试')">模拟考试({{classifyContent.mockNum}})</div>
@@ -48,10 +59,10 @@
     </div>
     <div class="wrongQues_third" ref="wrongQues_third">
       <div>
-        <div v-for="(item, index) in classifyDetail" :key="index" class="wrongQues_third_detail">
+        <div v-for="(item, index) in classifyDetail" :key="index" class="wrongQues_third_detail" v-if="classifyDetail.length > 0" @click="gotoDetail(item.content.question.id, index)">
 <!--          <div class="wrongQues_third_detail_title" v-if="showList[index] === 0">{{item.question.questionContext}}</div><div @click="zhankai(index)">展开</div>-->
 <!--          <div v-if="showList[index] === 1">{{item.question.questionContext}}</div>-->
-          <div v-show="!item.show"><span class="wrongQues_third_detail_title">{{item.content.question.questionContext}}</span><span class="wrongQues_third_detail_open" @click="openContent(item)">展开</span></div>
+          <div v-show="!item.show"><span class="wrongQues_third_detail_title">{{item.content.question.questionContext}}</span><span class="wrongQues_third_detail_open" @click.stop="openContent(item)">展开</span></div>
           <div v-show="item.show" class="wrongQues_third_detail_title1">{{item.content.question.questionContext}}</div>
           <div>
             <span class="wrongQues_third_detail_label" v-for="(val, index) in item.content.labelList" :key="index">
@@ -63,34 +74,78 @@
             </span>
           </div>
         </div>
+        <div class="wrongQues_third_detail_noData" v-if="classifyDetail.length === 0">
+          暂无此分类的题
+<!--          <div class="wrongQues_third_detail_title1"></div>-->
+        </div>
       </div>
+    </div>
+    <div class="section_exec_third" v-if="classifyName !== '全部'">
+      <!--判断是否收藏 1表示收藏  2表示没有收藏-->
+      <div class="section_exec_third_left">分类</div>
+      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>
+      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>
+      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>
+      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>
+    </div>
+    <div v-transfer-dom class="section_exec_third_tan">
+      <popup v-model="showClassify" position="bottom" max-height="50%">
+        <div class="section_exec_third">
+          <div class="section_exec_third_left">分类</div>
+          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>
+          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>
+          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>
+          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>
+<!--          <div class="section_exec_third_right" @click="gotoClose"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.totalNum}}</span></div>-->
+        </div>
+        <group>
+          <div class="section_exec_third_title">
+            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length === 0">
+              {{item.key}}<span>（{{item.value}}）</span>
+            </div>
+            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length > 0">
+              {{item.key}}
+              <div class="section_exec_third_content" v-for="(itemTwo, index) in bottomClassifyList_two" :key="index">
+                {{itemTwo.key}}<span>（{{itemTwo.value}}）</span>
+              </div>
+            </div>
+          </div>
+        </group>
+      </popup>
     </div>
   </div>
 </template>
 <script>
 import BScroll from 'better-scroll'
-import {Flexbox, FlexboxItem, Popover} from 'vux'
-import {getExecNum, getSectionExecNum, getErrorNumDetail, getWrongRecord, getClassifyDetail} from '@/api/index'
+import {Flexbox, FlexboxItem, Popover, TransferDom, Group} from 'vux'
+import {getClassifyClassify, getWrongRecord, getClassifyDetail, gotoSearch} from '@/api/index'
 export default {
+  directives: {
+    TransferDom
+  },
   components: {
-    Flexbox,
-    FlexboxItem,
-    Popover
+    Flexbox, FlexboxItem, Popover, TransferDom, Group
   },
   data () {
     return {
       classifyName: '全部', // 选中的值
-      ifMastered: 1, // 是否掌握
+      ifMastered: -1, // 是否掌握,1表示掌握，2表示未掌握
       classifyContent: [], // 返回的分类信息以及数量
       classifyDetail: [], // 查询某个分裂具体的情况
       // flag: 0, // 标志是练习还是考试 1是练习，2是考试
       results: [],
       key: '',
       placeholder: '搜索',
+      searchContent: [], // 搜索返回内容
       showWrongSearch: false,
       wrongQuesScroll: null,
-      showAll: false,
-      showList: [], // 所有题的展开与否
+      // showAll: false,
+      idList: [], // 所有题的id（唯一）
+      questionIdList: [], // 所有题的题号（入库时（不唯一，一套卷子一个id））id
+      showClassify: false, // 是否展示最下面分类模块
+      bottomClassify: [], // 最下面的分类模块
+      bottomClassifyList_one: [], // 最下面分类模块key列表
+      bottomClassifyList_two: [], // 最下面分类模块key列表
       // showList1: {}, // 所有题的展开与否
     }
   },
@@ -104,8 +159,8 @@ export default {
       return this.$route.params.paperName
     },
     subject_online () {
-      console.log(this.$store.state.lineCourse.select_sub)
-      return this.$store.state.lineCourse.select_sub
+      // console.log(this.$store.state.lineCourse.select_sub)
+      return localStorage.SET_SELECT_SUB
     },
     openid () {
       return this.$store.state.exam.openid
@@ -115,12 +170,24 @@ export default {
     },
     levelName () { // 年级
       return this.$store.state.lineCourse.levelName
-    }
+    },
+    // ifMastered () {
+    //   console.log(this.$store.state.lineCourse.if_master)
+    //   if (this.$store.state.lineCourse.if_master === -1) {
+    //     this.$store.commit('SET_IF_MASTER', 1)
+    //     // this.ifMastered = this.$store.state.lineCourse.if_master
+    //     return 1
+    //   } else {
+    //     return this.$store.state.lineCourse.if_master
+    //   }
+    // }
   },
   created () {
     this.getWrongClassfiRecord()
   },
   mounted () {
+    this.getOriginInfo() // 获取是否掌握的状态信息
+    // this.ifMastered = this.$store.state.lineCourse.if_master
     this.init()
     this.getClassifyContent('全部')
     // this.$nextTick(function () {
@@ -128,6 +195,14 @@ export default {
     // })
   },
   methods: {
+    getOriginInfo () {
+      console.log('掌握状态：', this.$store.state.lineCourse.if_master)
+      if (this.$store.state.lineCourse.if_master === -1) {
+        this.ifMastered = 1
+      } else {
+        this.ifMastered = this.$store.state.lineCourse.if_master
+      }
+    },
     returnBack () {
       this.$router.push({name: 'lineCourse'})
     },
@@ -138,14 +213,29 @@ export default {
         })
       })
     },
-    openContent (item) {
+    openContent (item) { // 展开题目
       const _this = this
       if (!_this.classifyDetail[item.index].show) {
-        console.log('heiohsodfnsodnf', _this.classifyDetail[item.index])
+        // console.log('heiohsodfnsodnf', _this.classifyDetail[item.index])
 
         _this.classifyDetail[item.index].show = true
-        console.log('heiohsod吼', _this.classifyDetail[item.index])
+        // console.log('heiohsod吼', _this.classifyDetail[item.index])
       }
+    },
+    gotoDetail (id, ind) { // 跳转到详情页
+      console.log('index:', ind)
+      this.$router.push({
+        path: '/wrongDetail',
+        query: {
+          id: id,
+          idList: this.idList,
+          selectIndexd: ind,
+          ifMaster: this.ifMastered + 1,
+          questionIdList: this.questionIdList,
+          type: 2 // 错题详情
+        }
+      })
+      console.log(id)
     },
     getWrongClassfiRecord () { // 得到各种分类的数量
       getWrongRecord({
@@ -160,6 +250,9 @@ export default {
       })
     },
     getClassifyContent (val) { // 得到某个分类的具体题
+      this.classifyDetail = []
+      this.idList = []
+      this.questionIdList = []
       this.classifyName = val
       getClassifyDetail({
         studentNumber: this.schoolNumber,
@@ -169,28 +262,82 @@ export default {
         gradeLevel: this.levelName,
         master: this.ifMastered + 1
       }).then(res => {
-        // this.classifyDetail = res.data.data.questionInfo
-        this.classifyDetail = res.data.data.questionInfo.map((item, index) => {
-          return {
-            show: false,
-            index: index,
-            content: item,
-            // children: []
+        console.log(res.data)
+        if (res.data.code === 0) {
+          this.classifyDetail = res.data.data.questionInfo.map((item, index) => {
+            return {
+              show: false,
+              index: index,
+              content: item
+              // children: []
+            }
+          })
+          for (const i in res.data.data.questionInfo) {
+            this.idList.push(res.data.data.questionInfo[i].question.id)
+            this.questionIdList.push(res.data.data.questionInfo[i].question.questionId)
           }
-        })
+          console.log('id列表1', this.questionIdList)
+        } else {
+          this.classifyDetail = []
+        }
+
+        // this.classifyDetail = res.data.data.questionInfo
         // for (const item in this.classifyDetail) {
         //   this.classifyDetail[item]['show'] = false
         //   this.classifyDetail[item]['index'] = parseInt(item)
         //   this.showList.push(0)
         //   // this.showList1[item] = false
         // }
-        // console.log('zhankaiyufou', this.showList)
-        // console.log('zhankaiyufou', this.showList1)
-        console.log(this.classifyDetail)
+        console.log('7894565431')
+        console.log(this.idList)
+        console.log(this.classifyDetail.length)
       })
     },
+    gotoClassifyDetail () { // 查看最下面的分类模块
+      this.bottomClassifyList_one = []
+      this.bottomClassifyList_two = []
+      getClassifyClassify({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        examCategory: this.classifyName,
+        gradeLevel: this.levelName,
+        master: this.ifMastered + 1
+      }).then(res => {
+        // if (res.data.data.info !== '') {
+        this.bottomClassify = res.data.data.info
+        for (const item in Object.keys(this.bottomClassify)) {
+          this.bottomClassifyList_one.push({
+            'key': Object.keys(this.bottomClassify)[item],
+            'value': this.bottomClassify[Object.keys(this.bottomClassify)[item]]
+          })
+          console.log(typeof this.bottomClassify[Object.keys(this.bottomClassify)[item]])
+          console.log(this.bottomClassify[Object.keys(this.bottomClassify)[item]])
+          if (this.bottomClassify[Object.keys(this.bottomClassify)[item]] instanceof Object) {
+            let valueValue = this.bottomClassify[Object.keys(this.bottomClassify)[item]]
+            console.log(Object.keys(valueValue))
+            for (const twoItem in Object.keys(valueValue)) {
+              this.bottomClassifyList_two.push({
+                'key': Object.keys(valueValue)[twoItem],
+                'value': valueValue[Object.keys(valueValue)[twoItem]]
+              })
+            }
+          }
+        }
+        console.log('45644444444', this.bottomClassifyList_one)
+        console.log('1111111111111', this.bottomClassifyList_two)
+        console.log(res.data.data)
+        // }
+        this.showClassify = true
+      })
+    },
+    gotoClose () { // 最下面的弹起关闭
+      this.showClassify = false
+    },
     consoleIndex () {
+      this.$store.commit('SET_IF_MASTER', this.ifMastered)
       console.log('click demo01', this.ifMastered)
+      this.getWrongClassfiRecord()
       this.getClassifyContent(this.classifyName)
     },
     searchWrong () {
@@ -199,35 +346,56 @@ export default {
       this.showWrongSearch = true
     },
     resultClick (item) {
-      window.alert('you click the result item: ' + JSON.stringify(item))
+      this.key = item.title
+      this.gotoSearchDetail(item.other)
+      // window.alert('you click the result item: ' + JSON.stringify(item))
+    },
+    gotoSearchDetail (val) {
+      this.$router.push({
+        path: '/gotoSearchDetail',
+        query: {
+          id: val,
+          // ifMaster: this.ifMastered + 1
+        }
+      })
     },
     getResult (val) {
       console.log('on-change', val)
-      this.results = val ? getResult(this.value) : []
+      this.results = []
+      gotoSearch({
+        desc: this.key,
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online
+      }).then(res => {
+        console.log('搜索结果：', res.data.data)
+        this.searchContent = res.data.data
+        for (const item in res.data.data) {
+          const val = {title: res.data.data[item].questionContext, other: res.data.data[item].id}
+          this.results.push(val)
+        }
+      })
+      // this.results = val ? getResult(this.key) : []
+      console.log('结果：', this.results)
     },
     onSubmit () {
-      // this.$refs.search.setBlur()
-      this.$vux.toast.show({
-        type: 'text',
-        position: 'top',
-        text: 'on submit'
-      })
+      this.$refs.search.setBlur()
     },
     cancelSearch () {
       this.showWrongSearch = false
     }
   }
 }
-function getResult (val) {
-  let rs = []
-  for (let i = 0; i < 20; i++) {
-    rs.push({
-      title: `${val} result: ${i + 1} `,
-      other: i
-    })
-  }
-  return rs
-}
+// function getResult (val) {
+//   let rs = []
+//   for (let i = 0; i < 20; i++) {
+//     rs.push({
+//       title: `${val} result: ${i + 1} `,
+//       other: i
+//     })
+//   }
+//   return rs
+// }
 </script>
 <style scoped lang="scss">
   .wrongQues_info {
@@ -273,9 +441,12 @@ function getResult (val) {
     width: 35%;
     margin: 0 15px;
   }
+  /*.wrongQues >>> .vux-popover {*/
+  /*  left: 60%;*/
+  /*}*/
   .popover-demo-content {
+    padding: 5px 10px;
     font-size: 13px;
-    padding: 5px;
   }
   .wrongQues_second {
     margin-top: 5px;
@@ -300,14 +471,17 @@ function getResult (val) {
       .one {
         width: 26%;
         margin-right: 10px;
+        text-align: center;
       }
       .two {
         width: 30%;
         margin: 0 10px;
+        text-align: center;
       }
       .three {
         width: 26%;
         margin-left: 10px;
+        text-align: left;
       }
     }
   }
@@ -321,6 +495,24 @@ function getResult (val) {
   .wrongQues_info >>> .weui-search-bar {
     padding: 10px 20px;
     height: 28px;
+  }
+  .wrongQues_info >>> .weui-cells.vux-search_show {
+    width: 85%;
+    color: #3c3c3c;
+    max-height: none;
+  }
+  .wrongQues_info >>> .weui-cell_access {
+    font-size: 14px;
+    /*white-space: nowrap; // 强制一行显示*/
+    /*width: 90%;*/
+    /*overflow: hidden; // 超出部分隐藏*/
+    /*text-overflow: ellipsis; // 超出部分显示省略号*/
+  }
+  .wrongQues_info >>> .weui-cell__bd p {
+    white-space: nowrap; // 强制一行显示
+    width: 250px;
+    overflow: hidden; // 超出部分隐藏
+    text-overflow: ellipsis; // 超出部分显示省略号
   }
   .wrongQues_info >>> .weui-search-bar:before,
   .wrongQues_info >>> .weui-search-bar:after {
@@ -361,14 +553,20 @@ function getResult (val) {
     transform: translateX(-50%);
   }
   .wrongQues_third {
-    margin-top: 10px;
+    /*margin-top: 10px;*/
     position: relative;
     background: #fbf9fe;
     overflow: hidden;
     padding: 10px 0;
-    height: calc(100% - 126px);
+    height: calc(100% - 141px);
     /*margin-top: 10px;*/
     /*background-color: #fff;*/
+  }
+  .wrongQues_third_detail_noData {
+    text-align: center;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 10px 0;
   }
   .wrongQues_third_detail {
     margin-top: 8px;
@@ -427,5 +625,41 @@ function getResult (val) {
         background-color: #CC99CC;
       }
     }
+  }
+  .section_exec_third {
+    height: 25px;
+    background-color: rgba(255,255, 223, 0.7);
+    font-size: 13px;
+    line-height: 25px;
+    .iconfont {
+      font-size: 14px;
+      margin-right: 7px;
+      /*line-height: 25px;*/
+    }
+  }
+  .section_exec_third_left {
+    line-height: 25px;
+    width: 25%;
+    text-align: center;
+    /*margin-left: 10px;*/
+    display: inline-block;
+  }
+  .section_exec_third_right {
+    width: 65%;
+    line-height: 25px;
+    text-align: right;
+    display: inline-block;
+  }
+  .section_exec_third_title {
+    text-indent: 2em;
+    padding: 10px 0;
+    font-size: 14px;
+    line-height: 25px;
+    span {
+      margin-left: 5px;
+    }
+  }
+  .section_exec_third_content {
+    text-indent: 3em;
   }
 </style>

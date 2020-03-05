@@ -11,8 +11,9 @@
         <!--        <popup-picker class="second_screen_xiala" :data="[examList]" v-model="exam" @on-change="showChange" @on-show="showExam" :placeholder="exam[0]" @on-hide="hideExam"></popup-picker>-->
       </div>
       <div class="first_dialog">
-        <span class="add_score" @click="addScore">
-          <i class="iconfont icon_lulujurassic_edit-form"></i>录入
+        <span class="add_score" @click="scanCode">
+          <i class="iconfont icon_lulusaoma"></i>
+<!--          <i class="iconfont icon_lulujurassic_edit-form"></i>录入-->
         </span>
 
        <!--  <popover placement="bottom" @on-show="onShow" @on-hide="onHide" class="first_dialog">
@@ -170,8 +171,8 @@ export default {
     onHide () {
       console.log('on hide')
     },
-    addScore () {
-      this.$router.push('/addScore')
+    scanCode () {
+      this.$router.push('/scanCode')
     },
     add () {
       console.log('点击')
@@ -205,9 +206,9 @@ export default {
   }
   .first_dialog{
      position: absolute;
-     top: 0;
+     top: 1px;
      right: 4px;
-     padding: 0 10px;
+     padding: 0 5px;
      color: #f3f3f3;
    }
   .second_screen_title {
@@ -217,8 +218,17 @@ export default {
   }
   .add_score{
     font-size: 14px;
-    text-align: center;
+    display: inline-block;
+    /*white-space: nowrap;*/
+    /*width: 90%;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*text-align: center;*/
     /*font-weight: bold;*/
+    .iconfont {
+      font-size: 23px;
+      font-weight: 600;
+    }
   }
   .second_screen_title >>> .vux-popup-picker-select {
     /*width: 60%;*/

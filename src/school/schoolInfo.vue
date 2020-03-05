@@ -14,74 +14,76 @@
         <div class="school-info-title">{{schoolName}}</div>
       </div>
       <div class="school-info-box" ref="schoolInfo">
-        <div class="list-loading" v-if="loading">
-          <div class="loader"></div>
-        </div>
-        <div class="list-no-data" v-if="!loading && schoolError">
-          学校代码错误，请返回
-        </div>
-        <div class="schoolInfo-item" style="padding: 10px 0;position: relative;"
-             v-if="!loading && !schoolError" ref="schoolInfoItem">
-          <div class="school-info-card"
-               :style="{backgroundImage: 'url('+Schoolpicture + ')',backgroundSize:'100%'}">
-            <div class="school-item__logo"><img :src="schoolLog"></div>
-            <div class="school-info-detail">
-              <div class="school-item__info">
-                <div class="school-item__name">{{schoolName}}</div>
-                <div class="school-item__enname" v-if="schoolNameEn !== undefined">{{schoolNameEn}}</div>
-                <div class="school-item__grade">代码：{{schoolCode}}</div>
-                <div class="school-item__ranking">NO. {{schoolRanking}}</div>
-                <div class="school-item__prescore">{{schoolGrade}}</div>
-              </div>
-            </div>
-
+        <div>
+          <div class="list-loading" v-if="loading">
+            <div class="loader"></div>
           </div>
-          <div class="school-introduction">
-            <div style="font-size: 18px;font-weight: bold;margin: 15px 10px 14px">基本信息</div>
-            <div>
-              <a class="school-introduction-link" :href="schoolWebsite">
-                <span class="school-introduction-detail">更多</span>
-                <span class="school-introduction-icon"><i class="iconfont iconleft-arrow"></i></span>
-              </a>
-              <div  class="school-introduction_content"><b>知名校友</b>: {{schoolAlumni || '暂无信息'}}</div>
-              <div  class="school-introduction_content">校训: {{schoolMotto || '暂无信息'}}</div>
-              <div class="school-introduction-content">{{schoolSummary}}</div>
-            </div>
-
+          <div class="list-no-data" v-if="!loading && schoolError">
+            学校代码错误，请返回
           </div>
-          <div class="school-score">
-            <div style="font-size: 18px;font-weight: bold;margin: 15px 10px 14px">学校往年分数线</div>
-            <div>
-              <div v-if="Object.keys(SchoolScore).length > 0">
-                <div class="content" style="width: 100%">
-                  <div class="seven_echarts" ref="chart"></div>
+          <div class="schoolInfo-item" style="padding: 10px 0;position: relative;"
+               v-if="!loading && !schoolError" ref="schoolInfoItem">
+            <div class="school-info-card"
+                 :style="{backgroundImage: 'url('+Schoolpicture + ')',backgroundSize:'100%'}">
+              <div class="school-item__logo"><img :src="schoolLog"></div>
+              <div class="school-info-detail">
+                <div class="school-item__info">
+                  <div class="school-item__name">{{schoolName}}</div>
+                  <div class="school-item__enname" v-if="schoolNameEn !== undefined">{{schoolNameEn}}</div>
+                  <div class="school-item__grade">代码：{{schoolCode}}</div>
+                  <div class="school-item__ranking">NO. {{schoolRanking}}</div>
+                  <div class="school-item__prescore" v-if="schoolGrade !== null">{{schoolGrade}}</div>
                 </div>
               </div>
-              <div v-else  style="font-size: 14px;margin: 10px 10px 14px;text-indent: 26px;color: #aaa">暂时无往年录取分数线！</div>
-              <div class="user" style="padding-left: 30%">
-                <!--                <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:red;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{batch}}</div>-->
-                <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:blue;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{category}}</div>
-                <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:green;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 20px;"></div>{{province}}</div>
+
+            </div>
+            <div class="school-introduction">
+              <div style="font-size: 18px;font-weight: bold;margin: 15px 10px 14px">基本信息</div>
+              <div>
+                <a class="school-introduction-link" :href="schoolWebsite">
+                  <span class="school-introduction-detail">更多</span>
+                  <span class="school-introduction-icon"><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></span>
+                </a>
+                <div  class="school-introduction_content"><b>知名校友</b>: {{schoolAlumni || '暂无信息'}}</div>
+                <div  class="school-introduction_content">校训: {{schoolMotto || '暂无信息'}}</div>
+                <div class="school-introduction-content">{{schoolSummary}}</div>
+              </div>
+
+            </div>
+            <div class="school-score">
+              <div style="font-size: 18px;font-weight: bold;margin: 15px 10px 14px">学校往年分数线</div>
+              <div>
+                <div v-if="Object.keys(SchoolScore).length > 0">
+                  <div class="content" style="width: 100%">
+                    <div class="seven_echarts" ref="chart"></div>
+                  </div>
+                </div>
+                <div v-else  style="font-size: 14px;margin: 10px 10px 14px;text-indent: 26px;color: #aaa">暂时无往年录取分数线！</div>
+                <div class="user" style="padding-left: 30%">
+                  <!--                <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:red;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{batch}}</div>-->
+                  <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:blue;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 0;"></div>{{category}}</div>
+                  <div  class="userInfo"><div style="width: 10px;height: 10px;background-color:green;border-radius: 50%;-moz-border-radius: 50%;-webkit-border-radius: 50%;float: left;margin: 6px 4px 0 20px;"></div>{{province}}</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="major-item"
-               :class="{'major-item--open': show}"
-               @click="ReturnStatus()"
-          >
-            <div style="font-size: 18px;font-weight: bold;margin: 15px 10px 14px">专业往年录取分数线</div>
-            <div class="major-item__name" style="font-size: 16px;text-indent: 26px ">专业最低分数</div>
-            <div class="major-item__icon"><i class="iconfont iconleft-arrow"></i></div>
-            <div class="major-item__sub" v-show="show" ref="majoritemList" style="padding: 10px 0;position: relative;">
-              <div v-for="major in schoolMajors" @click="Scoreline(schoolCode,major.majorcode)" class="school-score_line" >
-                <div class="school-score_content" style="font-size:15px">{{major.majorcode}}</div>
-                <!--                <div style="width: 25%;margin-left: 75%">-->
-                <div>
-                  <div class="major-item_label" style="width: 11%;">{{major.category}}</div>
-                  <div class="major-item_label" v-if="parseInt(major.lowestscore) === 0 " style="width: 11%;">
-                    未公开
+            <div class="major-item"
+                 :class="{'major-item--open': show}"
+                 @click="ReturnStatus()"
+            >
+              <div style="font-size: 18px;font-weight: bold;margin: 15px 10px 14px">专业往年录取分数线</div>
+              <div class="major-item__name" style="font-size: 16px;text-indent: 26px ">专业最低分数</div>
+              <div class="major-item__icon"><i class="iconfont iconleft-arrow"></i></div>
+              <div class="major-item__sub" v-show="show" ref="majoritemList" style="padding: 10px 0;position: relative;">
+                <div v-for="major in schoolMajors" @click="Scoreline(schoolCode,major.majorcode)" class="school-score_line" >
+                  <div class="school-score_content" style="font-size:15px">{{major.majorcode}}</div>
+                  <!--                <div style="width: 25%;margin-left: 75%">-->
+                  <div>
+                    <div class="major-item_label" style="width: 11%;">{{major.category}}</div>
+                    <div class="major-item_label" v-if="parseInt(major.lowestscore) === 0 " style="width: 11%;">
+                      未公开
+                    </div>
+                    <div class="major-item_label" v-else style="width: 11%;text-align: center">{{major.lowestscore}}</div>
                   </div>
-                  <div class="major-item_label" v-else style="width: 11%;text-align: center">{{major.lowestscore}}</div>
                 </div>
               </div>
             </div>
@@ -93,7 +95,7 @@
 </template>
 <script type="text/javascript">
 import BScroll from 'better-scroll'
-import { getSchoolInfo, myInfo } from '@/api/index'
+// import { getSchoolInfo, myInfo } from '@/api/index'
 import {errorMsg} from '@/utils/common'
 // const url = require(schoolScore);
 export default {
@@ -219,20 +221,20 @@ export default {
   },
   computed: {
     openid () {
-      return this.$route.params.id || ''
-      // return this.$store.state.exam.openid
+      // return this.$route.params.id || ''
+      return this.$store.state.exam.openid
     },
     schoolCode () {
       return this.$route.params.schoolcode || ''
     }
   },
   mounted () {
-    // this.getUserInfo()
+    this.getUserInfo()
     this.getSchoolDetail()
     this.init()
   },
   activated () {
-    // this.getUserInfo()
+    this.getUserInfo()
     this.getSchoolDetail()
     this.init()
   },
@@ -287,13 +289,20 @@ export default {
         })
       })
     },
-    // getUserInfo () {
-    //   myInfo(this.openid).then(res => {
-    //     this.batch = res.data.data.batch || '暂无'
-    //     this.category = res.data.data.category || '暂无'
-    //     this.province = res.data.data.province || '暂无'
-    //   })
-    // },
+    getUserInfo () {
+      this.$axios({
+        method: 'get',
+        url: 'http://zhongkeruitong.top/show/cee/user/findUserInfo',
+        params: {
+          // openid: this.openid
+          openid: '123456'
+        }
+      }).then(res => {
+        this.batch = res.data.data.batch || '暂无'
+        this.category = res.data.data.category || '暂无'
+        this.province = res.data.data.province || '暂无'
+      })
+    },
     ReturnStatus () {
       this.show = !this.show
     },
@@ -317,6 +326,7 @@ export default {
         method: 'get',
         url: 'http://zhongkeruitong.top/show/cee/school/findInfoSchool',
         params: {
+          // openid: this.openid,
           openid: '123456',
           schoolcode: this.schoolCode
         }
@@ -432,13 +442,11 @@ export default {
   .content {
     width: 100%;
   }
-
   .content p {
     margin-top: 1rem;
     font-size: 0.4rem;
     color: #666666;
   }
-
   .seven_echarts {
     /*padding-left: 20px;*/
     height: 9rem;
@@ -448,13 +456,22 @@ export default {
 
   .school-info-wrapper {
     /*background: #647cfb;*/
-    background: linear-gradient(to right, #4a8ef9 0%, #5292f7 15%, #347ff4 70%, #0c5ddc 100%);;
+    background: #42b983;
+    height: 100%;
+    /*background: linear-gradient(to right, #4a8ef9 0%, #5292f7 15%, #347ff4 70%, #0c5ddc 100%);;*/
     flex: 1;
     z-index: 1;
     display: flex;
     flex-direction: column;
   }
-
+  .return-box .return__icon {
+    position: absolute;
+    left: 10px;
+    top: 6px;
+    z-index: 9;
+    padding: 8px 6px;
+    color: #fff;
+  }
   .school-info-return {
     /*position: relative;*/
     height: 56px;
@@ -550,6 +567,7 @@ export default {
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 12px;
+    background: #42b983;
   }
 
   .school-score_line {
@@ -592,7 +610,8 @@ export default {
         /*background: linear-gradient(to right, #647cfb 0%, #7188fb 25%, #fbe2ff 100%);*/
         /*background: linear-gradient(to right, RGB(51,128,215) 0%, RGB(129,179,238) 25%, RGB(168,207,248) 100%);*/
         color: #fff;
-        background: linear-gradient(to right, #417dda 0%, #77a5ec 25%, #afd1fb 100%);
+        background: #42b983;
+        /*background: linear-gradient(to right, #417dda 0%, #77a5ec 25%, #afd1fb 100%);*/
         overflow: hidden;
       }
 
@@ -644,7 +663,8 @@ export default {
     vertical-align: auto;
     float: right;
     color: #fff;
-    background: #5f95dc;
+    background: #42b983;
+    /*background: #5f95dc;*/
     border: 1px solid #abc;
     border-radius: 4px;
     /*margin-left: 13px;*/
@@ -709,10 +729,11 @@ export default {
 
   .school-introduction-icon {
     position: absolute;
-    font-size: 12px;
+    font-size: 11px;
     right: -2px;
-    top: -2px;
-    transform: rotate(-180deg);
+    top: 2px;
+    color: #42b983;
+    /*transform: rotate(-180deg);*/
   }
 
   .school-picture {

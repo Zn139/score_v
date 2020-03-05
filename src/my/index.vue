@@ -22,6 +22,7 @@
       <div class="my_info_first_item" @click="myBBS"><i class="iconfont icon_luluiconquanzinor"></i>我的圈子<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
       <div class="my_info_first_item" @click="collect"><i class="iconfont icon_lulushoucang1"></i>我的收藏<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
       <div class="my_info_first_item" @click="suggestFeedback"><i class="iconfont icon_lulufankui1"></i>意见反馈<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+      <div class="my_info_first_item" @click="statement"><i class="iconfont icon_lulumianzeshengmingcopy"></i>免责声明<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
       <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>
     </div>
   </div>
@@ -76,6 +77,9 @@ export default {
     },
     suggestFeedback () {
       this.$router.push('/ideaFeedback')
+    },
+    statement () {
+      this.$router.push('/statement')
     }
   }
 }
@@ -229,6 +233,10 @@ export default {
   }
   .icon_lulufankui1 {
     color: #ffbe00;
+    margin-right: 8px;
+  }
+  .icon_lulumianzeshengmingcopy {
+    color: #FFCCCC;
     margin-right: 8px;
   }
 </style>

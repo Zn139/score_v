@@ -1,75 +1,149 @@
 <template>
-  <div class="specialItem_info">
+  <div class="wrongQues_info">
     <div class="score_header">
       <div class="return__icon" @click="returnBack">
         <i class="iconfont icon_lulufanhui"></i>
       </div>
-      <div class="title">专项练习</div>
+      <search
+        v-show="showWrongSearch"
+        @on-result-click="resultClick"
+        @on-change="getResult"
+        :results="results"
+        v-model="key"
+        class="searchColor"
+        :placeholder="placeholder"
+        @on-submit="onSubmit"
+        @on-cancel="cancelSearch"
+        auto-scroll-to-top
+        ref="search"></search>
+      <div class="title" v-show="!showWrongSearch">专项练习</div>
+      <i v-show="!showWrongSearch" class="iconfont icon_luluicon-search" @click="searchWrong"></i>
     </div>
-    <div class="specialItem_second">
-      <div class="specialItem_seconde_title">
-        年级： 高一
-        <x-button class="special_second_title_button">{{subject_online}}</x-button>
-      </div>
-      <div class="specialItem_second_summary">
-        <div class="menu-icon_1" @click="gotoPage('hisAnalysis')">
-          <div class="icon-bac left">
-            <i class="iconfont icon_luluyicuoti"></i>
-          </div>
-          <div class="icon-text">易错题</div>
+    <div class="wrongQues_second">
+      <div class="wrongQues_second_firstInfo">
+        <div class="wrongQues_second_first one">
+          年级：{{levelName}}
         </div>
-        <div class="menu-icon_1" @click="gotoPage('hisAnalysis')">
-          <div class="icon-bac right">
-            <i class="iconfont icon_lulunanti"></i>
-          </div>
-          <div class="icon-text">难题</div>
-        </div>
-      </div>
-      <div class="specialItem_second_third">
-        <div class="line-second-first_title">
-          <i class="iconfont icon_lulufengefu"></i><strong>知识点</strong>
-          <span><i class="iconfont icon_lulushixinyuan"></i>为易错知识点</span>
-        </div>
-        <div class="specialItem_second_third_content" v-for="(item,index) in chapterList" :key="index">
-          <div class="record_year_name">
-            <div class="record_year_sty" @click="getAllSections(item)">
-              <div class="record_year_sty_name">{{item.name}}<span v-if="item.num !== 0">{{item.num}}</span></div>
-              <i class="iconfont icon_lulujiantou-copy-copy" v-if="item.show"></i>
-              <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" v-else></i>
-            </div>
-            <div class="year-sub" v-show="item.show">
-              <div class="month-item" v-for="(sub, inde) in item.children" :key="inde" v-if="item.children.length> 0">
-                <div class="month-item-name">
-                  <div class="month-item_sty" @click="getKnowledgeInfo(item.name, sub.key)">
-                    <div class="serialNum"><span>{{inde + 1}}</span></div>
-                    <div class="knowledge_title">
-                      <span>{{sub.key}}</span>
-                      <span>{{sub.value}}</span>
-                    </div>
-                  </div>
-                </div>
+        <div class="wrongQues_second_first three">
+<!--        <div style="position:fixed;text-align:center;width:100%;top: 80px;left: 60%;">-->
+          <popover placement="bottom" class="specila_item">
+            <div slot="content" class="popover-demo-content">
+              <div class="add_score" @click="getClassifyContent(item)" v-for="(item, index) in knowledgeList" :key="index">
+<!--                <i class="iconfont icon_lulujiugongge"></i>-->
+                {{item}}
               </div>
-            </div>
-          </div>
+             </div>
+            <span>{{classifyName}}</span>
+            <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i>
+          </popover>
         </div>
       </div>
     </div>
+    <div class="wrongQues_third" ref="wrongQues_third">
+      <div>
+        <div v-for="(item, index) in classifyDetail" :key="index" class="wrongQues_third_detail" v-if="classifyDetail.length > 0" @click="gotoDetail(item.content.question.id, index)">
+<!--          <div class="wrongQues_third_detail_title" v-if="showList[index] === 0">{{item.question.questionContext}}</div><div @click="zhankai(index)">展开</div>-->
+<!--          <div v-if="showList[index] === 1">{{item.question.questionContext}}</div>-->
+          <div v-show="!item.show"><span class="wrongQues_third_detail_title">{{item.content.question.questionContext}}</span><span class="wrongQues_third_detail_open" @click.stop="openContent(item)">展开</span></div>
+          <div v-show="item.show" class="wrongQues_third_detail_title1">{{item.content.question.questionContext}}</div>
+          <div>
+            <span class="wrongQues_third_detail_label" v-for="(val, index) in item.content.labelList" :key="index">
+              <span class="one" v-if="val === '章节练习'">章</span>
+              <span class="two" v-else-if="val === '专项练习'">点</span>
+              <span class="three" v-else-if="val === '模拟考试'">模</span>
+              <span class="five" v-else-if="val === '历年真题'">真题</span>
+              <span class="four" v-else>{{val}}</span>
+            </span>
+          </div>
+        </div>
+        <div class="wrongQues_third_detail_noData" v-if="classifyDetail.length === 0">
+          暂无此分类的题
+<!--          <div class="wrongQues_third_detail_title1"></div>-->
+        </div>
+      </div>
+    </div>
+<!--    <div class="section_exec_third" v-if="classifyName !== '全部'">-->
+<!--      &lt;!&ndash;判断是否收藏 1表示收藏  2表示没有收藏&ndash;&gt;-->
+<!--      <div class="section_exec_third_left">分类</div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>-->
+<!--    </div>-->
+<!--    <div v-transfer-dom class="section_exec_third_tan">-->
+<!--      <popup v-model="showClassify" position="bottom" max-height="50%">-->
+<!--        <div class="section_exec_third">-->
+<!--          <div class="section_exec_third_left">分类</div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>-->
+<!--&lt;!&ndash;          <div class="section_exec_third_right" @click="gotoClose"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.totalNum}}</span></div>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <group>-->
+<!--          <div class="section_exec_third_title">-->
+<!--            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length === 0">-->
+<!--              {{item.key}}<span>（{{item.value}}）</span>-->
+<!--            </div>-->
+<!--            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length > 0">-->
+<!--              {{item.key}}-->
+<!--              <div class="section_exec_third_content" v-for="(itemTwo, index) in bottomClassifyList_two" :key="index">-->
+<!--                {{itemTwo.key}}<span>（{{itemTwo.value}}）</span>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </group>-->
+<!--      </popup>-->
+<!--    </div>-->
   </div>
 </template>
 <script>
-import {getKnowledgeNumByChapter, getKnowledgeNum} from '@/api/index'
+import BScroll from 'better-scroll'
+import {Flexbox, FlexboxItem, Popover, TransferDom, Group} from 'vux'
+import {getAllKnowledge, getKnowledgeDetail, getClassifyClassify, searchPoint} from '@/api/index'
 export default {
+  directives: {
+    TransferDom
+  },
+  components: {
+    Flexbox, FlexboxItem, Popover, TransferDom, Group
+  },
   data () {
     return {
-      chapterInfo: [], // 章节返回的信息
-      chapterList: [],
-      knowledegInfo: [],
-      knowledgeList: []
+      classifyName: '全部', // 选中的值
+      ifMastered: 1, // 是否掌握,1表示掌握，2表示未掌握
+      classifyContent: [], // 返回的分类信息以及数量
+      classifyDetail: [], // 查询某个分裂具体的情况
+      // flag: 0, // 标志是练习还是考试 1是练习，2是考试
+      results: [],
+      key: '',
+      placeholder: '搜索',
+      showWrongSearch: false,
+      wrongQuesScroll: null,
+      // showAll: false,
+      idList: [], // 所有题的id（唯一）
+      questionIdList: [], // 所有题的题号（入库时（不唯一，一套卷子一个id））id
+      showClassify: false, // 是否展示最下面分类模块
+      bottomClassify: [], // 最下面的分类模块
+      bottomClassifyList_one: [], // 最下面分类模块key列表
+      bottomClassifyList_two: [], // 最下面分类模块key列表
+      knowledgeList: [] // 所有知识点
+      // showList1: {}, // 所有题的展开与否
+    }
+  },
+  watch: {
+    showList (val, oldval) {
+      console.log(val, oldval)
     }
   },
   computed: {
+    paperName () {
+      return this.$route.params.paperName
+    },
     subject_online () {
-      return this.$store.state.lineCourse.select_sub
+      // console.log(this.$store.state.lineCourse.select_sub)
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
     },
     openid () {
       return this.$store.state.exam.openid
@@ -81,82 +155,262 @@ export default {
       return this.$store.state.lineCourse.levelName
     }
   },
+  created () {
+    this.getKnowledge()
+  },
   mounted () {
-    this.getKnowledgenumByChapter()
+    this.init()
+    this.getClassifyContent('全部')
+    // this.$nextTick(function () {
+    //   this.getWrongClassfiRecord()
+    // })
   },
   methods: {
     returnBack () {
       this.$router.push({name: 'lineCourse'})
     },
-    getKnowledgenumByChapter () { // 获取所有的章节
-      getKnowledgeNumByChapter({
-        subject: this.subject_online,
-        levelName: this.levelName
-      }).then(res => {
-        this.chapterInfo = []
-        if (res.data.code === 0) {
-          if (Object.keys(res.data.data).length > 0) {
-            for (const item in Object.keys(res.data.data)) {
-              const val = {'key': Object.keys(res.data.data)[item], 'value': res.data.data[Object.keys(res.data.data)[item]]}
-              this.chapterInfo.push(val)
-            }
-          }
-        }
-        this.chapterList = this.chapterInfo.map((item, index) => {
-          return {
-            show: false,
-            index: index,
-            name: item.key,
-            num: item.value,
-            children: []
-          }
+    init () {
+      this.$nextTick(() => {
+        this.wrongQuesScroll = new BScroll(this.$refs.wrongQues_third, {
+          click: true
         })
-        console.log(this.chapterList)
       })
     },
-    getAllSections (chapter) { // 获取章节下面的知识点
-      if (!this.chapterList[chapter.index].show) {
-        getKnowledgeNum({
-          subject: this.subject_online,
-          levelName: this.levelName,
-          chapter: chapter.name
-        }).then(res => {
-          this.knowledegInfo = []
-          if (res.data.code === 0) {
-            for (const item in Object.keys(res.data.data)) {
-              const val = {'key': Object.keys(res.data.data)[item], 'value': res.data.data[Object.keys(res.data.data)[item]]}
-              this.knowledegInfo.push(val)
-            }
-            this.chapterList[chapter.index].children = []
-            for (const i in this.knowledegInfo) {
-              const b = {'key': this.knowledegInfo[i].key, 'value': this.knowledegInfo[i].value}
-              this.chapterList[chapter.index].children.push(b)
-            }
-            this.chapterList[chapter.index].show = true
-          }
-          console.log('知识点', res.data.data)
-        })
-      } else {
-        this.chapterList[chapter.index].show = false
+    getKnowledge () { // 获取所有的知识点
+      getAllKnowledge({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        // gradeLevel: '高2'
+        gradeLevel: this.levelName
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.knowledgeList = res.data.data.attributesList
+        }
+        console.log(res.data)
+      })
+    },
+    openContent (item) { // 展开题目
+      const _this = this
+      if (!_this.classifyDetail[item.index].show) {
+        // console.log('heiohsodfnsodnf', _this.classifyDetail[item.index])
+
+        _this.classifyDetail[item.index].show = true
+        // console.log('heiohsod吼', _this.classifyDetail[item.index])
       }
     },
-    getKnowledgeInfo (chapter, knowledge) { // 点击知识点，跳转
+    gotoDetail (id, ind) { // 跳转到详情页
+      console.log('index:', ind)
       this.$router.push({
-        name: 'specialKnowledgeInfo',
-        params: {
-          chapter: chapter,
-          knowledge: knowledge
+        path: '/wrongDetail',
+        query: {
+          id: id,
+          idList: this.idList,
+          selectIndexd: ind,
+          ifMaster: this.ifMastered + 1,
+          questionIdList: this.questionIdList,
+          type: 1 // 专项练习
         }
       })
+      console.log(id)
+    },
+    // getWrongClassfiRecord () { // 得到各种分类的数量
+    //   getWrongRecord({
+    //     studentNumber: this.schoolNumber,
+    //     openid: this.openid,
+    //     subject: this.subject_online,
+    //     gradeLevel: this.levelName,
+    //     master: this.ifMastered + 1
+    //   }).then(res => {
+    //     this.classifyContent = res.data.data
+    //     console.log('返回信息', this.classifyContent)
+    //   })
+    // },
+    getknowledgeDetail () { // 得到题详细信息
+      this.quesList = []
+      getKnowledgeDetail({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        gradeLevel: this.levelName,
+        knowledgePoint: this.knowledge
+      }).then(res => {
+        // this.quesList = []
+        console.log('知识点情况：', res.data.data)
+        if (res.data.code === 0) {
+          this.errorSectionList = res.data.data
+          this.str = ''
+          this.start()
+          this.allSum = res.data.data.length // 所有题的个数
+          for (const item in this.errorSectionList) {
+            const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.errorSectionList[item].question.id, 'question_id': this.errorSectionList[item].question.questionId}
+            this.quesList.push(oneDetail)
+          }
+        } else {
+          this.errorSectionList = []
+        }
+      })
+    },
+    getClassifyContent (val) { // 得到某个分类的具体题
+      this.classifyDetail = []
+      this.idList = []
+      this.questionIdList = []
+      this.classifyName = val
+      getKnowledgeDetail({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        gradeLevel: this.levelName,
+        knowledgePoint: this.classifyName
+      }).then(res => {
+        console.log(res.data)
+        if (res.data.code === 0) {
+          this.classifyDetail = res.data.data.map((item, index) => {
+            return {
+              show: false,
+              index: index,
+              content: item
+              // children: []
+            }
+          })
+          for (const i in res.data.data) {
+            this.idList.push(res.data.data[i].question.id)
+            this.questionIdList.push(res.data.data[i].question.questionId)
+          }
+          console.log('id列表1', this.questionIdList)
+        } else {
+          this.classifyDetail = []
+        }
+
+        // this.classifyDetail = res.data.data.questionInfo
+        // for (const item in this.classifyDetail) {
+        //   this.classifyDetail[item]['show'] = false
+        //   this.classifyDetail[item]['index'] = parseInt(item)
+        //   this.showList.push(0)
+        //   // this.showList1[item] = false
+        // }
+        console.log('7894565431')
+        console.log(this.idList)
+        console.log(this.classifyDetail.length)
+      })
+    },
+    gotoClassifyDetail () { // 查看最下面的分类模块
+      this.bottomClassifyList_one = []
+      this.bottomClassifyList_two = []
+      getClassifyClassify({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_online,
+        examCategory: this.classifyName,
+        gradeLevel: this.levelName,
+        master: this.ifMastered + 1
+      }).then(res => {
+        // if (res.data.data.info !== '') {
+        this.bottomClassify = res.data.data.info
+        for (const item in Object.keys(this.bottomClassify)) {
+          this.bottomClassifyList_one.push({
+            'key': Object.keys(this.bottomClassify)[item],
+            'value': this.bottomClassify[Object.keys(this.bottomClassify)[item]]
+          })
+          console.log(typeof this.bottomClassify[Object.keys(this.bottomClassify)[item]])
+          console.log(this.bottomClassify[Object.keys(this.bottomClassify)[item]])
+          if (this.bottomClassify[Object.keys(this.bottomClassify)[item]] instanceof Object) {
+            let valueValue = this.bottomClassify[Object.keys(this.bottomClassify)[item]]
+            console.log(Object.keys(valueValue))
+            for (const twoItem in Object.keys(valueValue)) {
+              this.bottomClassifyList_two.push({
+                'key': Object.keys(valueValue)[twoItem],
+                'value': valueValue[Object.keys(valueValue)[twoItem]]
+              })
+            }
+          }
+        }
+        console.log('45644444444', this.bottomClassifyList_one)
+        console.log('1111111111111', this.bottomClassifyList_two)
+        console.log(res.data.data)
+        // }
+        this.showClassify = true
+      })
+    },
+    gotoClose () { // 最下面的弹起关闭
+      this.showClassify = false
+    },
+    consoleIndex () {
+      console.log('click demo01', this.ifMastered)
+      this.getWrongClassfiRecord()
+      this.getClassifyContent(this.classifyName)
+    },
+    searchWrong () {
+      // this.onFocus()
+      // console.log(this.$refs.search)
+      this.results = []
+      this.$refs.search.onFocus() // 获取搜索框的焦点
+      this.showWrongSearch = true
+    },
+    resultClick (item) {
+      this.key = item.title
+      this.getClassifyContent(this.key)
+      // window.alert('you click the result item: ' + JSON.stringify(item))
+    },
+    getResult (val) {
+      console.log('on-change', val)
+      this.results = []
+      searchPoint({
+        desc: this.key,
+        studentNumber: this.schoolNumber,
+        openid: this.openid
+      }).then(res => {
+        console.log('搜索结果：', res.data.data)
+        for (const item in res.data.data) {
+          const val = {title: res.data.data[item], other: item}
+          this.results.push(val)
+        }
+      })
+      // this.results = val ? getResult(this.key) : []
+      console.log('结果：', this.results)
+    },
+    onFocus () {
+      console.log('on focus')
+    },
+    onSubmit () {
+      this.$refs.search.setBlur()
+      // this.results = []
+      // searchPoint({
+      //   desc: this.key
+      // }).then(res => {
+      //   console.log('搜索结果：', res.data.data)
+      //   for (const item in res.data.data) {
+      //     const val = {'title': item, 'otherData': res.data.data[item]}
+      //     this.results.push(val)
+      //   }
+      // })
+      // this.$vux.toast.show({
+      //   type: 'text',
+      //   position: 'top',
+      //   text: 'on submit'
+      // })
+    },
+    cancelSearch () {
+      this.showWrongSearch = false
     }
   }
 }
+// function getResult (val) {
+//   let rs = []
+//   for (let i = 0; i < 20; i++) {
+//     rs.push({
+//       title: val + `result: ` + (i + 1),
+//       other: i
+//     })
+//   }
+//   return rs
+// }
 </script>
 <style scoped lang="scss">
-  .specialItem_info {
+  .wrongQues_info {
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    /*display: flex;*/
+    /*flex-direction: column;*/
     background: #f8f8f8;
   }
   .score_header {
@@ -167,168 +421,277 @@ export default {
     background-color: #42b983;
     color: #fff;
     height: 40px;
-    line-height: 40px;
+    /*line-height: 40px;*/
     flex: none;
     z-index: 1;
   }
   .return__icon{
-    margin-left: 20px;
-    width: 20px;
-    height: 20px;
-    /*margin-top: 10px;*/
-    /*color: #fff;*/
-    display: inline-block;
+    position: absolute;
+    left: 10px;
+    /*top: 6px;*/
+    z-index: 9;
+    padding: 6px;
+    color: #fff;
   }
   .icon_lulufanhui {
     margin-top: 10px;
     font-size: 20px;
   }
-  .title {
-    display: inline-block;
-    margin-left: 35%;
-    transform: translateX(-45%);
+  .wrongQues_first {
+    background-color: rgb(239, 255, 255);
   }
-  .specialItem_second {
-    /*padding: 0 15px;*/
+  .barChartButton {
+    text-align: center;
+    /*margin-bottom: 20px;
+    margin-top: -10px;*/
+    /*width: 40%;*/
   }
-  .specialItem_seconde_title {
+  .barChartButtonInfo {
+    width: 35%;
+    margin: 0 15px;
+  }
+  .popover-demo-content {
+    font-size: 13px;
+    padding: 5px 10px;
+    width: 100%;
+  }
+  .specila_item {
+    /*width: 120px;*/
+    span {
+      white-space: nowrap;
+      width: 90%;
+      overflow: hidden;
+      text-overflow:ellipsis;
+    }
+  }
+  .add_score {
+    /*display: inline-block;*/
+    white-space: nowrap;
+    width: 90%;
+    overflow: hidden;
+    text-overflow:ellipsis;
+  }
+  .wrongQues_second {
+    margin-top: 5px;
+    /*padding-top: 10px;*/
     height: 50px;
     line-height: 50px;
     background-color: #fff;
-    padding: 0 15px;
-    border-bottom: 1px solid #ccc;
-  }
-  .special_second_title_button {
-    display: inline-block;
-    width: 30%;
-    /*text-align: center;*/
-    margin-left: 10%;
-    color: #fff;
-    font-size: 16px;
-    background-color: #42b982;
-  }
-  .specialItem_second_summary {
-    height: 90px;
-    background-color: #fff;
-    padding: 0 5%;
-    .menu-icon_1 {
-      margin: 13px 0 30px;
-      width: 49%;
-      display: inline-block;
-      text-align: center;
-      border-radius: 50%;
+    /*margin-top: 15px;*/
+    .vux-button-group {
+      width: 100%;
+      margin-left: 50%;
+      transform: translateX(-50%);
     }
-    .icon-text{
-      font-size: 12px;
-      color: #454545;
-      padding-top: 6px;
-    }
-    .icon_luluyicuoti {
-      font-size: 20px;
-    }
-    .icon_lulunanti {
-      font-size: 23px;
-    }
-    .icon-bac {
-      margin: 0 auto;
-      width: 42px;
-      height: 42px;
-      color: #fff;
-      border-radius: 40px;
-      /*background-color: rgb(128, 128, 255);*/
-      line-height: 42px;
-    }
-    .left {
-      background-color: rgba(128, 128, 255, 0.8);
-    }
-    .right {
-      background-color: rgba(236, 128, 141, 0.8);
-    }
-  }
-  .specialItem_second_third {
-    margin-top: 10px;
-    background-color: #fff;
-  }
-  .line-second-first_title {
-    padding: 5px 15px 3px;
-    border-bottom: 1px solid #ccc;
-    line-height: 25px;
-    height: 25px;
-    .icon_lulufengefu {
-      font-weight: bold;
-    }
-    span {
-      float: right;
-      font-size: 14px;
-      /*height: 23px;*/
-      /*line-height: 23px;*/
-      .icon_lulushixinyuan {
-        margin-right: 5px;
-        color: #f43530;
-        font-size: 15px;
-        padding-top: 3px;
+    .wrongQues_second_firstInfo {
+      /*height: 40px;*/
+      /*line-height: 40px;*/
+      /*text-align: center;*/
+      .wrongQues_second_first {
+        display: inline-block;
+        font-size: 14px;
+      }
+      .one {
+        width: 26%;
+        margin-right: 10px;
+        text-align: center;
+      }
+      /*.two {*/
+      /*   width: 30%;*/
+      /*   margin: 0 10px;*/
+      /* }*/
+      .three {
+        width: 60%;
+        text-align: right;
+        margin-left: 10px;
       }
     }
   }
-  .specialItem_second_third_content {
-    margin: 5px 0 5px 25px;
-    /*padding: 5px 0 5px 25px;*/
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ececec;
+  .wrongQues_Second_tab {
+    background-color: #43b783;
+  }
+  .wrongQues_info >>>.vux-search-box  .weui-search-bar__label {
+    border-radius: 20px;
+    top: 4px;
+  }
+  .wrongQues_info >>> .weui-search-bar {
+    padding: 10px 20px;
+    height: 28px;
+  }
+  .wrongQues_info >>> .weui-cells.vux-search_show {
+    width: 85%;
+  }
+  .wrongQues_info >>> .weui-cell_access {
     font-size: 14px;
-  }
-  .record_year_sty {
-    width: 100%;
-    padding-top: 8px;
-    .iconfont {
-      float: right;
-      margin-right: 15px;
-      /*text-align: right;*/
-    }
-  }
-  .record_year_sty_name {
-    /*float: left;*/
+    /*white-space: nowrap; // 强制一行显示*/
     /*width: 20%;*/
-    display: inline-block;
+    /*overflow: hidden; // 超出部分隐藏*/
+    /*text-overflow: ellipsis; // 超出部分显示省略号*/
   }
-  .year-sub {
-    transition: all .2s;
-    padding: 8px 10px 0;
+  .wrongQues_info >>> .weui-cell__bd p {
+    white-space: nowrap; // 强制一行显示
+    width: 90%;
+    overflow: hidden; // 超出部分隐藏
+    text-overflow: ellipsis; // 超出部分显示省略号
   }
-  .month-item-name {
-    /*background-color: pink;*/
-    min-height: 40px;
-    /*position: relative;*/
+  .wrongQues_info >>> .weui-search-bar:before,
+  .wrongQues_info >>> .weui-search-bar:after {
+    border-top: 0;
+    border-bottom: 0;
   }
-  .month-item_sty {
-    padding-left: 15px;
-    padding-top: 10px;
-    font-size: 14px;
-    background-color: #fff;
-    /*box-shadow: 1px 1px 3px 2px rgba(66,185,130,0.4);*/
-    border-bottom: 1px solid #ececec;
-    /*border-radius: 10px;*/
+  .wrongQues_info >>> .weui-search-bar,
+  .wrongQues_info >>> .weui-search-bar__form {
+    background: transparent;
   }
-  .name_item_info {
-    padding-bottom: 10px;
+  .wrongQues_info >>> .weui-search-bar__box .weui-icon-search {
+    top: 15px;
+    left: 8px;
   }
-  .serialNum {
-    /*margin: 0 auto;*/ /*整个圈区中*/
-    text-align: center; /*文字居于圈的中间*/
-    height: 18px;
-    width: 18px;
-    line-height: 18px;
-    border-radius: 50%;
+  .wrongQues_info >>> .weui-search-bar__box .weui-icon-clear {
+    top: 50%;
+  }
+  .wrongQues_info >>> .weui-search-bar__cancel-btn {
     color: #fff;
-    background-color: rgba(66, 185, 130, 0.7);
-    font-size: 11px;
-    display: inline-block;
-    /*position: relative;*/
   }
-  .knowledge_title {
+  .wrongQues_info >>> .vux-search-box {
+    padding-left: 30px;
+    padding-top: 6px;
+    padding-bottom: 10px;
+    width: calc(100% - 30px);
+    background: transparent;
+  }
+  .icon_luluicon-search {
+    float: right;
+    margin-right: 15px;
+    line-height: 40px;
+    /*margin-top: 6px;*/
+  }
+  .title {
     display: inline-block;
-    span:nth-child(2) {
-      /*float: right;*/
+    margin-top: 6px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  /*.specila_item {*/
+  /*  /deep/ .vux-popover {*/
+  /*    left: 60%;*/
+  /*  }*/
+  /*}*/
+  /*.popover-demo-content {*/
+  /*  */
+  /*}*/
+  .wrongQues_third {
+    /*margin-top: 10px;*/
+    position: relative;
+    background: #fbf9fe;
+    overflow: hidden;
+    padding: 10px 0;
+    height: calc(100% - 121px);
+    /*margin-top: 10px;*/
+    /*background-color: #fff;*/
+  }
+  .wrongQues_third_detail_noData {
+    text-align: center;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 10px 0;
+  }
+  .wrongQues_third_detail {
+    margin-top: 8px;
+    padding: 5px 15px;
+    background-color: #fff;
+    font-size: 14px;
+    box-shadow: 3px 2px 1px 0 rgba(66,185,130,0.1);
+    border-radius: 10px;
+    /*line-height: 28px;*/
+    .wrongQues_third_detail_title {
+      /*margin-bottom: 5px;*/
+      /*text-align: center;*/
+      display: inline-block;
+      white-space: nowrap;
+      width: 90%;
+      overflow: hidden;
+      text-overflow:ellipsis;
     }
+    .wrongQues_third_detail_title1 {
+      line-height: 27px;
+    }
+    .wrongQues_third_detail_open {
+      color: #5f95dc;
+      position: absolute;
+      font-size: 13px;
+      margin-left: 2px;
+      /*line-height: 20px;*/
+    }
+    .wrongQues_third_detail_label {
+      font-size: 13px;
+      margin-left: 3px;
+      color: #fff;
+      .one {
+        padding: 1px 3px;
+        border-radius: 4px;
+        background-color: #ffbe00;
+      }
+      .two {
+        padding: 1px 3px;
+        border-radius: 4px;
+        background-color: #ec8b89;
+      }
+      .three {
+        padding: 1px 3px;
+        border-radius: 4px;
+        background-color: #42b982;
+      }
+      .four {
+        padding: 1px 3px;
+        border-radius: 4px;
+        background-color: #5f95dc;
+      }
+      .five {
+        padding: 1px 3px;
+        border-radius: 4px;
+        background-color: #CC99CC;
+      }
+    }
+  }
+  .section_exec_third {
+    height: 25px;
+    background-color: rgba(255,255, 223, 0.7);
+    font-size: 13px;
+    line-height: 25px;
+    .iconfont {
+      font-size: 14px;
+      margin-right: 7px;
+      /*line-height: 25px;*/
+    }
+  }
+  .section_exec_third_left {
+    line-height: 25px;
+    width: 25%;
+    text-align: center;
+    /*margin-left: 10px;*/
+    display: inline-block;
+  }
+  .section_exec_third_right {
+    width: 65%;
+    line-height: 25px;
+    text-align: right;
+    display: inline-block;
+  }
+  .section_exec_third_title {
+    text-indent: 2em;
+    padding: 10px 0;
+    font-size: 14px;
+    line-height: 25px;
+    span {
+      margin-left: 5px;
+    }
+  }
+  .section_exec_third_content {
+    text-indent: 3em;
+  }
+  .searchColor {
+    color: #3c3c3c;
+    font-size: 14px;
   }
 </style>

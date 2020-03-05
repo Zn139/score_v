@@ -6,14 +6,17 @@
       </div>
       <div class="title">学习记录</div>
     </div>
-    <div class="studyRecord_info_second" ref="studyRecord_info_second">
+    <div v-if="basicContent.doQuestiondays === 0 & basicContent.doQuestionCount === 0 & basicContent.doTimeTotal === '00:00:00'" class="noData">
+      暂无学习记录
+    </div>
+    <div v-else class="studyRecord_info_second" ref="studyRecord_info_second">
       <div>
         <div class="xitiStatic_second">
-        <div class="xitiStatic_seconde_title">
-          <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>
-          <popup-picker class="grade_info" title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>
+          <div class="xitiStatic_seconde_title">
+            <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>
+            <popup-picker class="grade_info" disabled title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>
+          </div>
         </div>
-      </div>
         <div class="studyRecord_third">
           <div class="studyRecord_third_info">
             <div class="studyRecord_third_info_top">{{basicContent.doQuestiondays}}天</div>
@@ -62,7 +65,8 @@ export default {
   },
   computed: {
     subject_online () {
-      return this.$store.state.lineCourse.select_sub
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
     },
     openid () {
       return this.$store.state.exam.openid
@@ -104,11 +108,13 @@ export default {
         subject: this.subject_online,
         levelName: this.levelName
       }).then(res => {
-        for (const item in res.data.data) {
-          this.timeList.push(res.data.data[item].doDate)
-          this.doNum.push(res.data.data[item].doCount)
+        if (res.data.code === 0) {
+          for (const item in res.data.data) {
+            this.timeList.push(res.data.data[item].doDate)
+            this.doNum.push(res.data.data[item].doCount)
+          }
+          this.drawDoQues()
         }
-        this.drawDoQues()
         // console.log(res.data.data)
       })
     },
@@ -121,15 +127,18 @@ export default {
         subject: this.subject_online,
         levelName: this.levelName
       }).then(res => {
-        for (const item in res.data.data) {
-          const list = res.data.data[item].doTimeLength.split(':')
-          // console.log(list[0], list[1], list[2])
-          // this.studyHourList.push(res.data.data[item].doTimeLength)
-          this.studyHourList.push(parseInt(list[0]) * 3600 + parseInt(list[1]) * 60 + parseInt(list[2]))
-          this.correctPercentList.push(parseFloat(res.data.data[item].rightRate).toFixed(2) * 100)
-          this.correctTimeList.push(res.data.data[item].doDate)
+        console.log('获取做题时长和正确率数据', res.data)
+        if (res.data.code === 0) {
+          for (const item in res.data.data) {
+            const list = res.data.data[item].doTimeLength.split(':')
+            // console.log(list[0], list[1], list[2])
+            // this.studyHourList.push(res.data.data[item].doTimeLength)
+            this.studyHourList.push(parseInt(list[0]) * 3600 + parseInt(list[1]) * 60 + parseInt(list[2]))
+            this.correctPercentList.push(parseFloat(res.data.data[item].rightRate).toFixed(2) * 100)
+            this.correctTimeList.push(res.data.data[item].doDate)
+          }
+          this.drawCorrectPercent()
         }
-        this.drawCorrectPercent()
         // console.log(res.data.data)
       })
     },
@@ -140,22 +149,29 @@ export default {
         subject: this.subject_online,
         levelName: this.levelName
       }).then(res => {
-        this.masterNum = res.data.data.masteredErrorQuestionsCount
-        this.notMasterNum = res.data.data.notMasteredErrorQuestionsCount
-        this.collectNum = res.data.data.collectQuestionsCount
-        this.drawErrorCollect()
+        console.log('获取收藏_错题数据', res.data)
+        if (res.data.code === 0) {
+          this.masterNum = res.data.data.masteredErrorQuestionsCount
+          this.notMasterNum = res.data.data.notMasteredErrorQuestionsCount
+          this.collectNum = res.data.data.collectQuestionsCount
+          this.drawErrorCollect()
+        }
         // console.log(res.data.data)
       })
     },
     getBasicInfo () { // 得到基础信息
+      this.basicContent = []
       getBasicInfo({
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
         levelName: this.levelName
       }).then(res => {
-        console.log('三个值：', res.data.data)
-        this.basicContent = res.data.data
+        console.log('得到基础信息', res.data)
+        if (res.data.code === 0) {
+          console.log('三个值：', res.data.data)
+          this.basicContent = res.data.data
+        }
       })
     },
     drawDoQues () {
@@ -498,7 +514,7 @@ export default {
               }
             },
             barWidth: '20%',
-            data: [this.masterNum, this.notMasterNum, this.collectNum]
+            data: [this.notMasterNum, this.masterNum, this.collectNum]
           }
         ]
       })
@@ -625,5 +641,10 @@ export default {
       /*height: 13rem;*/
       /*height: 140px;*/
     }
+  }
+  .noData {
+    margin-top: 15%;
+    text-align: center;
+    color: #9c9c9c;
   }
 </style>

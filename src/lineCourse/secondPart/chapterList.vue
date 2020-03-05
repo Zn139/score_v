@@ -6,7 +6,10 @@
       </div>
       <div class="title">章节练习</div>
     </div>
-    <div class="chapter_list_second">
+    <div v-if="chapterList.length === 0" class="noData">
+      暂未提供练习题
+    </div>
+    <div class="chapter_list_second" v-if="chapterList.length > 0">
       <div v-for="(item, index) in chapterList" :key="index" class="chapter_list_second_info">
         <div class="record_year_name">
           <div class="record_year_sty" @click="getAllSections(item)">
@@ -47,7 +50,8 @@ export default {
       return this.$store.state.exam.openid
     },
     selectsub () {
-      return this.$store.state.lineCourse.select_sub
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
     },
     levelName () { // 年级
       return this.$store.state.lineCourse.levelName
@@ -70,21 +74,24 @@ export default {
         levelName: this.levelName,
         subject: this.selectsub
       }).then(res => {
-        this.chapterList = res.data.data.map((item, index) => {
-          return {
-            show: false,
-            index: index,
-            name: item,
-            children: []
-          }
-        })
-        console.log('章')
+        console.log('章节：', res.data)
+        if (res.data.code === 0) {
+          this.chapterList = res.data.data.map((item, index) => {
+            return {
+              show: false,
+              index: index,
+              name: item,
+              children: []
+            }
+          })
+          console.log('章')
+        }
       })
     },
     getAllSections (item) { // 获取所有节
       if (!this.chapterList[item.index].show) {
         getSection({
-          levelName: '高1',
+          levelName: this.levelName,
           chapter: item.name,
           subject: this.selectsub
         }).then(res => {
@@ -101,9 +108,10 @@ export default {
     },
     getExamInfo (val) { // 获取一节的题
       this.$router.push({
-        name: 'chapterExercise',
-        params: {
+        path: '/chapterExercise',
+        query: {
           paperName: val,
+          sub: this.selectsub
           // subject: this.selectsub
         }
       })
@@ -114,6 +122,21 @@ export default {
       //   console.log(res.data)
       // })
     }
+    // getExamInfo (val) { // 获取一节的题
+    //   this.$router.push({
+    //     name: 'chapterExercise',
+    //     params: {
+    //       paperName: val,
+    //       // subject: this.selectsub
+    //     }
+    //   })
+    //   // getOneSectionQues({
+    //   //   paperName: val,
+    //   //   subject: this.subject
+    //   // }).then(res => {
+    //   //   console.log(res.data)
+    //   // })
+    // }
   }
 }
 </script>
@@ -202,5 +225,10 @@ export default {
   }
   .name_item_info {
     padding-bottom: 10px;
+  }
+  .noData {
+    margin-top: 15%;
+    text-align: center;
+    color: #9c9c9c;
   }
 </style>

@@ -23,9 +23,10 @@ export default {
         name: '首页',
         icon: 'icon_lulushouye'
       }, {
-        link: 'study',
+        link: 'bbs/hot',
+        // link: 'study',
         value: 'study',
-        name: '学习',
+        name: '讨论',
         icon: 'icon_luluziyuan'
       },
       {
@@ -38,7 +39,7 @@ export default {
       {
         link: 'lineCourse',
         value: 'lineCourse',
-        name: '课堂',
+        name: '题库',
         icon: 'icon_luluzaixianketang'
       }, {
         link: 'my',
@@ -58,6 +59,7 @@ export default {
   methods: {
     changeMenu (link) {
       this.$router.push({ path: './' + link })
+      // this.$router.push({ path: '/bbs/hot' })
     }
   }
 }

@@ -4,7 +4,7 @@
       <div class="return__icon" @click="returnBack">
         <i class="iconfont icon_lulufanhui"></i>
       </div>
-      <div class="title">在线课程</div>
+      <div class="title">乐练乐考</div>
     </div>
     <div class="lineCourse_second" ref="lineCourse_second">
       <div>
@@ -71,6 +71,9 @@ export default {
     line-height: 40px;
     flex: none;
     z-index: 1;
+  }
+  .icon_lulufanhui {
+    display: none;
   }
   .return__icon{
     margin-left: 20px;

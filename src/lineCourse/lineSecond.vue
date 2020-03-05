@@ -1,30 +1,5 @@
 <template>
   <div class="line-second-info">
-    <div class="line-second-first">
-      <div class="line-second-first_title">
-        <i class="iconfont icon_lulufengefu"></i><strong>考试演练</strong>
-      </div>
-      <div class="line-second-first_content">
-        <div class="line-second-first_content1" @click="gotoPage('simulationList')">
-<!--          2-->
-          <i class="iconfont icon_lulumonishijuan"></i>
-          <div>
-            <strong>模拟考试</strong>
-            <span>模拟演练发现自身问题</span>
-          </div>
-        </div>
-        <div class="fenge"></div>
-        <div class="line-second-first_content2" @click="gotoPage('overYearsZT')">
-<!--          <i class="iconfont icon_lululinianzhenti"></i>-->
-          <i class="iconfont icon_luluzhentiku"></i>
-          <div>
-            <strong>历年真题</strong>
-            <span>多年试题积累更多经验</span>
-          </div>
-
-        </div>
-      </div>
-    </div>
     <div class="line-second-second">
       <div class="line-second-first_title">
         <i class="iconfont icon_lulufengefu"></i><strong>平时练习</strong>
@@ -43,6 +18,31 @@
           <div>
             <strong>专项练习</strong>
             <span>短板决定木桶的容量</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="line-second-first">
+      <div class="line-second-first_title">
+        <i class="iconfont icon_lulufengefu"></i><strong>考试演练</strong>
+      </div>
+      <div class="line-second-first_content">
+        <div class="line-second-first_content1" @click="gotoPage('simulationList')">
+          <!--          2-->
+          <i class="iconfont icon_lulumonishijuan"></i>
+          <div>
+            <strong>模拟考试</strong>
+            <span>模拟演练发现自身问题</span>
+          </div>
+        </div>
+        <div class="fenge"></div>
+        <div class="line-second-first_content2" @click="gotoPage('overYearsZT')">
+          <!--          <i class="iconfont icon_lululinianzhenti"></i>-->
+          <i class="iconfont icon_luluzhentiku"></i>
+          <div>
+            <strong>历年真题</strong>
+            <span>多年试题积累更多经验</span>
           </div>
 
         </div>
@@ -83,7 +83,8 @@ export default {
     subject_online () {
       // console.log(this.$route.params.fullName)
       // return this.$route.params.subject
-      return this.$store.state.lineCourse.select_sub
+      return localStorage.SET_SELECT_SUB
+      // return this.$store.state.lineCourse.select_sub
     },
     openid () {
       return this.$store.state.exam.openid

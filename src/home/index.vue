@@ -4,6 +4,8 @@
       <first></first>
       <sun-chart></sun-chart>
       <menus></menus>
+<!--      <div @click="gotoTest">测试扫一扫</div>-->
+<!--      <div @click="gotoTest2">测试扫一扫2</div>-->
       <hot-recommend></hot-recommend>
     </div>
   </div>
@@ -37,6 +39,14 @@ export default {
         click: true
       })
     })
+  },
+  methods: {
+    gotoTest () {
+      this.$router.push('/test')
+    },
+    gotoTest2 () {
+      this.$router.push('/test2')
+    }
   }
 }
 </script>
