@@ -5,6 +5,7 @@
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">章节练习</div>
+      <div class="subject">{{selectsub}}</div>
     </div>
     <div v-if="chapterList.length === 0" class="noData">
       暂未提供练习题
@@ -54,7 +55,7 @@ export default {
       // return this.$store.state.lineCourse.select_sub
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
@@ -63,7 +64,8 @@ export default {
   },
   methods: {
     returnBack () {
-      this.$router.go(-1)
+      this.$router.push({name: 'lineCourse'})
+      // this.$router.go(-1)
     },
     // gotoExercise () {
     //   this.$router.push('/chapterExercise')
@@ -175,6 +177,13 @@ export default {
     display: inline-block;
     margin-left: 35%;
     transform: translateX(-45%);
+  }
+  .subject {
+    position: absolute;
+    top: 3px;
+    right: 15px;
+    color: #fff;
+    font-size: 14px;
   }
   .chapter_list_second_info {
     text-align: left;

@@ -28,13 +28,14 @@
                 <!--          </div>-->
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
-                  <div v-if="selectRight === 0" v-for="(c,a) of item.randomOption" class="ques_option" :class="{checked:a === n}" @click="changeList(c, a)" :key="a"><span :class="{checked:a === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                  <div v-if="selectRight === 0" v-for="(c,a) of item.randomOption" class="ques_option" :class="{checked:a === n}" @click="changeList(c, a)" :key="a"><span :class="{checked:a === n}">{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+<!--                  <div v-if="selectRight === 0" v-for="(c,a) of item.randomOption" class="ques_option" :class="{checked:a === n}" @click="changeList(c, a)" :key="a"><span :class="{checked:a === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>-->
                   <!--选择选项，无论对错-->
                   <div v-if="selectRight !== 0 && !showAfterSubmit">
                     <div v-for="(c, a) in item.randomOption" :key="a" class="ques_option" @click="changeList(c, a)" :class="{checked:a === n}">
-                      <div v-if="a !== n"><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-if="a !== n"><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                       <div v-if="a === n">
-                        <span :class="{checked:a === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}
+                        <span :class="{checked:a === n}">{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}
 <!--                        <span class="selectedOption">{{c.split('.')[1]}}</span>-->
                       </div>
                     </div>
@@ -42,8 +43,8 @@
                   <!--选择正确时，selectRight为1-->
                   <div v-if="selectRight === 1 && showAfterSubmit">
                     <div v-for="(c,i) of item.randomOption" :key="i" class="ques_option">
-                      <div v-if="i === quesList[index].n"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
-                      <div v-if="i !== quesList[index].n"><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-if="i === quesList[index].n"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+                      <div v-if="i !== quesList[index].n"><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
 <!--                      <div v-if="i === n"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>-->
 <!--                      <div v-if="i !== n"><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>-->
                     </div>
@@ -54,11 +55,11 @@
                   <!--选择错误时，selectRight为2-->
                   <div v-if="selectRight === 2 && showAfterSubmit">
                     <div  v-for="(c,j) of item.randomOption" :key="j" class="ques_option">
-                      <div v-if="j === quesList[index].n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('.')[1]}}</div>
+                      <div v-if="j === quesList[index].n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
 <!--                      <div v-if="j === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('.')[1]}}</div>-->
-                      <div v-else-if="j === quesList[index].rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
+                      <div v-else-if="j === quesList[index].rightOp"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
 <!--                      <div v-else-if="j === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>-->
-                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                     </div>
                     <!--                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
 <!--                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}，跳至下题</x-button>-->
@@ -204,6 +205,13 @@
         <p style="text-align:center;">选择题总分为{{allScore}}</p>
       </confirm>
     </div>
+    <div v-transfer-dom>
+      <confirm v-model="showSubmit"
+               @on-confirm="submitResult"
+               @on-cancel="cancelSubmit">
+        <p style="text-align:center;">是否提交？</p>
+      </confirm>
+    </div>
     <!--    <div v-transfer-dom>-->
     <!--      <confirm v-model="showTanTip"-->
     <!--               confirm-text="重新做"-->
@@ -228,6 +236,7 @@ export default {
       headerTitle: '模拟答题', // 标题
       showAfterSubmit: false, // 展示提交以后的结果
       showTanTip: false, // 再次进入时，是否展示弹框提示
+      showSubmit: false, // 是否提交框
       showCollec: 0, // 是否收藏此题
       showDetail: false, // 是否展示答案详解
       selectRight: 0,
@@ -289,13 +298,13 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     firstTitle () {
       return this.$route.params.type
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
@@ -446,10 +455,10 @@ export default {
         // 给每个题都加上一个字典，未做题的情况
         for (const item in this.one_section_content) {
           const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id, 'question_id': this.one_section_content[item].question.questionId, 'score': this.one_section_content[item].question.questionScore}
-          this.currentNotList.push(parseInt(item) + 1)
+          // this.currentNotList.push(parseInt(item) + 1)
           // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
           this.quesList.push(oneDetail)
-          this.answer_to_ques[item] = ''
+          // this.answer_to_ques[item] = ''
           // console.log(parseInt(item) + 1)
         }
         console.log('存入的初始化信息：', this.quesList)
@@ -607,7 +616,8 @@ export default {
       console.log(this.answer_to_ques)
       const that = this
       setTimeout(function () {
-        if (answer.split('.')[1].replace(/(^\s*)|(\s*$)/g, '') === that.one_section_content[that.selectIndex].question.correctText.replace(/(^\s*)|(\s*$)/g, '')) {
+        // {{c.replace(c.split('.')[0]+ '.', '')}}
+        if (answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, '') === that.one_section_content[that.selectIndex].question.correctText.replace(/(^\s*)|(\s*$)/g, '')) {
           that.selectRight = 1 // 答对
           that.quesList[that.selectIndex].selectRight = 1
           that.quesList[that.selectIndex].score = that.one_section_content[that.selectIndex].question.questionScore
@@ -635,11 +645,14 @@ export default {
           // that.currentErrorList.push(that.selectIndex)
         }
         that.idList.push(that.one_section_content[that.selectIndex].question.id)
-        that.optionList.push(answer.split('.')[1].replace(/(^\s*)|(\s*$)/g, ''))
+        that.optionList.push(answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, ''))
         that.doTimeList.push(that.str)
         console.log('已经做了的', that.doneQuesList)
         if (that.doneQuesList.indexOf(that.selectIndex) === -1) {
           that.doneQuesList.push(that.selectIndex)
+          if (that.doneQuesList.length === that.allSum) {
+            that.showSubmit = true
+          }
         }
         console.log('正确', that.currentRight, that.currentRightList)
         console.log('error', that.currentError, that.currentErrorList)
@@ -651,6 +664,9 @@ export default {
         console.log('总结用时：', that.str)
       }, 50)
       // console.log('答案是：', this.answer_to_ques)
+    },
+    cancelSubmit () { // 取消提交
+      this.showSubmit = false
     },
     submitResult () {
       this.showSum = false

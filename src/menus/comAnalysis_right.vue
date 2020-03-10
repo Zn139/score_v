@@ -91,7 +91,7 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     examname () {
       if (this.$store.state.exam.exam_name !== '') {

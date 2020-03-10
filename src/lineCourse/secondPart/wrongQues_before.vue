@@ -160,7 +160,7 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     }
   },
   mounted () {

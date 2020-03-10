@@ -23,10 +23,10 @@
         </div>
         <!--      <div class="setInfo_second_item" @click="editPassword">修改密码<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
         <!--      <div class="setInfo_second_item" @click="aboutUs">关于我们<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
-        <div class="setInfo_second_edit">
-          <p>关于我们</p>
-          <p class="setInfo_second_edit_p">{{usText}}</p>
-        </div>
+<!--        <div class="setInfo_second_edit">-->
+<!--          <p>关于我们</p>-->
+<!--          <p class="setInfo_second_edit_p">{{usText}}</p>-->
+<!--        </div>-->
       </div>
     </div>
   </div>
@@ -55,7 +55,7 @@ export default {
     }
     // schoolNum () {
     //   if (this.$store.state.exam.schoolNum !== '') {
-    //     return this.$store.state.exam.schoolNum
+    //     return localStorage.SET_SCHOOLNUM
     //   } else {
     //     return localStorage.SET_SCHOOLNUM
     //   }

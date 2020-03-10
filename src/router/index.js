@@ -38,6 +38,7 @@ const mockDetail = () => import('@/lineCourse/secondPart/mock/mockDetail') // �
 
 const add = () => import('@/home/add')
 const nav = () => import('@/layout/navbar')
+const building = () => import('@/layout/building') // 正在建设中
 const score = () => import('@/menus/score')
 const subAnalysis = () => import('@/menus/subAnalysis')
 const comAnalysis = () => import('@/menus/comAnalysis_right')
@@ -57,6 +58,7 @@ const record = () => import('@/enterGrade/record')
 const examInfo = () => import('@/enterGrade/examInfo')
 const collect = () => import('@/my/collect') // 我的--收藏
 const setInfo = () => import('@/my/setInfo') // 我的--设置
+const aboutUs = () => import('@/my/aboutUs') // 我的--关于我们
 const myInfoDetail = () => import('@/my/myInfoDetail') // 我的--我的详情
 const ideaFeedback = () => import('@/my/ideaFeedback') // 我的--意见反馈
 const statement = () => import('@/my/statement') // 我的--免责声明
@@ -71,7 +73,7 @@ const bbs = () => import('@/bbs/index')
 const bbsDetail = () => import('@/bbs/bbsDetail')
 const bbsAdd = () => import('@/bbs/bbsAdd')
 const myqz = () => import('@/bbs/myqz')
-const test2 = () => import('@/components/sao_sao')
+const test2 = () => import('@/camera/viewYu')
 
 export default new Router({
   routes: [
@@ -86,6 +88,14 @@ export default new Router({
       },
       name: 'home',
       meta: { tab: 'home', title: 'home' }
+    },
+    {
+      path: '/building',
+      components: {
+        default: building
+      },
+      name: 'building',
+      meta: { tab: 'building', title: 'building' }
     },
     {
       path: '/addScore',
@@ -151,6 +161,14 @@ export default new Router({
       },
       name: 'setInfo',
       meta: { tab: 'setInfo', title: 'setInfo' }
+    },
+    {
+      path: '/aboutUs', // 我的--关于我们
+      components: {
+        default: aboutUs
+      },
+      name: 'aboutUs',
+      meta: { tab: 'aboutUs', title: 'aboutUs' }
     },
     {
       path: '/myInfoDetail', // 我的--我的详情

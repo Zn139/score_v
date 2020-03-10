@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import bus from '@/utils/vueBus'
 export default {
   data () {
     return {
@@ -28,25 +29,40 @@ export default {
     subject_online () {
       if (localStorage.SET_SELECT_SUB === '') {
         localStorage.setItem('SET_SELECT_SUB', '生物')
+        // bus.$emit('subject', '生物')
         return '生物'
       } else {
         return localStorage.SET_SELECT_SUB
       }
     },
   },
-  // mounted () {
-  //   this.$store.commit('SET_SELECT_SUB', this.select_sub)
-  //   // localStorage.setItem('')
-  //   localStorage.setItem('SET_SELECT_SUB', this.select_sub)
-  //   // localStorage.SET_SELECT_SUB
+  // beforeDestroy () {
+  //   console.log('A before destroy')
+  //   bus.$emit('subject', this.subject_online)
   // },
+  mounted () {
+    this.busall()
+    // bus.$emit('subject', this.subject_online)
+    // this.$store.commit('SET_SELECT_SUB', this.select_sub)
+    // // localStorage.setItem('')
+    // localStorage.setItem('SET_SELECT_SUB', this.select_sub)
+    // // localStorage.SET_SELECT_SUB
+  },
   methods: {
+    busall () {
+      bus.$emit('subject', this.subject_online)
+    },
     selectSub (item) {
       console.log('点击了么：', item)
       // this.$store.state.lineCourse
       this.$store.commit('SET_SELECT_SUB', item)
       localStorage.setItem('SET_SELECT_SUB', item)
-    }
+      bus.$emit('subject', item)
+      // this.sendMsg()
+    },
+    // sendMsg () {
+    // bus.$emit("fromSecond",this.res)
+    // }
   }
 }
 </script>

@@ -5,18 +5,22 @@
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">学习记录</div>
+      <div class="subject">
+        <span>{{subject_online}}</span>
+        <span>{{levelName}}</span>
+      </div>
     </div>
     <div v-if="basicContent.doQuestiondays === 0 & basicContent.doQuestionCount === 0 & basicContent.doTimeTotal === '00:00:00'" class="noData">
       暂无学习记录
     </div>
     <div v-else class="studyRecord_info_second" ref="studyRecord_info_second">
       <div>
-        <div class="xitiStatic_second">
-          <div class="xitiStatic_seconde_title">
-            <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>
-            <popup-picker class="grade_info" disabled title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>
-          </div>
-        </div>
+<!--        <div class="xitiStatic_second">-->
+<!--          <div class="xitiStatic_seconde_title">-->
+<!--            <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>-->
+<!--            <popup-picker class="grade_info" disabled title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="studyRecord_third">
           <div class="studyRecord_third_info">
             <div class="studyRecord_third_info_top">{{basicContent.doQuestiondays}}天</div>
@@ -46,8 +50,8 @@ import {getDoQuesInfo, getDoQuesTiming, getCollectError, getBasicInfo} from '@/a
 export default {
   data () {
     return {
-      list1: [['高一', '高二', '高三', '初一']],
-      value: ['高一'],
+      // list1: [['高一', '高二', '高三', '初一']],
+      // value: ['高一'],
       doQuesChart: '', // 做题图表
       correctPercentChart: '', // 正确率-学时图表
       errorCollectChart: '', // 错题--收藏图表
@@ -72,10 +76,10 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
@@ -539,7 +543,7 @@ export default {
     background: #f8f8f8;
   }
   .studyRecord_info_second {
-    /*margin-top: 15px;*/
+    margin-top: 15px;
     position: relative;
     background: #fbf9fe;
     overflow: hidden;
@@ -574,6 +578,16 @@ export default {
     display: inline-block;
     margin-left: 35%;
     transform: translateX(-45%);
+  }
+  .subject {
+    position: absolute;
+    top: 3px;
+    right: 15px;
+    color: #fff;
+    font-size: 14px;
+    span {
+      padding-left: 3px;
+    }
   }
   .xitiStatic_seconde_title {
     height: 40px;

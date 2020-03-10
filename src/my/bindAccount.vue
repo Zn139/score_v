@@ -101,7 +101,7 @@ export default {
             content: '您已经绑定过学号啦！'
           })
           // this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
-          // localStorage.setItem('schoolNum', res.data.userLogin.diyid)
+          // localStorage.setItem('SET_SCHOOLNUM', res.data.userLogin.diyid)
           this.stuInfoContent = res.data.userLogin
           this.flag = 1
           this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.stuInfoContent.diyid).then(resp => {
@@ -189,7 +189,7 @@ export default {
     },
     bindUser () {
       // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      // localStorage.setItem('schoolNum', this.schoolNum)
+      // localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
       this.$axios({
         method: 'post',
         url: 'http://www.kgai.tech/rest/userRegister',

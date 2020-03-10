@@ -201,7 +201,7 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     // chapter () {
     //   return this.$route.params.chapter
@@ -210,7 +210,7 @@ export default {
       return this.$route.params.knowledgePoint
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   watch: { // 监听题号的索引的变化

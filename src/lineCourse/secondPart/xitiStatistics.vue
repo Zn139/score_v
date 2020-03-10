@@ -5,15 +5,19 @@
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">做题统计</div>
+      <div class="subject">
+        <span>{{subject_online}}</span>
+        <span>{{levelName}}</span>
+      </div>
     </div>
     <div class="noData" v-if="xtContent.length === 0">
       该同学暂无做题统计数据
     </div>
     <div class="xitiStatic_second" v-if="xtContent.length > 0">
-      <div class="xitiStatic_seconde_title">
-        <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>
-        <popup-picker class="grade_info" title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>
-      </div>
+<!--      <div class="xitiStatic_seconde_title">-->
+<!--        <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>-->
+<!--        <popup-picker class="grade_info" title="年级" :data="list1" v-model="value" disabled @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>-->
+<!--      </div>-->
       <div class="xitiStatic_second_date">
         <datetime
         v-model="dateValue"
@@ -105,10 +109,10 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
@@ -171,12 +175,14 @@ export default {
             // console.log(this.xtContent[item].doRightNums)
             // console.log(this.xtContent[item].doQuestionsNums)
             // this.rightPercent = (1 / this.xtContent[item].doQuestionsNums) * 100
-            this.rightPercent = parseFloat((this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
+            // const rightPercent = parseFloat(this.xtContent[item].doRightRate).toFixed(1) + '%'
+            // this.rightPercent = parseFloat(this.xtContent[item].doRightRate).toFixed(1) + '%'
+            // this.rightPercent = parseFloat((this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
             // this.rightPercent = parseFloat((1 / this.xtContent[item].doQuestionsNums) * 100).toFixed(2) + '%'
             // this.rightPercent = (this.xtContent[item].doRightNums / this.xtContent[item].doQuestionsNums) * 100 %
-            console.log(this.rightPercent)
+            console.log('比率为：', this.xtContent[item].doRightRate)
             this.$nextTick(function () {
-              this.drawDoQues(item)
+              this.drawDoQues(item, this.xtContent[item].doRightRate)
             })
             // this.drawPie()
           }
@@ -202,8 +208,9 @@ export default {
     onHide (type) {
       console.log('on hide', type)
     },
-    drawDoQues (id) {
-      // console.log(55555555555)
+    drawDoQues (id, rightPercent) {
+      // console.log(55555555555, typeof rightPercent)
+      // console.log('正确率', rightPercent.split('%')[0])
       console.log(this.xitiStaticRightChart(id))
       // this.doQuesChart = this.echarts.init(this.$refs.StaticRightChart[id])
       this.doQuesChart = this.echarts.init(document.getElementById(this.xitiStaticRightChart(id)))
@@ -212,7 +219,7 @@ export default {
       this.doQuesChart.setOption({
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}:({d}%)'
+          formatter: '{a} <br/>{d}%'
         },
         graphic: [{ // 环形图中间添加文字
           type: 'text', // 通过不同top值可以设置上下显示
@@ -234,7 +241,7 @@ export default {
           top: '55%',
           style: {
             // text: 30,
-            text: this.rightPercent,
+            text: rightPercent + '%',
             textAlign: 'center',
             fill: '#3c3c3c',
             // fill: '#0066CC',
@@ -294,8 +301,10 @@ export default {
               [
                 // {value: 20, name: '正确数'},
                 // {value: 26, name: '错误数'}
-                {value: 100 - this.rightPercent.split('%')[0], name: '错误率'},
-                {value: this.rightPercent.split('%')[0], name: '正确率'}
+                {value: 100 - parseFloat(rightPercent), name: '错误率'},
+                {value: rightPercent, name: '正确率'}
+                // {value: 100 - this.rightPercent.split('%')[0], name: '错误率'},
+                // {value: this.rightPercent.split('%')[0], name: '正确率'}
               ]
           }
         ]
@@ -341,6 +350,16 @@ export default {
     margin-left: 35%;
     transform: translateX(-45%);
   }
+  .subject {
+    position: absolute;
+    top: 3px;
+    right: 15px;
+    color: #fff;
+    font-size: 14px;
+    span {
+      padding-left: 3px;
+    }
+  }
   .xitiStatic_seconde_title {
     height: 40px;
     line-height: 40px;
@@ -371,7 +390,7 @@ export default {
   }
   .xitiStatic_second_date {
     /*height: 25px;*/
-    margin: 10px 0;
+    margin: 15px 0 10px;
     line-height: 30px;
     padding: 0 15px;
     background-color: #fff;

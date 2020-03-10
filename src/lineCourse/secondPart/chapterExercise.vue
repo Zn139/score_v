@@ -17,8 +17,17 @@
                 <span>{{item.question.questionType}}</span>
                 {{item.question.questionContext}}
                 <div class="section_exec_second_img" v-if="item.imgList.length !== 0">
-<!--                  <img v-for="(j, inde) in item.imgList" :src="j" alt="" style="width: 100%;height: 100%;" :key="inde">-->
-                  <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">
+<!--                  :previewBoxStyle="{border: '1px solid #eee'}"-->
+                  <vue-preview
+                    :list="imgsList[selectIndex]"
+                    :thumbImageStyle="{width: '100px', height: '100px', margin: '10px'}"
+                    class="yulan"
+                    :tapToClose="true"
+                    @close="closeHandler"
+                    @destroy="destroyHandler"></vue-preview>
+<!--                  <img v-for="(j, inde) in item.imgList" :src="j" :key="inde" @click="$preview($event, imgList, inde)" style="height: 100px;max-height: 200px">-->
+<!--                  <img v-for="(j, inde) in item.imgList" :src="j" :key="inde" style="height: 100px;max-height: 200px">-->
+<!--                  <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">-->
                 </div>
 <!--                {{str}}-->
                 <!--{{item.question.questionContext.split('）')[0] + '）'}}-->
@@ -28,12 +37,12 @@
                 <!--          </div>-->
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
-                  <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                  <div v-if="selectRight === 0" v-for="(c,index) of item.randomOption" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                   <!--选择正确时，selectRight为1-->
                   <div v-if="selectRight === 1">
                     <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
-                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
-                      <div v-if="index !== n"><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+                      <div v-if="index !== n"><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                     </div>
                     <x-button v-if="selectIndex !== allSum - 1" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
 <!--                    <x-button v-if="selectIndex === allSum" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>-->
@@ -41,9 +50,10 @@
                   <!--选择错误时，selectRight为2-->
                   <div v-if="selectRight === 2">
                     <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
-                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('.')[1]}}</div>
-                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
-                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+                      <div v-else-if="index === quesList[selectIndex].rightOp"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+<!--                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>-->
+                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                     </div>
 <!--                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
                     <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}，跳至下题</x-button>
@@ -76,9 +86,10 @@
                   <!--              <x-button class="right_button_jiexi" @click.native="seeDetail" v-if="!showDetail">查看题目详解</x-button>-->
                   <div>
                     <load-more tip="题目详解" :show-loading="false" background-color="#fbf9fe"></load-more>
-                    <div class="jiexi_second">
+                    <div class="jiexi_second" v-if="item.question.correctAnalysis !== null">
                       <div class="smallKuang"></div><h4>解析</h4>
                       <div class="jiexi_content">
+<!--                        {{item}}-->
                         {{item.question.correctAnalysis.split('】')[1]}}
                       </div>
                     </div>
@@ -98,7 +109,7 @@
         </div>
       </div>
     </div>
-    <div class="section_exec_third">
+    <div class="section_exec_third1">
       <!--判断是否收藏 1表示收藏  2表示没有收藏-->
       <div v-if="showCollec === 2" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_lulucollect"></i>收藏</div>
       <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
@@ -159,6 +170,20 @@ export default {
   components: {LoadMore, Group, XSwitch, Cell},
   data () {
     return {
+      list: [
+        {
+          src: 'https://placekitten.com/600/400',
+          w: 600,
+          h: 600
+        },
+        {
+          src: 'https://placekitten.com/1200/900',
+          w: 1200,
+          h: 900
+        }
+      ],
+      ppname: '',
+      imgsList: [],
       showTanTip: false, // 再次进入时，是否展示弹框提示
       showCollec: 0, // 是否收藏此题
       showDetail: false, // 是否展示答案详解
@@ -199,7 +224,7 @@ export default {
   },
   computed: {
     paperName () { // 表示节的名称
-      console.log('paperName:', this.$route.params.paperName)
+      console.log('paperName:', this.$route.query.paperName)
       return this.$route.query.paperName
       // return this.$route.params.paperName
     },
@@ -214,14 +239,16 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      // return localStorage.SET_SCHOOLNUM
+      return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
     this.init()
+    this.ppname = this.$route.query.paperName
     // this.getOneSectionQues() // // 此试卷的所有题
     this.getPreRecord() // 获取之前的记录
     this.getInitTime()
@@ -229,7 +256,7 @@ export default {
   },
   watch: { // 监听题号的索引的变化
     selectIndex (val, oldval) {
-      console.log(this.quesList)
+      console.log('55555555555', this.quesList)
       this.selectRight = this.quesList[this.selectIndex].selectRight
       if (this.quesList[this.selectIndex].showDetail === true) {
         // console.log('daduileme :', this.showDetail)
@@ -244,26 +271,53 @@ export default {
       this.str = ''
       this.reset()
       this.start()
+      this.getChongxin()
       // this.showCollec = this.quesList[this.selectIndex].showCollec
       // this.showCollec = this.one_section_content[this.selectIndex].collect
       // } else {
       //   this.showCollec = this.one_section_content[this.selectIndex].collection
       // }
-    }
+    },
+    // '$route': function (newVal, oldVal) {
+    //   console.log('路由变了么:', newVal, oldVal)
+    //   alert(newVal + oldVal)
+    // },
   },
+  // 离开当前页面后执行
+  destroyed: function () {
+    console.log('离开了？', this.paperName)
+    recordCurrentAnsToQues({
+      studentNumber: this.schoolNumber,
+      openid: this.openid,
+      paperName: this.ppname,
+      subject: this.subject_online,
+      examPaperContent: JSON.stringify(this.one_section_content),
+      examPaperAnwer: this.answer_to_ques
+    }).then(res => {
+      console.log('保存了')
+    })
+  },
+  //     handler: function (to, form) {
+  //       console.log(to.path)
+  //       console.log(form)
+  //     },
+  //     // 立即先去执行handler方法
+  //     immediate: true
+  //   }
+  // },
   methods: {
     returnBack () {
       console.log(this.answer_to_ques)
-      for (const a in this.answer_to_ques) {
-        console.log(this.answer_to_ques[a])
-        if (this.answer_to_ques[a] === '') {
-          this.flag = 0 // 全是空，则不保存
-        } else {
-          this.flag = 1 // 但凡有一个不为空，即保存
-          break
-        }
-      }
-      if (this.flag === 1) {
+      // for (const a in this.answer_to_ques) {
+      //   console.log(this.answer_to_ques[a])
+      //   if (this.answer_to_ques[a] === '') {
+      //     this.flag = 0 // 全是空，则不保存
+      //   } else {
+      //     this.flag = 1 // 但凡有一个不为空，即保存
+      //     break
+      //   }
+      // }
+      // if (this.flag === 1) {
         recordCurrentAnsToQues({
           studentNumber: this.schoolNumber,
           openid: this.openid,
@@ -272,11 +326,11 @@ export default {
           examPaperContent: JSON.stringify(this.one_section_content),
           examPaperAnwer: this.answer_to_ques
         }).then(res => {
-          this.$router.go(-1)
+          this.$router.push({name: 'chapterList'})
         })
-      } else {
-        this.$router.go(-1)
-      }
+      // } else {
+      //   this.$router.push({name: 'chapterList'})
+      // }
     },
     init () {
       console.log('初始化：', this.$refs.section_exec_second)
@@ -285,6 +339,20 @@ export default {
           click: true
         })
       })
+    },
+    // 即将关闭的时候，调用这个处理函数
+    closeHandler () {
+      console.log('closeHandler')
+    },
+    // 完全关闭之后，调用这个函数清理资源
+    destroyHandler () {
+      console.log('destroyHandler')
+    },
+    getChongxin () {
+      console.log(this.currentNotList.length, this.selectIndex, this.allSum - 1)
+      if (this.currentNotList.length === 0 && this.selectIndex === this.allSum - 1) {
+        this.showSum = true
+      }
     },
     getInitTime () { // 获取当索引为0时的时间
       if (this.selectIndex === 0) {
@@ -412,8 +480,18 @@ export default {
           this.currentErrorList = []
           this.currentNotList = []
           for (const item in this.one_section_content) {
+            const imgs = []
+            for (const i in this.one_section_content[item].imgList) {
+              const list = {'src': this.one_section_content[item].imgList[i], 'w': 600, 'h': 600}
+              imgs.push(list)
+            }
+            // console.log('picture:', imgs)
+            this.imgsList.push(imgs)
+            // this.imgList
+            // console.log('图片集合', this.imgsList)
             this.userOption = -1
             this.selectToRight = 0
+            this.rightOp = -1
             if (this.one_section_content[item].complete === 1) { // 表示这道题做了
               if (this.one_section_content[item].userOption === 'A') {
                 this.userOption = 0
@@ -443,8 +521,9 @@ export default {
               this.currentNotList.push(parseInt(item) + 1)
               this.selectToRight = 0
               this.userOption = -1
+              this.rightOp = -1
             }
-            const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id}
+            const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id, 'rightOp': this.rightOp}
             // console.log('当前选项：', oneDetail)
             this.quesList.push(oneDetail)
             this.answer_to_ques[item] = this.one_section_content[item].userOption
@@ -543,12 +622,21 @@ export default {
         gradeLevel: this.levelName
       }).then(res => {
         this.one_section_content = res.data.data
-        // console.log('所有题：', this.one_section_content)
+        console.log('所有题：', this.one_section_content)
         this.allSum = res.data.data.length // 所有题的个数
         this.showCollec = this.one_section_content[this.selectIndex].collect
         // 给每个题都加上一个字典，未做题的情况
         for (const item in this.one_section_content) {
-          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id}
+          const imgs = []
+          for (const i in this.one_section_content[item].imgList) {
+            const list = {'src': this.one_section_content[item].imgList[i], 'w': 600, 'h': 600}
+            imgs.push(list)
+          }
+          // console.log('picture:', imgs)
+          this.imgsList.push(imgs)
+          // this.imgList
+          // console.log('图片集合', this.imgsList)
+          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id, 'rightOp': -1}
           this.currentNotList.push(parseInt(item) + 1)
           // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
           this.quesList.push(oneDetail)
@@ -563,17 +651,22 @@ export default {
       this.n = index // index为选项的索引
       this.quesList[this.selectIndex].n = index
       // console.log(this.quesList)
+      console.log('选的answer:', answer.split('.'))
       this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
       const that = this
       setTimeout(function () {
-        if (answer.split('.')[1] === that.one_section_content[that.selectIndex].question.correctText) {
+        console.log('选的answer:', answer)
+        if (answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, '') === that.one_section_content[that.selectIndex].question.correctText.replace(/(^\s*)|(\s*$)/g, '')) {
           that.selectRight = 1 // 答对
           that.quesList[that.selectIndex].selectRight = 1
           that.currentRight += 1 // 做对的个数加1
           that.currentRightList.push(that.selectIndex + 1)
           that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
+          console.log('正确了：')
         } else {
           const options = that.one_section_content[that.selectIndex].randomOption
+          console.log('选项：', options)
+          console.log('正确选项：', that.one_section_content[that.selectIndex].rightOption)
           for (const item in options) {
             if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
               that.rightOp = parseInt(item)
@@ -581,13 +674,20 @@ export default {
           }
           that.selectRight = 2 // 答错
           that.quesList[that.selectIndex].selectRight = 2
+          that.quesList[that.selectIndex].rightOp = that.rightOp
           that.currentError += 1 // 做对的个数加1
           that.currentErrorList.push(that.selectIndex + 1)
           that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
+          console.log('错误了：')
         }
         console.log(that.currentRight, that.currentRightList)
         console.log(that.currentError, that.currentErrorList)
         console.log('未做的：', that.currentNotList)
+        console.log('是否展示重新做题：', that.currentNotList.length, that.allSum, that.selectIndex)
+        that.getChongxin()
+        // if (that.currentNotList.length === 0 && that.selectIndex === that.allSum - 1) {
+        //   that.showSum = true
+        // }
         that.id = that.one_section_content[that.selectIndex].question.id
         that.paperid = that.one_section_content[that.selectIndex].sourcePaperId // 组卷id
         that.getCurrentRecord(answer)
@@ -694,11 +794,18 @@ export default {
     }
   }
   .section_exec_second_img {
-    max-height: 100px;
-    height: 100px;
+    /*max-height: 200px;*/
+    /*height: 100px;*/
     margin-top: 10px;
-    width: 80%;
+    max-width: 80%;
+    text-align: center;
     margin-left: 10%;
+    img {
+      height: 100px;
+    }
+  }
+  .yulan {
+    z-index: 10;
   }
   .box{
     /*text-align: center;*/
@@ -796,6 +903,21 @@ export default {
       padding: 5px 8px;
       border-radius: 10px;
       background-color: #42b983;
+    }
+  }
+  .section_exec_third1 {
+    height: 25px;
+    background-color: rgba(255,255, 223, 0.7);
+    font-size: 13px;
+    .iconfont {
+      font-size: 14px;
+      margin-right: 7px;
+    }
+    .icon_luluduigou {
+      color: #42b983;
+    }
+    .icon_luluchahao-copy-copy-copy {
+      color: red;
     }
   }
   .section_exec_third {

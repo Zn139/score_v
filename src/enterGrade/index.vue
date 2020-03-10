@@ -12,7 +12,7 @@
     </div>
     <div class="enter_grade_second" ref="enter_grade_second">
       <div>
-        <h4 class="enter_grade_title_info">中关村中学2019级07班</h4>
+        <h4 class="enter_grade_title_info">中学2019级07班</h4>
         <div class="addScore_form">
           <div class="smallKuang"></div><strong>考试信息</strong>
 <!--          <calendar class="enter_grade_time" v-model="examTime" placeholder="请在此输入考试名称，如：期中" placeholder-align="left"></calendar>-->

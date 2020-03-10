@@ -144,6 +144,19 @@ export function feedBack (req) { // 我的--反馈
     params: req
   })
 }
+export function verificationSchoolNum (req) { // 我的--验证学号是否可以做生物题
+  return request({
+    url: 'exam/checkStudentNumber',
+    method: 'get',
+    params: req
+  })
+}
+export function getAlllevels (req) { // 我的--得到所有年级
+  return request({
+    url: 'exam-three/selectgrade',
+    method: 'get'
+  })
+}
 export function positionCompare (req) { // 定位对比--定位
   return request({
     url: 'score/getSixRateInfo',
@@ -194,7 +207,8 @@ export function recentExer (req) { // 在线课程--首页--获取最近练习
     method: 'get',
     params: req
   })
-}export function getChapter (req) { // 在线课程--获取年级章
+}
+export function getChapter (req) { // 在线课程--获取年级章
   return request({
     url: 'exam/getAllChapter',
     method: 'get',
@@ -296,6 +310,13 @@ export function gotoMaster (req) { // 在线课程--错题统计--错题未掌�
 export function gotoSearch (req) { // 在线课程--错题统计--搜索
   return request({
     url: 'exam-three/wrongRecordSearch',
+    method: 'get',
+    params: req
+  })
+}
+export function gotoCollectSearch (req) { // 在线课程--我的收藏--搜索
+  return request({
+    url: 'exam-three/queryCollect',
     method: 'get',
     params: req
   })
@@ -500,6 +521,21 @@ export function getMockSubmit (req) { // 在线课程--模拟考试--做完题�
   return request({
     url: 'exam-three/examsubmit',
     method: 'post',
+    params: req
+  })
+}
+// GET /score_analysis/exam/getcollectClassifyQuantity
+export function getcollectClassifyQuantity (req) { // 在线课程--我的收藏--获取分类名称和数量
+  return request({
+    url: 'exam/getcollectClassifyQuantity',
+    method: 'get',
+    params: req
+  })
+}
+export function getcollectMasteredInfo (req) { // 在线课程--我的收藏--获取分类题详情
+  return request({
+    url: 'exam/getcollectMasteredInfo',
+    method: 'get',
     params: req
   })
 }

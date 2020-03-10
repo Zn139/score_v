@@ -5,15 +5,16 @@
         <i class="iconfont icon_lulufanhui"></i>
       </div>
       <div class="title">历年真题</div>
+      <div class="subject">{{subject_online}}</div>
     </div>
     <div class="simulationList_second" ref="simulationList_second">
       <div>
-        <div class="xitiStatic_second">
-          <div class="xitiStatic_seconde_title">
-            <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>
-            <popup-picker class="grade_info" disabled title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>
-          </div>
-        </div>
+<!--        <div class="xitiStatic_second">-->
+<!--          <div class="xitiStatic_seconde_title">-->
+<!--            <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>-->
+<!--            <popup-picker class="grade_info" disabled title="年级" :data="list1" v-model="value" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="simulationList_third">
           <div class="simulationList_third_title">
             <i class="iconfont icon_lulufengefu"></i><strong>热门真题</strong>
@@ -73,10 +74,10 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
@@ -167,6 +168,13 @@ export default {
     display: inline-block;
     margin-left: 35%;
     transform: translateX(-45%);
+  }
+  .subject {
+    position: absolute;
+    top: 3px;
+    right: 15px;
+    color: #fff;
+    font-size: 14px;
   }
   .simulationList_second {
     /*margin-top: 15px;*/

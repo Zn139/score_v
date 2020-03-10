@@ -18,20 +18,33 @@
         </div>
 <!--        <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i>-->
       </div>
-      <div class="my_info_first_item" @click="bindAccount"><i class="iconfont icon_lulurenyuanbangding"></i>绑定账号<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="my_info_first_item" @click="myBBS"><i class="iconfont icon_luluiconquanzinor"></i>我的圈子<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="my_info_first_item" @click="collect"><i class="iconfont icon_lulushoucang1"></i>我的收藏<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="my_info_first_item" @click="suggestFeedback"><i class="iconfont icon_lulufankui1"></i>意见反馈<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="my_info_first_item" @click="statement"><i class="iconfont icon_lulumianzeshengmingcopy"></i>免责声明<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
-      <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>
+    </div>
+    <div class="my_info_first_all" ref="my_info_first_all">
+      <div>
+        <div class="my_info_first_item" @click="bindAccount"><i class="iconfont icon_lulurenyuanbangding"></i>绑定账号<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+<!--        <div class="my_info_first_item" @click="myBBS"><i class="iconfont icon_luluiconquanzinor"></i>我的圈子<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
+<!--        <div class="my_info_first_item" @click="collect"><i class="iconfont icon_lulushoucang1"></i>我的收藏<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
+<!--        <div class="my_info_first_item" @click="collect"><i class="iconfont icon_lulushoucang1"></i>我的收藏<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
+        <div class="my_info_first_item" @click="suggestFeedback"><i class="iconfont icon_lulufankui1"></i>意见反馈<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+        <div class="my_info_first_item" @click="statement"><i class="iconfont icon_lulumianzeshengmingcopy"></i>免责声明<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+        <div class="my_info_first_item" @click="aboutUs"><i class="iconfont icon_luluguanyuwomen1"></i>关于我们<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>
+        <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>
+<!--                  <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>-->
+<!--                  <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>-->
+<!--                  <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>-->
+<!--                  <div class="my_info_first_set" @click="setInfo"><i class="iconfont icon_lulushezhi3"></i>设置<i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-" style="margin-left: 73%"></i></div>-->
+                  <div class="my_info_first_set1" @click="setInfo"></div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import BScroll from 'better-scroll'
 export default {
   data () {
     return {
+      myScroll: null,
       myInfo: {
         userName: '',
         userImg: ''
@@ -45,8 +58,17 @@ export default {
   },
   mounted () {
     this.getUserInfo()
+    this.init()
   },
   methods: {
+    init () {
+      console.log('初始化：', this.$refs.my_info_first_all)
+      this.$nextTick(() => {
+        this.myScroll = new BScroll(this.$refs.my_info_first_all, {
+          click: true
+        })
+      })
+    },
     getUserInfo () {
       this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid
       //   {
@@ -80,7 +102,10 @@ export default {
     },
     statement () {
       this.$router.push('/statement')
-    }
+    },
+    aboutUs () {
+      this.$router.push('/aboutUs')
+    },
   }
 }
 </script>
@@ -92,26 +117,32 @@ export default {
     /*background: #f8f8f8;*/
     position: relative;
   }
-.my_info:after { // 实现背景图片的透明度为0.8
-  content: '';
-  background: #f8f8f8 url("../../src/assets/img/28.jpg") no-repeat;
-  opacity: 0.8;
-  background-size: 100% 200px;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-}
-.icon_luluxiaoxitongzhi1 {
-  font-size: 18px;
-  position: absolute;
-  color: rgb(196, 223, 184);
-  /*color: indianred;*/
-  margin-left: 88%;
-  margin-top: 15px;
-}
+  .my_info_first_all {
+    height: calc(100% - 250px);
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 25px;
+  }
+  .my_info:after { // 实现背景图片的透明度为0.8
+    content: '';
+    background: #f8f8f8 url("../../src/assets/img/28.jpg") no-repeat;
+    opacity: 0.8;
+    background-size: 100% 200px;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+  }
+  .icon_luluxiaoxitongzhi1 {
+    font-size: 18px;
+    position: absolute;
+    color: rgb(196, 223, 184);
+    /*color: indianred;*/
+    margin-left: 88%;
+    margin-top: 15px;
+  }
   .my_info_first {
     margin-top: 30%;
     /*padding-left: 20px;*/
@@ -207,10 +238,14 @@ export default {
   .my_info_first_set {
     padding-left: 20px;
     background-color: #fff;
-    margin-top: 13px;
+    margin: 13px 0;
+    /*margin-bottom: 15px;*/
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #dcdcdc;
+  }
+  .my_info_first_set1 {
+   height: 20px;
   }
   .my_info_first_item i:nth-child(2) {
     margin-left: 65%;
@@ -237,6 +272,10 @@ export default {
   }
   .icon_lulumianzeshengmingcopy {
     color: #FFCCCC;
+    margin-right: 8px;
+  }
+  .icon_luluguanyuwomen1 {
+    color: red;
     margin-right: 8px;
   }
 </style>

@@ -4,14 +4,17 @@
       <div class="line-second-first_title">
         <i class="iconfont icon_lulufengefu"></i><strong>最近练习</strong>
       </div>
-      <div class="line-second-first_content">
+      <div class="line-second-first_content" v-if="chapterName !== ''">
         <div class="line-third-title">{{chapterName}}</div>
         <div class="line-third-con">
           <div>{{sectionName}}</div>
+<!--          <div>{{subject_online}}</div>-->
 <!--          <div>1、生命体结构和功能的基本单位是？</div>-->
           <x-button @click.native="gotoChapterExer">继续学习</x-button>
         </div>
       </div>
+<!--      <div v-if="chapterName === ''">暂无最近练习</div>-->
+      <div class="noData" v-if="chapterName === ''">暂无最近练习</div>
     </div>
 <!--    <div class="line-third_second">-->
 <!--      <div class="line-third_second_item" @click="gotoPage('doQuesRecord')"><i class="iconfont icon_lulujiludanzilishijilu"></i><span>做题记录</span><i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i></div>-->
@@ -22,11 +25,13 @@
 </template>
 <script>
 import {recentExer} from '@/api/index'
+import bus from '@/utils/vueBus'
 export default {
   data () {
     return {
       sectionName: '',
-      chapterName: ''
+      chapterName: '',
+      subject_line: ''
     }
   },
   computed: {
@@ -38,11 +43,20 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     }
   },
-  mounted () {
+  created () {
     this.recentExer()
+  },
+  mounted () {
+    let that = this
+    // this.subject_line = this.subject_online
+    bus.$on('subject', (data) => {
+      that.subject_line = data
+      console.log(that.subject_online)
+      that.recentExercise()
+    })
   },
   methods: {
     gotoPage (name) {
@@ -54,6 +68,19 @@ export default {
         openid: this.openid,
         subject: this.subject_online
       }).then(res => {
+        if (res.data.code === 0) {
+          this.sectionName = res.data.data.sectionName
+          this.chapterName = res.data.data.examPaperName
+        }
+        console.log('最近练习：', res.data)
+      })
+    },
+    recentExercise () { // 最近练习
+      recentExer({
+        studentNumber: this.schoolNumber,
+        openid: this.openid,
+        subject: this.subject_line
+      }).then(res => {
         this.sectionName = res.data.data.sectionName
         this.chapterName = res.data.data.examPaperName
         console.log('最近练习：', res.data.data)
@@ -62,7 +89,7 @@ export default {
     gotoChapterExer () {
       this.$router.push({
         name: 'chapterExercise',
-        params: {
+        query: {
           paperName: this.sectionName
         }
       })
@@ -71,9 +98,14 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+  .line-third-info {
+    padding-bottom: 20px;
+    height: 100%;
+  }
   .line-second-first {
-    margin-bottom: 6px;
+    /*margin-bottom: 6px;*/
     background-color: #fff;
+    margin-bottom: 20px;
   }
   strong {
     font-size: 15px;
@@ -91,7 +123,7 @@ export default {
   .line-second-first_content {
     /*padding: 5px 0;*/
     margin: 10px 30px 0;
-    padding-bottom: 30px;
+    padding-bottom: 20px;
   }
   .line-third-title {
     font-size: 15px;
@@ -100,6 +132,7 @@ export default {
   .line-third-con {
     margin-top: 15px;
     text-align: center;
+    margin-bottom: 30px;
     div:nth-child(2) {
       margin-top: 5px;
       font-size: 14px;
@@ -109,6 +142,7 @@ export default {
       margin-top: 15px;
       width: 47%;
       font-size: 16px;
+      margin-bottom: 20px;
       /*border: 1px red solid;*/
     }
     .weui-btn:after {
@@ -150,5 +184,12 @@ export default {
   }
   .icon_luluchangyongtubiao-xianxingdaochu-zhuanqu- {
     float: right;
+  }
+  .noData {
+    font-size: 14px;
+    margin-top: 15px;
+    padding-bottom: 20px;
+    text-align: center;
+    color: #9c9c9c;
   }
 </style>

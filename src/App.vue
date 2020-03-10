@@ -1,7 +1,13 @@
 <template>
   <div id="app">
 <!--    <img src="./assets/logo.png">-->
-    <router-view  v-if="isRouterAlive"/>
+    <router-view/>
+<!--    <router-view  v-if="isRouterAlive"/>-->
+<!--    <keep-alive>-->
+<!--      <router-view v-if="keepAlive"></router-view>-->
+<!--      &lt;!&ndash;这里是会被缓存的组件&ndash;&gt;-->
+<!--    </keep-alive>-->
+<!--    <router-view v-if="!keepAlive"></router-view>-->
     <router-view name="nav"></router-view>
   </div>
 </template>
@@ -64,12 +70,16 @@ export default {
           this.$store.commit('SET_USER_NAME', res.data.nickname)
           this.$store.commit('SET_USER_IMG', res.data.userLogin.headimgurl)
           if (res.data.userLogin.diyid !== '') {
-            this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
+            // this.$store.commit('SET_SCHOOLNUM', res.data.userLogin.diyid)
+            localStorage.setItem('SET_SCHOOLNUM', res.data.userLogin.diyid)
+            // localStorage.SET_SCHOOLNUM
             // this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
           }
-          // if (res.data.gradeLevel !== '') {
-          //   this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
-          // }
+          // console.log('学号：', localStorage.SET_SCHOOLNUM)
+          if (res.data.gradeLevel !== '') {
+            // this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
+            localStorage.setItem('SET_LEVEL_NAME', res.data.gradeLevel)
+          }
           // else {
           //   this.$store.commit('SET_SCHOOLNUM', '08047737')
           // }

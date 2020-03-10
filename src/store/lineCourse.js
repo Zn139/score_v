@@ -1,7 +1,7 @@
 const lineCourse = {
   state: {
     select_sub: '',
-    levelName: '高1',
+    levelName: '',
     if_master: -1
   },
   mutations: {

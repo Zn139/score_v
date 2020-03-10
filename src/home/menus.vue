@@ -18,11 +18,13 @@
 <!--      </div>-->
       <div class="icon-text">历史分析</div>
     </div>
-    <div class="menu-icon_1" @click="gotoPage('question')">
+    <div class="menu-icon_1" @click="gotoPage('building')">
+<!--    <div class="menu-icon_1" @click="gotoPage('question')">-->
       <i class="iconfont icon_lulugerenzhenduan"></i>
       <div class="icon-text">错题诊断</div>
     </div>
-    <div class="menu-icon_1" @click="gotoPage('classSchedule')">
+    <div class="menu-icon_1" @click="gotoPage('building')">
+<!--    <div class="menu-icon_1" @click="gotoPage('classSchedule')">-->
       <i class="iconfont icon_lulukebiao"></i>
       <div class="icon-text">课程表</div>
     </div>
@@ -31,7 +33,8 @@
       <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">高校查询</div>
     </div>
-    <div class="menu-icon_1" @click="gotoPage('more')">
+    <div class="menu-icon_1" @click="gotoPage('building')">
+<!--    <div class="menu-icon_1" @click="gotoPage('more')">-->
       <i class="iconfont icon_lulugengduo1"></i>
       <!--      <div class="icon-bac"><i class="iconfont iconxuexiao"></i></div>-->
       <div class="icon-text">更多</div>

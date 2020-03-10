@@ -7,7 +7,7 @@ const exam = {
     // openid: 'o_pfhwpP_2R_kK4gzKw5SuDG0LXo',
     userImg: '',
     userName: '',
-    schoolNum: '08047737', // 学号
+    schoolNum: '', // 学号
     // schoolNum: '08047737', // 学号
     // singleScoreList: '', // 单科所有成绩
     singleScoreList: [], // 单科所有成绩-梦良

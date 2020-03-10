@@ -25,7 +25,8 @@
 <!--        @on-submit="onSubmit"-->
 <!--        @on-cancel="cancelSearch"-->
 <!--        ref="search"></search>-->
-      <div class="title" v-show="!showWrongSearch">错题记录</div>
+<!--      <div class="title">我的收藏</div>-->
+      <div class="title" v-show="!showWrongSearch">我的收藏</div>
       <i v-show="!showWrongSearch" class="iconfont icon_luluicon-search" @click="searchWrong"></i>
     </div>
     <div class="wrongQues_second">
@@ -33,15 +34,15 @@
         <div class="wrongQues_second_first one">
           年级：{{levelName}}
         </div>
-        <div class="wrongQues_second_first two">
-<!--          <button-tab>-->
-          <button-tab  v-model="ifMastered">
-            <button-tab-item @on-item-click="consoleIndex()">掌握</button-tab-item>
-            <button-tab-item @on-item-click="consoleIndex()">未掌握</button-tab-item>
-<!--            <button-tab-item selected>未掌握</button-tab-item>-->
-<!--            <button-tab-item>掌握</button-tab-item>-->
-          </button-tab>
-        </div>
+<!--        <div class="wrongQues_second_first two">-->
+<!--&lt;!&ndash;          <button-tab>&ndash;&gt;-->
+<!--          <button-tab  v-model="ifMastered">-->
+<!--            <button-tab-item @on-item-click="consoleIndex()">掌握</button-tab-item>-->
+<!--            <button-tab-item @on-item-click="consoleIndex()">未掌握</button-tab-item>-->
+<!--&lt;!&ndash;            <button-tab-item selected>未掌握</button-tab-item>&ndash;&gt;-->
+<!--&lt;!&ndash;            <button-tab-item>掌握</button-tab-item>&ndash;&gt;-->
+<!--          </button-tab>-->
+<!--        </div>-->
         <div class="wrongQues_second_first three">
           <popover placement="bottom" :gutter="5" class="wrongQues">
             <div slot="content" class="popover-demo-content">
@@ -57,6 +58,26 @@
         </div>
       </div>
     </div>
+<!--    <div class="wrongQues_second">-->
+<!--      <div class="wrongQues_second_firstInfo">-->
+<!--        <div class="wrongQues_second_first one">-->
+<!--          年级：{{levelName}}-->
+<!--        </div>-->
+<!--        <div class="wrongQues_second_first three">-->
+<!--          &lt;!&ndash;        <div style="position:fixed;text-align:center;width:100%;top: 80px;left: 60%;">&ndash;&gt;-->
+<!--          <popover placement="bottom" class="specila_item">-->
+<!--            <div slot="content" class="popover-demo-content">-->
+<!--&lt;!&ndash;              <div class="add_score" @click="getClassifyContent(item)" v-for="(item, index) in knowledgeList" :key="index">&ndash;&gt;-->
+<!--&lt;!&ndash;                &lt;!&ndash;                <i class="iconfont icon_lulujiugongge"></i>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                {{item}}&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--            </div>-->
+<!--            <span>{{classifyName}}</span>-->
+<!--            <i class="iconfont icon_luluchangyongtubiao-xianxingdaochu-zhuanqu-"></i>-->
+<!--          </popover>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="wrongQues_third" ref="wrongQues_third">
       <div>
         <div v-for="(item, index) in classifyDetail" :key="index" class="wrongQues_third_detail" v-if="classifyDetail.length > 0" @click="gotoDetail(item.content.question.id, index)">
@@ -80,45 +101,45 @@
         </div>
       </div>
     </div>
-    <div class="section_exec_third" v-if="classifyName !== '全部'">
-      <!--判断是否收藏 1表示收藏  2表示没有收藏-->
-      <div class="section_exec_third_left">分类</div>
-      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>
-      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>
-      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>
-      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>
-    </div>
-    <div v-transfer-dom class="section_exec_third_tan">
-      <popup v-model="showClassify" position="bottom" max-height="50%">
-        <div class="section_exec_third">
-          <div class="section_exec_third_left">分类</div>
-          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>
-          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>
-          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>
-          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>
-<!--          <div class="section_exec_third_right" @click="gotoClose"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.totalNum}}</span></div>-->
-        </div>
-        <group>
-          <div class="section_exec_third_title">
-            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length === 0">
-              {{item.key}}<span>（{{item.value}}）</span>
-            </div>
-            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length > 0">
-              {{item.key}}
-              <div class="section_exec_third_content" v-for="(itemTwo, index) in bottomClassifyList_two" :key="index">
-                {{itemTwo.key}}<span>（{{itemTwo.value}}）</span>
-              </div>
-            </div>
-          </div>
-        </group>
-      </popup>
-    </div>
+<!--    <div class="section_exec_third" v-if="classifyName !== '全部'">-->
+<!--      &lt;!&ndash;判断是否收藏 1表示收藏  2表示没有收藏&ndash;&gt;-->
+<!--      <div class="section_exec_third_left">分类</div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>-->
+<!--      <div class="section_exec_third_right" @click="gotoClassifyDetail" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>-->
+<!--    </div>-->
+<!--    <div v-transfer-dom class="section_exec_third_tan">-->
+<!--      <popup v-model="showClassify" position="bottom" max-height="50%">-->
+<!--        <div class="section_exec_third">-->
+<!--          <div class="section_exec_third_left">分类</div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '章节练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.chapterNum}}</span></div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '模拟考试'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.mockNum}}</span></div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '专项练习'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.specialNum}}</span></div>-->
+<!--          <div class="section_exec_third_right" @click="gotoClose" v-if="classifyName === '历年真题'"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.truthNum}}</span></div>-->
+<!--&lt;!&ndash;          <div class="section_exec_third_right" @click="gotoClose"><i class="iconfont icon_lulujiugongge"></i><span>{{classifyContent.totalNum}}</span></div>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <group>-->
+<!--          <div class="section_exec_third_title">-->
+<!--            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length === 0">-->
+<!--              {{item.key}}<span>（{{item.value}}）</span>-->
+<!--            </div>-->
+<!--            <div v-for="(item, index) in bottomClassifyList_one" :key="index" v-if="bottomClassifyList_two.length > 0">-->
+<!--              {{item.key}}-->
+<!--              <div class="section_exec_third_content" v-for="(itemTwo, index) in bottomClassifyList_two" :key="index">-->
+<!--                {{itemTwo.key}}<span>（{{itemTwo.value}}）</span>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </group>-->
+<!--      </popup>-->
+<!--    </div>-->
   </div>
 </template>
 <script>
 import BScroll from 'better-scroll'
 import {Flexbox, FlexboxItem, Popover, TransferDom, Group} from 'vux'
-import {getClassifyClassify, getWrongRecord, getClassifyDetail, gotoSearch} from '@/api/index'
+import {getClassifyClassify, gotoCollectSearch, getcollectClassifyQuantity, getcollectMasteredInfo} from '@/api/index'
 export default {
   directives: {
     TransferDom
@@ -166,10 +187,10 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     },
     // ifMastered () {
     //   console.log(this.$store.state.lineCourse.if_master)
@@ -186,7 +207,7 @@ export default {
     this.getWrongClassfiRecord()
   },
   mounted () {
-    this.getOriginInfo() // 获取是否掌握的状态信息
+    // this.getOriginInfo() // 获取是否掌握的状态信息
     // this.ifMastered = this.$store.state.lineCourse.if_master
     this.init()
     this.getClassifyContent('全部')
@@ -195,14 +216,14 @@ export default {
     // })
   },
   methods: {
-    getOriginInfo () {
-      console.log('掌握状态：', this.$store.state.lineCourse.if_master)
-      if (this.$store.state.lineCourse.if_master === -1) {
-        this.ifMastered = 1
-      } else {
-        this.ifMastered = this.$store.state.lineCourse.if_master
-      }
-    },
+    // getOriginInfo () {
+    //   console.log('掌握状态：', this.$store.state.lineCourse.if_master)
+    //   if (this.$store.state.lineCourse.if_master === -1) {
+    //     this.ifMastered = 1
+    //   } else {
+    //     this.ifMastered = this.$store.state.lineCourse.if_master
+    //   }
+    // },
     returnBack () {
       this.$router.push({name: 'lineCourse'})
     },
@@ -232,21 +253,20 @@ export default {
           selectIndexd: ind,
           ifMaster: this.ifMastered + 1,
           questionIdList: this.questionIdList,
-          type: 2 // 错题详情
+          type: 3 // 收藏详情
         }
       })
       console.log(id)
     },
     getWrongClassfiRecord () { // 得到各种分类的数量
-      getWrongRecord({
+      getcollectClassifyQuantity({
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
-        gradeLevel: this.levelName,
-        master: this.ifMastered + 1
+        gradeLevel: this.levelName
       }).then(res => {
         this.classifyContent = res.data.data
-        console.log('返回信息', this.classifyContent)
+        console.log('分类信息', this.classifyContent)
       })
     },
     getClassifyContent (val) { // 得到某个分类的具体题
@@ -254,13 +274,12 @@ export default {
       this.idList = []
       this.questionIdList = []
       this.classifyName = val
-      getClassifyDetail({
+      getcollectMasteredInfo({
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
         examCategory: val,
-        gradeLevel: this.levelName,
-        master: this.ifMastered + 1
+        gradeLevel: this.levelName
       }).then(res => {
         console.log(res.data)
         if (res.data.code === 0) {
@@ -280,15 +299,7 @@ export default {
         } else {
           this.classifyDetail = []
         }
-
-        // this.classifyDetail = res.data.data.questionInfo
-        // for (const item in this.classifyDetail) {
-        //   this.classifyDetail[item]['show'] = false
-        //   this.classifyDetail[item]['index'] = parseInt(item)
-        //   this.showList.push(0)
-        //   // this.showList1[item] = false
-        // }
-        console.log('7894565431')
+        // console.log('7894565431')
         console.log(this.idList)
         console.log(this.classifyDetail.length)
       })
@@ -362,11 +373,12 @@ export default {
     getResult (val) {
       console.log('on-change', val)
       this.results = []
-      gotoSearch({
+      gotoCollectSearch({
         desc: this.key,
         studentNumber: this.schoolNumber,
         openid: this.openid,
-        subject: this.subject_online
+        subject: this.subject_online,
+        level: this.levelName
       }).then(res => {
         console.log('搜索结果：', res.data.data)
         this.searchContent = res.data.data
@@ -386,16 +398,6 @@ export default {
     }
   }
 }
-// function getResult (val) {
-//   let rs = []
-//   for (let i = 0; i < 20; i++) {
-//     rs.push({
-//       title: `${val} result: ${i + 1} `,
-//       other: i
-//     })
-//   }
-//   return rs
-// }
 </script>
 <style scoped lang="scss">
   .wrongQues_info {
@@ -463,7 +465,7 @@ export default {
     .wrongQues_second_firstInfo {
       /*height: 40px;*/
       /*line-height: 40px;*/
-      text-align: center;
+      /*text-align: center;*/
       .wrongQues_second_first {
         display: inline-block;
         font-size: 14px;
@@ -473,15 +475,14 @@ export default {
         margin-right: 10px;
         text-align: center;
       }
-      .two {
-        width: 30%;
-        margin: 0 10px;
-        text-align: center;
-      }
+      /*.two {*/
+      /*   width: 30%;*/
+      /*   margin: 0 10px;*/
+      /* }*/
       .three {
-        width: 26%;
+        width: 64%;
+        text-align: right;
         margin-left: 10px;
-        text-align: left;
       }
     }
   }
@@ -558,7 +559,8 @@ export default {
     background: #fbf9fe;
     overflow: hidden;
     padding: 10px 0;
-    height: calc(100% - 141px);
+    height: calc(100% - 121px);
+    /*height: calc(100% - 141px);*/
     /*margin-top: 10px;*/
     /*background-color: #fff;*/
   }

@@ -273,7 +273,7 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     // getLastDetail () {
     //   if (this.$route.params.sign === 1) {

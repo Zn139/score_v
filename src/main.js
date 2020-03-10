@@ -17,6 +17,7 @@ import wcView from 'wc-view'
 import 'wc-view/style.css'
 import VueTouch from 'vue-touch'
 import Mui from 'vue-awesome-mui'
+import VuePreview from 'vue2-preview'
 Vue.use(Mui)
 Vue.use(VueTouch, {name: 'v-touch'})
 VueTouch.config.swipe = {
@@ -52,6 +53,7 @@ Vue.component('calendar', Calendar)
 Vue.component('popup-picker', PopupPicker)
 Vue.component('button-tab', ButtonTab)
 Vue.component('button-tab-item', ButtonTabItem)
+Vue.use(VuePreview)
 Vue.use(ToastPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)

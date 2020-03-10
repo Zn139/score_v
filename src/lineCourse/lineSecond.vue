@@ -69,6 +69,7 @@
   </div>
 </template>
 <script>
+import {verificationSchoolNum} from '@/api/index'
 export default {
   data () {
     return {
@@ -90,7 +91,10 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
+    },
+    levelName () { // 年级
+      return localStorage.SET_LEVEL_NAME
     }
   },
   methods: {
@@ -99,12 +103,40 @@ export default {
       if (this.schoolNumber === '') {
         this.$vux.alert.show({
           title: '提示',
-          content: '您还未绑定学号，请到‘我的-->绑定账号’去绑定'
+          content: '您还未绑定学号，请到‘我的-->绑定账号’去绑定',
+          onHide () {
+            location.href = location.origin + location.pathname + '#/bindAccount'
+          }
         })
+        this.$router.push({name: 'bindAccount'})
       } else {
         this.$router.push({name: name})
+        // if (this.subject_online === '生物') {
+        //   verificationSchoolNum({
+        //     studentNumber: this.schoolNumber,
+        //     openid: this.openid,
+        //     subject: this.subject_online,
+        //     gradeLevel: this.levelName
+        //   }).then(res => {
+        //     if (res.data.code === 0) {
+        //       this.$router.push({name: name})
+        //     } else {
+        //       this.$vux.alert.show({
+        //         title: '提示',
+        //         content: '您暂无权限查看呦~'
+        //       })
+        //       // 隐藏
+        //       // this.$vux.alert.hide()
+        //     }
+        //   })
+        // } else {
+        //   this.$router.push({name: name})
+        // }
       }
-    }
+    },
+    // gotoBind () {
+    //   this.$router.push({path: '/bindAccount'})
+    // }
     // gotoChapter () {
     //   this.$router.push('/chapterList')
     // },

@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    <div class="wrongQues_third" ref="wrongQues_third">
+    <div class="wrongQues_third all" ref="wrongQues_third">
       <div>
         <div v-for="(item, index) in classifyDetail" :key="index" class="wrongQues_third_detail" v-if="classifyDetail.length > 0" @click="gotoDetail(item.content.question.id, index)">
 <!--          <div class="wrongQues_third_detail_title" v-if="showList[index] === 0">{{item.question.questionContext}}</div><div @click="zhankai(index)">展开</div>-->
@@ -166,10 +166,10 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     },
     // ifMastered () {
     //   console.log(this.$store.state.lineCourse.if_master)
@@ -182,9 +182,9 @@ export default {
     //   }
     // }
   },
-  created () {
-    this.getWrongClassfiRecord()
-  },
+  // created () {
+  //   this.getWrongClassfiRecord()
+  // },
   mounted () {
     this.getOriginInfo() // 获取是否掌握的状态信息
     // this.ifMastered = this.$store.state.lineCourse.if_master
@@ -202,6 +202,8 @@ export default {
       } else {
         this.ifMastered = this.$store.state.lineCourse.if_master
       }
+      this.getWrongClassfiRecord()
+      console.log('掌握状态2：', this.ifMastered)
     },
     returnBack () {
       this.$router.push({name: 'lineCourse'})
@@ -292,6 +294,12 @@ export default {
         console.log(this.idList)
         console.log(this.classifyDetail.length)
       })
+      var a = document.querySelector('.wrongQues_third')
+      if (val === '全部') {
+        a.className = 'wrongQues_third all'
+      } else {
+        a.className = 'wrongQues_third notAll'
+      }
     },
     gotoClassifyDetail () { // 查看最下面的分类模块
       this.bottomClassifyList_one = []
@@ -481,7 +489,7 @@ export default {
       .three {
         width: 26%;
         margin-left: 10px;
-        text-align: left;
+        text-align: right;
       }
     }
   }
@@ -558,9 +566,16 @@ export default {
     background: #fbf9fe;
     overflow: hidden;
     padding: 10px 0;
-    height: calc(100% - 141px);
+    /*height: calc(100% - 141px);*/
+    /*height: calc(100% - 141px);*/
     /*margin-top: 10px;*/
     /*background-color: #fff;*/
+  }
+  .all {
+    height: calc(100% - 121px);
+  }
+  .notAll {
+    height: calc(100% - 141px);
   }
   .wrongQues_third_detail_noData {
     text-align: center;
