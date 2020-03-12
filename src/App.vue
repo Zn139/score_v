@@ -76,10 +76,10 @@ export default {
             // this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
           }
           // console.log('学号：', localStorage.SET_SCHOOLNUM)
-          if (res.data.gradeLevel !== '') {
+          // if (res.data.gradeLevel !== '') {
             // this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
-            localStorage.setItem('SET_LEVEL_NAME', res.data.gradeLevel)
-          }
+            // localStorage.setItem('SET_LEVEL_NAME', res.data.gradeLevel)
+          // }
           // else {
           //   this.$store.commit('SET_SCHOOLNUM', '08047737')
           // }

@@ -22,12 +22,12 @@
                 </div>
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
-                  <div v-if="selectRight === 0" v-for="(c,index) of errorSectionList.optionList" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                  <div v-if="selectRight === 0" v-for="(c,index) of errorSectionList.optionList" class="ques_option" :class="{checked:index === n}" @click="changeList(c, index)" :key="index"><span :class="{checked:index === n}">{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                   <!--选择正确时，selectRight为1-->
                   <div v-if="selectRight === 1">
                     <div v-for="(c,index) of errorSectionList.optionList" :key="index" class="ques_option">
-                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
-                      <div v-if="index !== n"><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-if="index === n"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+                      <div v-if="index !== n"><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                     </div>
                     <x-button v-if="newIndex !== parseInt(newIdList.length) - 1" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>
 <!--                    <x-button v-if="newIndex !== parseInt(idList.length) - 1" class="right_button" @click.native="gotoNextQues">回答正确，直接跳至下一题</x-button>-->
@@ -36,9 +36,9 @@
                   <!--选择错误时，selectRight为2-->
                   <div v-if="selectRight === 2">
                     <div  v-for="(c,index) of errorSectionList.optionList" :key="index" class="ques_option">
-                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.split('.')[1]}}</div>
-                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.split('.')[1]}}</div>
-                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.split('.')[1]}}</div>
+                      <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
+                      <div v-else><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                     </div>
                     <x-button class="right_button" v-if="newIndex !== newIdList.length - 1" @click.native="gotoNextQues">正确答案是{{errorSectionList.question.correctOption}}，你的答案是{{errorSectionList.optionList[n].split('.')[0]}}，跳至下题</x-button>
 <!--                    <x-button class="right_button" v-if="newIndex !== idList.length - 1" @click.native="gotoNextQues">正确答案是{{errorSectionList.question.correctOption}}，你的答案是{{errorSectionList.optionList[n].split('.')[0]}}，跳至下题</x-button>-->
@@ -102,8 +102,9 @@
       <div v-if="showCollec === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>
 <!--      <div v-if="errorSectionList.collect === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>-->
       <!--掌握与否，1表示已掌握，2表示未掌握-->
-      <div class="section_exec_third_center" v-show="ifMaster === 1"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
-      <div class="section_exec_third_center" v-show="ifMaster === 2 "></div>
+      <div class="section_exec_third_center" v-if="ifMaster === 1"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
+      <div class="section_exec_third_center" v-else></div>
+<!--      <div class="section_exec_third_center" v-show="ifMaster === 2 "></div>-->
       <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{newIndex + 1}}/{{newIdList.length}}</span></div>
     </div>
     <div v-transfer-dom class="section_exec_third_tan">
@@ -115,7 +116,8 @@
 <!--          <div v-if="errorSectionList.collect === 1" class="section_exec_third_left" @click="collectCurrentQues"><i class="iconfont icon_luluenjoy1"></i>收藏</div>-->
           <!--          <div class="section_exec_third_left"><i class="iconfont icon_lulucollect"></i>收藏</div>-->
           <div class="section_exec_third_center" v-if="ifMaster === 1"><span @click="delCurrentQues"><i class="iconfont icon_lulushanchu-copy-copy"></i>删除</span></div>
-          <div class="section_exec_third_center" v-if="ifMaster === 2"></div>
+          <div class="section_exec_third_center" v-else></div>
+<!--          <div class="section_exec_third_center" v-if="ifMaster === 2"></div>-->
           <div class="section_exec_third_right" @click="get_noselect_current"><i class="iconfont icon_lulujiugongge"></i><span>{{newIndex + 1}}/{{newIdList.length}}</span></div>
         </div>
         <group>
@@ -208,7 +210,7 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     quesId () {
       return this.$route.query.id
@@ -234,7 +236,7 @@ export default {
       // return this.$route.params.questionIdList
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     },
     // selectIndexd: {
     //   get () {
@@ -306,6 +308,8 @@ export default {
         this.$router.push({path: '/wrongQues'})
       } else if (this.sourceType === 1) {
         this.$router.push({path: '/specialItem'})
+      } else {
+        this.$router.push({path: '/xtcollect'})
       }
     },
     init () {
@@ -321,6 +325,8 @@ export default {
         this.firstTitle = '专项练习详情'
       } else if (this.sourceType === 2) {
         this.firstTitle = '错题详情'
+      } else {
+        this.firstTitle = '收藏详情'
       }
       this.quesList = []
       this.newIndex = this.selectIndexd
@@ -603,7 +609,7 @@ export default {
       setTimeout(function () {
         // console.log('选项及答案：', '111' + answer.split('.')[1].replace(/(^\s*)|(\s*$)/g, '') + '333', '222' + that.errorSectionList.question.correctText.replace(/(^\s*)|(\s*$)/g, '') + '33333333333')
         // console.log('选项及答案type：', typeof answer.split('.')[1], typeof that.errorSectionList.question.correctText)
-        if (answer.split('.')[1].replace(/(^\s*)|(\s*$)/g, '') === that.errorSectionList.question.correctText.replace(/(^\s*)|(\s*$)/g, '')) {
+        if (answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, '') === that.errorSectionList.question.correctText.replace(/(^\s*)|(\s*$)/g, '')) {
           that.selectRight = 1 // 答对
           that.currentRight += 1 // 做对的个数加1
           that.currentRightList.push(that.newIndex)
@@ -625,10 +631,11 @@ export default {
         that.id = that.errorSectionList.question.id // 针对所有题的题号
         if (that.sourceType === 1) { // 专业练习做题
           that.commitRecord(answer)
-        }
-        if (that.ifMaster === 2) { // 如果是错题里面未掌握的题
-        // if (that.ifMaster === 2 && that.selectRight === 1) { // 如果是错题里面未掌握的题
-          that.gotoMaster()
+        } else if (that.sourceType === 2) {
+          if (that.ifMaster === 2) { // 如果是错题里面未掌握的题
+            // if (that.ifMaster === 2 && that.selectRight === 1) { // 如果是错题里面未掌握的题
+            that.gotoMaster()
+          }
         }
         // that.id = that.errorSectionList.question.id // 针对所有题的题号
         // that.paperid = that.errorSectionList[that.selectIndexd].exam_id // 试卷id

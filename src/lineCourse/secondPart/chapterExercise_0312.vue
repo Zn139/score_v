@@ -56,8 +56,8 @@
                       <div v-else><span>{{c.split('.')[0]}}</span>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                     </div>
 <!--                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
-                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{quesList[selectIndex].rightOpStr}}，你的答案是{{item.randomOption[n].split('.')[0]}}，跳至下题</x-button>
-                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{quesList[selectIndex].rightOpStr}}，你的答案是{{item.randomOption[n].split('.')[0]}}</x-button>
+                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}，跳至下题</x-button>
+                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}</x-button>
                   </div>
                 </div>
               </div>
@@ -160,7 +160,7 @@
 </template>
 <script>
 import BScroll from 'better-scroll'
-import {getOneSectionQues, getCurrentRecord, getPreDoneRecord, getNoSelectCurrentRecord, collectCurrentQues, cancelCollectCurrentQues, recordCurrentAnsToQues, getPreRecord, getShowCollect} from '@/api/index'
+import {getOneSectionQues, getCurrentRecord, getNoSelectCurrentRecord, collectCurrentQues, cancelCollectCurrentQues, recordCurrentAnsToQues, getPreRecord, getShowCollect} from '@/api/index'
 import { LoadMore, TransferDom, Group, XSwitch, Cell } from 'vux'
 // import ToggleText from './ToggleText'
 export default {
@@ -189,10 +189,9 @@ export default {
       showDetail: false, // 是否展示答案详解
       selectRight: 0,
       one_section_content: [],
-      selectIndex: -1, // 当前展示的题的索引
+      selectIndex: 0, // 当前展示的题的索引
       n: -1, // 当前题的选项的索引
-      rightOp: -1, // 选错以后正确选项的判断 0123
-      rightOpStr: '', // 选错以后正确选项 ABCD
+      rightOp: -1, // 选错以后正确选项的判断
       exerScroll: null,
       currentRight: 0, // 当前正确的个数
       currentRightList: [], // 当前正确的列表
@@ -225,7 +224,7 @@ export default {
   },
   computed: {
     paperName () { // 表示节的名称
-      // console.log('paperName:', this.$route.query.paperName)
+      console.log('paperName:', this.$route.query.paperName)
       return this.$route.query.paperName
       // return this.$route.params.paperName
     },
@@ -257,7 +256,7 @@ export default {
   },
   watch: { // 监听题号的索引的变化
     selectIndex (val, oldval) {
-      // console.log('55555555555', this.quesList)
+      console.log('55555555555', this.quesList)
       this.selectRight = this.quesList[this.selectIndex].selectRight
       if (this.quesList[this.selectIndex].showDetail === true) {
         // console.log('daduileme :', this.showDetail)
@@ -285,19 +284,19 @@ export default {
     // },
   },
   // 离开当前页面后执行
-  // destroyed: function () {
-  //   console.log('离开了？', this.paperName)
-  //   recordCurrentAnsToQues({
-  //     studentNumber: this.schoolNumber,
-  //     openid: this.openid,
-  //     paperName: this.ppname,
-  //     subject: this.subject_online,
-  //     examPaperContent: JSON.stringify(this.one_section_content),
-  //     examPaperAnwer: this.answer_to_ques
-  //   }).then(res => {
-  //     console.log('保存了')
-  //   })
-  // },
+  destroyed: function () {
+    console.log('离开了？', this.paperName)
+    recordCurrentAnsToQues({
+      studentNumber: this.schoolNumber,
+      openid: this.openid,
+      paperName: this.ppname,
+      subject: this.subject_online,
+      examPaperContent: JSON.stringify(this.one_section_content),
+      examPaperAnwer: this.answer_to_ques
+    }).then(res => {
+      console.log('保存了')
+    })
+  },
   //     handler: function (to, form) {
   //       console.log(to.path)
   //       console.log(form)
@@ -308,11 +307,33 @@ export default {
   // },
   methods: {
     returnBack () {
-      // console.log(this.answer_to_ques)
-      this.$router.push({name: 'chapterList'})
+      console.log(this.answer_to_ques)
+      // for (const a in this.answer_to_ques) {
+      //   console.log(this.answer_to_ques[a])
+      //   if (this.answer_to_ques[a] === '') {
+      //     this.flag = 0 // 全是空，则不保存
+      //   } else {
+      //     this.flag = 1 // 但凡有一个不为空，即保存
+      //     break
+      //   }
+      // }
+      // if (this.flag === 1) {
+        recordCurrentAnsToQues({
+          studentNumber: this.schoolNumber,
+          openid: this.openid,
+          paperName: this.paperName,
+          subject: this.subject_online,
+          examPaperContent: JSON.stringify(this.one_section_content),
+          examPaperAnwer: this.answer_to_ques
+        }).then(res => {
+          this.$router.push({name: 'chapterList'})
+        })
+      // } else {
+      //   this.$router.push({name: 'chapterList'})
+      // }
     },
     init () {
-      // console.log('初始化：', this.$refs.section_exec_second)
+      console.log('初始化：', this.$refs.section_exec_second)
       this.$nextTick(() => {
         this.exerScroll = new BScroll(this.$refs.section_exec_second, {
           click: true
@@ -377,15 +398,18 @@ export default {
       this.msen = '00'
       console.log('重置时间：', this.time)
     },
+
     start () { // 开始
       clearInterval(this.time)
       this.time = setInterval(this.timer, 50)
       console.log('开始时间：', this.time)
     },
+
     stop () { // 暂停
       clearInterval(this.time)
       console.log('结束时间：', this.time)
     },
+
     toDub (n) { // 补0操作
       if (n < 10) {
         return '0' + n
@@ -393,6 +417,7 @@ export default {
         return '' + n
       }
     },
+
     toDubms (n) { // 给毫秒补0操作
       if (n < 10) {
         return '00' + n
@@ -403,7 +428,7 @@ export default {
     redoQues () {
       this.showSum = false
       this.selectRight = 0
-      this.selectIndex = -1
+      this.selectIndex = 0
       this.n = -1
       // this.selectToRight = 0
       this.currentError = 0
@@ -427,13 +452,14 @@ export default {
     },
     getPreRecord () {
       this.quesList = []
-      getPreDoneRecord({
+      getPreRecord({
         studentNumber: this.schoolNumber,
         openid: this.openid,
         subject: this.subject_online,
-        examName: this.paperName
+        paperName: this.paperName
       }).then(res => {
         console.log('所有信息：', res.data)
+        // console.log(res.data.data[0].effective)
         if (res.data.code === 0) { // 做过题
           this.allSum = res.data.data[0].list.length // 所有题的个数
           // this.flag = 1 // 做过题
@@ -444,7 +470,7 @@ export default {
             this.showSum = true
             this.selectIndex = this.allSum - 1
           } else {
-            this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum) - 1
+            this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
           }
           this.one_section_content = res.data.data[0].list
           console.log('返回成果', this.one_section_content)
@@ -467,129 +493,47 @@ export default {
             this.selectToRight = 0
             this.rightOp = -1
             if (this.one_section_content[item].complete === 1) { // 表示这道题做了
-              for (const i in this.one_section_content[item].randomOption) {
-                if (this.one_section_content[item].userOption === this.one_section_content[item].randomOption[i].replace(this.one_section_content[item].randomOption[i].split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, '')) {
-                  this.userOption = parseInt(i)
-                  if (this.userOption === parseInt(this.one_section_content[item].rightOption)) {
-                    this.selectToRight = 1 // right
-                    this.currentRight += 1
-                    this.currentRightList.push(parseInt(item) + 1)
-                  } else {
-                    this.selectToRight = 2 // error
-                    // console.log('4444444444', this.one_section_content[item].rightOption)
-                    this.rightOp = parseInt(this.one_section_content[item].rightOption)
-                    this.rightOpStr = this.one_section_content[item].randomOption[this.rightOp].split('.')[0]
-                    this.currentError += 1
-                    this.currentErrorList.push(parseInt(item) + 1)
+              if (this.one_section_content[item].userOption === 'A') {
+                this.userOption = 0
+              } else if (this.one_section_content[item].userOption === 'B') {
+                this.userOption = 1
+              } else if (this.one_section_content[item].userOption === 'C') {
+                this.userOption = 2
+              } else if (this.one_section_content[item].userOption === 'D') {
+                this.userOption = 3
+              }
+              if (this.one_section_content[item].userOption === this.one_section_content[item].question.rightOption) {
+                this.selectToRight = 1 // right
+                this.currentRight += 1
+                this.currentRightList.push(parseInt(item) + 1)
+              } else {
+                this.selectToRight = 2 // error
+                for (const j in this.one_section_content[item].randomOption) {
+                  if (this.one_section_content[item].randomOption[j].split('.')[0] === this.one_section_content[item].rightOption) {
+                    this.rightOp = parseInt(j)
                   }
                 }
+                this.currentError += 1
+                this.currentErrorList.push(parseInt(item) + 1)
               }
+              // console.log('this.selectToRight:', this.selectToRight)
             } else if (res.data.data[0].list[item].complete === 2) { // 这道题没做
               this.currentNotList.push(parseInt(item) + 1)
               this.selectToRight = 0
               this.userOption = -1
               this.rightOp = -1
-              this.rightOpStr = ''
             }
-            const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id, 'rightOp': this.rightOp, 'rightOpStr': this.rightOpStr}
-            console.log('当前选项：', oneDetail)
+            const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id, 'rightOp': this.rightOp}
+            // console.log('当前选项：', oneDetail)
             this.quesList.push(oneDetail)
             this.answer_to_ques[item] = this.one_section_content[item].userOption
           }
-        }
-        // else { // 没做过题
-        //   this.getOneSectionQues()
-        // }
-      })
-        .catch(res => {
-          console.log('异常')
+        } else { // 没做过题
           this.getOneSectionQues()
-        })
+        }
+        // console.log('之前的记录~~~~', res.data.data)
+      })
     },
-    // getPreRecord () {
-    //   this.quesList = []
-    //   getPreRecord({
-    //     studentNumber: this.schoolNumber,
-    //     openid: this.openid,
-    //     subject: this.subject_online,
-    //     paperName: this.paperName
-    //   }).then(res => {
-    //     console.log('所有信息：', res.data)
-    //     // console.log(res.data.data[0].effective)
-    //     if (res.data.code === 0) { // 做过题
-    //       this.allSum = res.data.data[0].list.length // 所有题的个数
-    //       // this.flag = 1 // 做过题
-    //       // if (res.data.data[0].effective === 1) { // 上次记录做完了
-    //       // this.showSum = true
-    //       // this.selectIndex = this.allSum - 1
-    //       if (parseInt(res.data.data[0].firstNoDoneNum) === this.allSum) {
-    //         this.showSum = true
-    //         this.selectIndex = this.allSum - 1
-    //       } else {
-    //         this.selectIndex = parseInt(res.data.data[0].firstNoDoneNum)
-    //       }
-    //       this.one_section_content = res.data.data[0].list
-    //       console.log('返回成果', this.one_section_content)
-    //       this.currentRightList = []
-    //       this.currentError = 0
-    //       this.currentRight = 0
-    //       this.currentErrorList = []
-    //       this.currentNotList = []
-    //       for (const item in this.one_section_content) {
-    //         const imgs = []
-    //         for (const i in this.one_section_content[item].imgList) {
-    //           const list = {'src': this.one_section_content[item].imgList[i], 'w': 600, 'h': 600}
-    //           imgs.push(list)
-    //         }
-    //         // console.log('picture:', imgs)
-    //         this.imgsList.push(imgs)
-    //         // this.imgList
-    //         // console.log('图片集合', this.imgsList)
-    //         this.userOption = -1
-    //         this.selectToRight = 0
-    //         this.rightOp = -1
-    //         if (this.one_section_content[item].complete === 1) { // 表示这道题做了
-    //           if (this.one_section_content[item].userOption === 'A') {
-    //             this.userOption = 0
-    //           } else if (this.one_section_content[item].userOption === 'B') {
-    //             this.userOption = 1
-    //           } else if (this.one_section_content[item].userOption === 'C') {
-    //             this.userOption = 2
-    //           } else if (this.one_section_content[item].userOption === 'D') {
-    //             this.userOption = 3
-    //           }
-    //           if (this.one_section_content[item].userOption === this.one_section_content[item].question.rightOption) {
-    //             this.selectToRight = 1 // right
-    //             this.currentRight += 1
-    //             this.currentRightList.push(parseInt(item) + 1)
-    //           } else {
-    //             this.selectToRight = 2 // error
-    //             for (const j in this.one_section_content[item].randomOption) {
-    //               if (this.one_section_content[item].randomOption[j].split('.')[0] === this.one_section_content[item].rightOption) {
-    //                 this.rightOp = parseInt(j)
-    //               }
-    //             }
-    //             this.currentError += 1
-    //             this.currentErrorList.push(parseInt(item) + 1)
-    //           }
-    //           // console.log('this.selectToRight:', this.selectToRight)
-    //         } else if (res.data.data[0].list[item].complete === 2) { // 这道题没做
-    //           this.currentNotList.push(parseInt(item) + 1)
-    //           this.selectToRight = 0
-    //           this.userOption = -1
-    //           this.rightOp = -1
-    //         }
-    //         const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id, 'rightOp': this.rightOp}
-    //         // console.log('当前选项：', oneDetail)
-    //         this.quesList.push(oneDetail)
-    //         this.answer_to_ques[item] = this.one_section_content[item].userOption
-    //       }
-    //     } else { // 没做过题
-    //       this.getOneSectionQues()
-    //     }
-    //     // console.log('之前的记录~~~~', res.data.data)
-    //   })
-    // },
     collectCurrentQues () { // 收藏当前题
       if (this.showCollec === 2) { // 表示未收藏
         collectCurrentQues({
@@ -677,8 +621,6 @@ export default {
         openid: this.openid,
         gradeLevel: this.levelName
       }).then(res => {
-        // console.log(this.selectIndex)
-        this.selectIndex += 1
         this.one_section_content = res.data.data
         console.log('所有题：', this.one_section_content)
         this.allSum = res.data.data.length // 所有题的个数
@@ -694,7 +636,7 @@ export default {
           this.imgsList.push(imgs)
           // this.imgList
           // console.log('图片集合', this.imgsList)
-          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id, 'rightOp': -1, 'rightOpStr': ''}
+          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id, 'rightOp': -1}
           this.currentNotList.push(parseInt(item) + 1)
           // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
           this.quesList.push(oneDetail)
@@ -709,11 +651,11 @@ export default {
       this.n = index // index为选项的索引
       this.quesList[this.selectIndex].n = index
       // console.log(this.quesList)
-      // console.log('选的answer:', answer.split('.'))
-      // this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
+      console.log('选的answer:', answer.split('.'))
+      this.answer_to_ques[this.selectIndex] = answer.split('.')[0]
       const that = this
       setTimeout(function () {
-        // console.log('选的answer:', answer)
+        console.log('选的answer:', answer)
         if (answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, '') === that.one_section_content[that.selectIndex].question.correctText.replace(/(^\s*)|(\s*$)/g, '')) {
           that.selectRight = 1 // 答对
           that.quesList[that.selectIndex].selectRight = 1
@@ -722,32 +664,26 @@ export default {
           that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
           console.log('正确了：')
         } else {
-          // const options = that.one_section_content[that.selectIndex].randomOption
-          // console.log('选项：', options)
-          // console.log('正确选项：', that.one_section_content[that.selectIndex].rightOption)
-          that.rightOp = parseInt(that.one_section_content[that.selectIndex].rightOption)
-          console.log(that.rightOp)
-          console.log(that.one_section_content[that.selectIndex].randomOption)
-          console.log(that.one_section_content[that.selectIndex].randomOption[that.rightOp])
-          that.rightOpStr = that.one_section_content[that.selectIndex].randomOption[that.rightOp].split('.')[0]
-          // for (const item in options) {
-          //   if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
-          //     that.rightOp = parseInt(item)
-          //   }
-          // }
+          const options = that.one_section_content[that.selectIndex].randomOption
+          console.log('选项：', options)
+          console.log('正确选项：', that.one_section_content[that.selectIndex].rightOption)
+          for (const item in options) {
+            if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
+              that.rightOp = parseInt(item)
+            }
+          }
           that.selectRight = 2 // 答错
           that.quesList[that.selectIndex].selectRight = 2
           that.quesList[that.selectIndex].rightOp = that.rightOp
-          that.quesList[that.selectIndex].rightOpStr = that.rightOpStr
           that.currentError += 1 // 做对的个数加1
           that.currentErrorList.push(that.selectIndex + 1)
           that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
-          // console.log('错误了：')
+          console.log('错误了：')
         }
         console.log(that.currentRight, that.currentRightList)
         console.log(that.currentError, that.currentErrorList)
-        // console.log('未做的：', that.currentNotList)
-        // console.log('是否展示重新做题：', that.currentNotList.length, that.allSum, that.selectIndex)
+        console.log('未做的：', that.currentNotList)
+        console.log('是否展示重新做题：', that.currentNotList.length, that.allSum, that.selectIndex)
         that.getChongxin()
         // if (that.currentNotList.length === 0 && that.selectIndex === that.allSum - 1) {
         //   that.showSum = true

@@ -57,6 +57,7 @@ export default {
       return localStorage.SET_SCHOOLNUM
     },
     levelName () { // 年级
+      console.log('年级：', localStorage.SET_LEVEL_NAME)
       return localStorage.SET_LEVEL_NAME
     },
     // ifMastered () {
@@ -86,17 +87,18 @@ export default {
       })
     },
     getAllLevels () { // 得到所有的年级
+      console.log(this.levelName)
       this.classifyName = this.levelName
       getAlllevels().then(res => {
         this.levelList = res.data.data
-        console.log('所有年级：', res.data)
+        // console.log('所有年级：', res.data)
       })
     },
     getClassifyContent (val) { // 得到某个分类的具体题
       this.classifyName = val
       // this.$store.commit('SET_LEVEL_NAME', val)
       localStorage.setItem('SET_LEVEL_NAME', val)
-      console.log(localStorage.SET_LEVEL_NAME)
+      console.log('选完之后年级：', localStorage.SET_LEVEL_NAME)
     },
     // gotoChapter () {
     //   this.$router.push('/chapterList')

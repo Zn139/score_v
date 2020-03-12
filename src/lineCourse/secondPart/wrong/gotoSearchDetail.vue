@@ -166,7 +166,7 @@ export default {
       return this.$store.state.exam.openid
     },
     schoolNumber () {
-      return this.$store.state.exam.schoolNum
+      return localStorage.SET_SCHOOLNUM
     },
     // ifMaster () {
     //   return parseInt(this.$route.query.ifMaster)
@@ -175,7 +175,7 @@ export default {
       return parseInt(this.$route.query.id)
     },
     levelName () { // 年级
-      return this.$store.state.lineCourse.levelName
+      return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {

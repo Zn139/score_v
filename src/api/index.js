@@ -271,6 +271,13 @@ export function getPreRecord (req) { // 在线课程--章节练习--进来时--�
     params: req
   })
 }
+export function getPreDoneRecord (req) { // 在线课程--章节练习--进来时--将用户最近做的题回显给用户
+  return request({
+    url: 'exam-three/echoPaperInfo',
+    method: 'get',
+    params: req
+  })
+}
 export function getShowCollect (req) { // 在线课程--章节练习--进来时--某个题是否收藏过
   return request({
     url: 'exam/findCollectInfo',

@@ -110,28 +110,28 @@ export default {
         })
         this.$router.push({name: 'bindAccount'})
       } else {
-        this.$router.push({name: name})
-        // if (this.subject_online === '生物') {
-        //   verificationSchoolNum({
-        //     studentNumber: this.schoolNumber,
-        //     openid: this.openid,
-        //     subject: this.subject_online,
-        //     gradeLevel: this.levelName
-        //   }).then(res => {
-        //     if (res.data.code === 0) {
-        //       this.$router.push({name: name})
-        //     } else {
-        //       this.$vux.alert.show({
-        //         title: '提示',
-        //         content: '您暂无权限查看呦~'
-        //       })
-        //       // 隐藏
-        //       // this.$vux.alert.hide()
-        //     }
-        //   })
-        // } else {
-        //   this.$router.push({name: name})
-        // }
+        // this.$router.push({name: name})
+        if (this.subject_online === '生物') {
+          verificationSchoolNum({
+            studentNumber: this.schoolNumber,
+            openid: this.openid,
+            subject: this.subject_online,
+            gradeLevel: this.levelName
+          }).then(res => {
+            if (res.data.code === 0) {
+              this.$router.push({name: name})
+            } else {
+              this.$vux.alert.show({
+                title: '提示',
+                content: '您暂无权限查看呦~'
+              })
+              // 隐藏
+              // this.$vux.alert.hide()
+            }
+          })
+        } else {
+          this.$router.push({name: name})
+        }
       }
     },
     // gotoBind () {
