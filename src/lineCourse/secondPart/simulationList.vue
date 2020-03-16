@@ -114,7 +114,7 @@ export default {
     gotoDetail (val) { // 跳转到模拟考试详情页
       this.$router.push({
         name: 'mockDetail',
-        params: {
+        query: {
           paperName: val.name,
           type: 'mock'
         }

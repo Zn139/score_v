@@ -27,13 +27,22 @@ export default {
   },
   computed: {
     subject_online () {
-      if (localStorage.SET_SELECT_SUB === '') {
+      console.log('科目：', localStorage.SET_SELECT_SUB)
+      if (this.$store.state.lineCourse.select_sub === '' || this.$store.state.lineCourse.select_sub === undefined) {
+        this.$store.commit('SET_SELECT_SUB', '生物')
         localStorage.setItem('SET_SELECT_SUB', '生物')
-        // bus.$emit('subject', '生物')
         return '生物'
       } else {
-        return localStorage.SET_SELECT_SUB
+        return this.$store.state.lineCourse.select_sub
       }
+      // if (localStorage.SET_SELECT_SUB === '' || localStorage.SET_SELECT_SUB === undefined) {
+      //   this.$store.commit('SET_SELECT_SUB', '生物')
+      //   localStorage.setItem('SET_SELECT_SUB', '生物')
+      //   // bus.$emit('subject', '生物')
+      //   return '生物'
+      // } else {
+      //   return localStorage.SET_SELECT_SUB
+      // }
     },
   },
   // beforeDestroy () {
@@ -41,7 +50,7 @@ export default {
   //   bus.$emit('subject', this.subject_online)
   // },
   mounted () {
-    this.busall()
+    // this.busall()
     // bus.$emit('subject', this.subject_online)
     // this.$store.commit('SET_SELECT_SUB', this.select_sub)
     // // localStorage.setItem('')
@@ -49,15 +58,15 @@ export default {
     // // localStorage.SET_SELECT_SUB
   },
   methods: {
-    busall () {
-      bus.$emit('subject', this.subject_online)
-    },
+    // busall () {
+    //   bus.$emit('subject', this.subject_online)
+    // },
     selectSub (item) {
       console.log('点击了么：', item)
       // this.$store.state.lineCourse
       this.$store.commit('SET_SELECT_SUB', item)
       localStorage.setItem('SET_SELECT_SUB', item)
-      bus.$emit('subject', item)
+      // bus.$emit('subject', item)
       // this.sendMsg()
     },
     // sendMsg () {

@@ -84,8 +84,8 @@ export default {
     subject_online () {
       // console.log(this.$route.params.fullName)
       // return this.$route.params.subject
-      return localStorage.SET_SELECT_SUB
-      // return this.$store.state.lineCourse.select_sub
+      // return localStorage.SET_SELECT_SUB
+      return this.$store.state.lineCourse.select_sub
     },
     openid () {
       return this.$store.state.exam.openid
@@ -97,9 +97,17 @@ export default {
       return localStorage.SET_LEVEL_NAME
     }
   },
+  watch: {
+    subject_online (newVal, oldVal) {
+      console.log('监听科目：', newVal, oldVal)
+    }
+  },
   methods: {
     gotoPage (name) {
       console.log('学号：', this.schoolNumber)
+      console.log('年级：', this.levelName)
+      console.log('科目1：', this.subject_online)
+      console.log('科目：', this.$store.state.lineCourse.select_sub)
       if (this.schoolNumber === '') {
         this.$vux.alert.show({
           title: '提示',
@@ -118,6 +126,7 @@ export default {
             subject: this.subject_online,
             gradeLevel: this.levelName
           }).then(res => {
+            console.log('学号可以做题？', res.data)
             if (res.data.code === 0) {
               this.$router.push({name: name})
             } else {

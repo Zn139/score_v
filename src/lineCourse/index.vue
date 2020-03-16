@@ -42,7 +42,7 @@ export default {
     return {
       lineCourseScroll: null,
       levelList: [],
-      classifyName: ''
+      classifyName: '年级'
     }
   },
   computed: {
@@ -88,7 +88,11 @@ export default {
     },
     getAllLevels () { // 得到所有的年级
       console.log(this.levelName)
-      this.classifyName = this.levelName
+      if (this.levelName === undefined) {
+        this.classifyName = '年级'
+      } else {
+        this.classifyName = this.levelName
+      }
       getAlllevels().then(res => {
         this.levelList = res.data.data
         // console.log('所有年级：', res.data)

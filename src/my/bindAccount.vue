@@ -189,7 +189,7 @@ export default {
     },
     bindUser () {
       // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      // localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
+      localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
       this.$axios({
         method: 'post',
         url: 'http://www.kgai.tech/rest/userRegister',
@@ -209,6 +209,7 @@ export default {
             this.myInfo.levelValue.push(resp.data.userLogin.level)
             this.myInfo.grade = resp.data.userLogin.gradeLevel
             this.myInfo.class = resp.data.userLogin.className
+            localStorage.setItem('SET_LEVEL_NAME', resp.data.userLogin.gradeLevel)
           })
         } else {
           const msg = res.data.errmsg
@@ -219,7 +220,8 @@ export default {
     },
     bindOutUser () {
       // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      // localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
+      localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
+      localStorage.setItem('SET_LEVEL_NAME', this.startYear)
       this.$axios({
         method: 'post',
         url: 'http://www.kgai.tech/rest/userRegister',

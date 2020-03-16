@@ -74,6 +74,8 @@ export default {
             localStorage.setItem('SET_SCHOOLNUM', res.data.userLogin.diyid)
             // localStorage.SET_SCHOOLNUM
             // this.$store.commit('SET_LEVEL_NAME', res.data.gradeLevel)
+          } else {
+            localStorage.setItem('SET_SCHOOLNUM', '')
           }
           // console.log('学号：', localStorage.SET_SCHOOLNUM)
           // if (res.data.gradeLevel !== '') {

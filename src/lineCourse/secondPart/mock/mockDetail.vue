@@ -16,9 +16,21 @@
               <div v-if="selectIndex === index" class="section_exec_ques">
                 <span>{{item.question.questionType}}</span>
                 {{item.question.questionContext}}（{{item.question.questionScore}}分）
-                <div class="section_exec_second_img" v-if="item.imgList.length !== 0">
-                  <!--                  <img v-for="(j, inde) in item.imgList" :src="j" alt="" style="width: 100%;height: 100%;" :key="inde">-->
-                  <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">
+<!--                <div class="section_exec_second_img" v-if="item.imgList.length !== 0">-->
+<!--                  &lt;!&ndash;                  <img v-for="(j, inde) in item.imgList" :src="j" alt="" style="width: 100%;height: 100%;" :key="inde">&ndash;&gt;-->
+<!--                  <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">-->
+<!--                </div>-->
+<!--                <div class="section_exec_second_img" v-if="item.imgList.length !== 0">-->
+<!--                  <img v-for="(i, index) in item.imgList" :src="i" alt="" style="width: 80%;margin-left: 10%" :key="index">-->
+<!--                </div>-->
+                <div style="text-align: center">
+                  <vue-preview
+                    :list="imgsList[selectIndex]"
+                    :thumbImageStyle="{width: '180px', height: '80px', margin: '10px'}"
+                    class="yulan"
+                    :tapToClose="true"
+                    @close="closeHandler"
+                    @destroy="destroyHandler"></vue-preview>
                 </div>
                 <!--                {{str}}-->
                 <!--{{item.question.questionContext.split('）')[0] + '）'}}-->
@@ -64,7 +76,7 @@
                     <!--                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('．')[0]}}</x-button>-->
 <!--                    <x-button class="right_button" v-if="selectIndex !== allSum - 1" @click.native="gotoNextQues">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}，跳至下题</x-button>-->
 <!--                    <x-button class="right_button" v-if="selectIndex === allSum - 1">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}</x-button>-->
-                    <x-button class="right_button">正确答案是{{item.rightOption}}，你的答案是{{item.randomOption[n].split('.')[0]}}</x-button>
+                    <x-button class="right_button">正确答案是{{quesList[index].rightOpStr}}，你的答案是{{item.randomOption[n].split('.')[0]}}</x-button>
                   </div>
                   <div class="pre_next_ques">
                     <x-button mini plain type="primary" v-if="selectIndex > 0" @click.native="gotoPrevious">上一题</x-button>
@@ -241,9 +253,11 @@ export default {
       showDetail: false, // 是否展示答案详解
       selectRight: 0,
       one_section_content: [],
+      imgsList: [],
       selectIndex: 0, // 当前展示的题的索引
       n: -1, // 当前题的选项的索引
       rightOp: -1, // 选错以后正确选项的判断
+      rightOpStr: '', // 选错以后正确选项ABCD
       exerScroll: null,
       currentRight: 0, // 当前正确的个数
       currentRightList: [], // 当前正确的列表
@@ -285,7 +299,7 @@ export default {
   computed: {
     paperName () { // 表示节的名称
       console.log('paperName:', this.$route.params.paperName)
-      return this.$route.params.paperName
+      return this.$route.query.paperName
     },
     subject_online () {
       // console.log(this.$route.params.fullName)
@@ -301,14 +315,14 @@ export default {
       return localStorage.SET_SCHOOLNUM
     },
     firstTitle () {
-      return this.$route.params.type
+      return this.$route.query.type
     },
     levelName () { // 年级
       return localStorage.SET_LEVEL_NAME
     }
   },
   mounted () {
-    this.init()
+    // this.init()
     this.getMockDetail()
     this.getInitTime() // // 获取当索引为0时的时间
   },
@@ -330,6 +344,7 @@ export default {
       this.str = ''
       this.reset()
       this.start()
+      // this.init()
       // this.showCollec = this.quesList[this.selectIndex].showCollec
       // this.showCollec = this.one_section_content[this.selectIndex].collect
       // } else {
@@ -352,6 +367,14 @@ export default {
           click: true
         })
       })
+    },
+    // 即将关闭的时候，调用这个处理函数
+    closeHandler () {
+      console.log('closeHandler')
+    },
+    // 完全关闭之后，调用这个函数清理资源
+    destroyHandler () {
+      console.log('destroyHandler')
     },
     getInitTime () {
       if (this.firstTitle === 'mock') {
@@ -449,22 +472,32 @@ export default {
         gradeLevel: this.levelName
       }).then(res => {
         this.one_section_content = res.data.data
+        // this.init()
         console.log('所有题：', this.one_section_content)
         this.allSum = res.data.data.length // 所有题的个数
         this.showCollec = this.one_section_content[this.selectIndex].collect
         // 给每个题都加上一个字典，未做题的情况
         for (const item in this.one_section_content) {
-          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id, 'question_id': this.one_section_content[item].question.questionId, 'score': this.one_section_content[item].question.questionScore}
+          const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'id': this.one_section_content[item].question.id, 'question_id': this.one_section_content[item].question.questionId, 'score': this.one_section_content[item].question.questionScore, 'rightOpStr': ''}
           // this.currentNotList.push(parseInt(item) + 1)
           // const oneDetail = {'index': parseInt(item), 'n': -1, 'selectRight': 0, 'showDetail': false}
           this.quesList.push(oneDetail)
+          const imgs = []
+          for (const i in this.one_section_content[item].imgList) {
+            const list = {'src': this.one_section_content[item].imgList[i], 'w': 600, 'h': 600}
+            imgs.push(list)
+          }
+          // console.log('picture:', imgs)
+          this.imgsList.push(imgs)
           // this.answer_to_ques[item] = ''
           // console.log(parseInt(item) + 1)
         }
         console.log('存入的初始化信息：', this.quesList)
         console.log(this.currentNotList)
         console.log(this.currentNotList.length)
+        // this.init()
       })
+      this.init()
     },
     // redoQues () {
     //   this.showSum = false
@@ -627,26 +660,37 @@ export default {
           // that.allScore += that.one_section_content[that.selectIndex].question.questionScore
           // console.log('当前获得的总分为：', that.allScore)
         } else {
-          const options = that.one_section_content[that.selectIndex].randomOption
-          // console.log('正确选项为：', that.one_section_content[that.selectIndex].rightOption)
-          // console.log('所有选项为：', options)
-          for (const item in options) {
-            if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
-              that.rightOp = parseInt(item)
-              console.log('that.rightOp:', that.rightOp)
-            }
-          }
+          that.rightOp = parseInt(that.one_section_content[that.selectIndex].rightOption)
+          console.log(that.rightOp)
+          console.log(that.one_section_content[that.selectIndex].randomOption)
+          console.log(that.one_section_content[that.selectIndex].randomOption[that.rightOp])
+          that.rightOpStr = that.one_section_content[that.selectIndex].randomOption[that.rightOp].split('.')[0].replace(/(^\s*)|(\s*$)/g, '')
+          // const options = that.one_section_content[that.selectIndex].randomOption
+          // // console.log('正确选项为：', that.one_section_content[that.selectIndex].rightOption)
+          // // console.log('所有选项为：', options)
+          // for (const item in options) {
+          //   if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
+          //     that.rightOp = parseInt(item)
+          //     console.log('that.rightOp:', that.rightOp)
+          //   }
+          // }
           that.selectRight = 2 // 答错
           that.quesList[that.selectIndex].rightOp = that.rightOp
+          that.quesList[that.selectIndex].rightOpStr = that.rightOpStr
           that.quesList[that.selectIndex].score = 0
           that.quesList[that.selectIndex].selectRight = 2
           console.log('that.quesList[that.selectIndex]:', that.quesList[that.selectIndex])
           // that.currentError += 1 // 做对的个数加1
           // that.currentErrorList.push(that.selectIndex)
         }
-        that.idList.push(that.one_section_content[that.selectIndex].question.id)
-        that.optionList.push(answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, ''))
-        that.doTimeList.push(that.str)
+        if (that.idList.indexOf(that.one_section_content[that.selectIndex].question.id) > -1) {
+          that.optionList.splice(-1, 1, answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, ''))
+          that.doTimeList.splice(-1, 1, that.str)
+        } else {
+          that.idList.push(that.one_section_content[that.selectIndex].question.id)
+          that.optionList.push(answer.replace(answer.split('.')[0] + '.', '').replace(/(^\s*)|(\s*$)/g, ''))
+          that.doTimeList.push(that.str)
+        }
         console.log('已经做了的', that.doneQuesList)
         if (that.doneQuesList.indexOf(that.selectIndex) === -1) {
           that.doneQuesList.push(that.selectIndex)
@@ -791,6 +835,7 @@ export default {
   }
   .wrapper {
     touch-action: pan-y!important;
+    /*height: calc(100% - 30px);*/
   }
   .section_exec_ques {
     background-color: #fff;
@@ -810,11 +855,11 @@ export default {
     }
   }
   .section_exec_second_img {
-    max-height: 100px;
-    height: 100px;
+    /*max-height: 100px;*/
+    /*height: 150px;*/
     margin-top: 10px;
-    width: 80%;
-    margin-left: 10%;
+    width: 90%;
+    margin-left: 5%;
   }
   .box{
     /*text-align: center;*/

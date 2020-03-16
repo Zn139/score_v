@@ -8,24 +8,26 @@
     </div>
     <div class="section_exec_second" ref="section_exec_second">
 <!--    <div class="section_exec_second" ref="section_exec_second" @dblclick="collectCurrentQues">-->
-      <div>
+      <div v-if="one_section_content.length > 0">
         <div v-for="(item, index) in one_section_content" :key="index">
+<!--          style="touch-action: pan-y!important;"-->
           <v-touch v-on:swipeleft="swiperleft" v-on:swiperight="swiperright" class="wrapper">
             <div class="menu-container" ref="menuContainer">
               <!-- 这个是内容 -->
-              <div v-if="selectIndex === index" class="section_exec_ques">
+              <div v-show="selectIndex === index" class="section_exec_ques">
                 <span>{{item.question.questionType}}</span>
                 {{item.question.questionContext}}
-                <div class="section_exec_second_img" v-if="item.imgList.length !== 0">
+                <div class="section_exec_second_img" v-show="item.imgList.length !== 0">
 <!--                  :previewBoxStyle="{border: '1px solid #eee'}"-->
-                  <vue-preview
-                    :list="imgsList[selectIndex]"
-                    :thumbImageStyle="{width: '100px', height: '100px', margin: '10px'}"
-                    class="yulan"
-                    :tapToClose="true"
-                    @close="closeHandler"
-                    @destroy="destroyHandler"></vue-preview>
-<!--                  <img v-for="(j, inde) in item.imgList" :src="j" :key="inde" @click="$preview($event, imgList, inde)" style="height: 100px;max-height: 200px">-->
+<!--                  <vue-preview-->
+<!--                    :list="imgsList[selectIndex]"-->
+<!--                    :thumbImageStyle="{width: '80%'}"-->
+<!--                    class="yulan"-->
+<!--                    :tapToClose="true"-->
+<!--                    @close="closeHandler"-->
+<!--                    @destroy="destroyHandler"></vue-preview>-->
+                  <img v-for="(j, inde) in item.imgList" :src="j" :key="inde" style="width: 80%">
+<!--                  <img v-for="(j, inde) in item.imgList" :src="j" :key="inde" @click="$preview($event, imgList, inde)" style="width: 90%">-->
 <!--                  <img v-for="(j, inde) in item.imgList" :src="j" :key="inde" style="height: 100px;max-height: 200px">-->
 <!--                  <img :src="item.question.questionImgs" alt="" style="width: 100%;height: 100%;">-->
                 </div>
@@ -49,7 +51,7 @@
                   </div>
                   <!--选择错误时，selectRight为2-->
                   <div v-if="selectRight === 2">
-                    <div  v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
+                    <div v-for="(c,index) of item.randomOption" :key="index" class="ques_option">
                       <div v-if="index === n"><i class="iconfont icon_luluchahao-copy-copy-copy"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
                       <div v-else-if="index === quesList[selectIndex].rightOp"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>
 <!--                      <div v-else-if="index === rightOp"><i class="iconfont icon_luluduigou"></i>{{c.replace(c.split('.')[0]+ '.', '')}}</div>-->
@@ -248,7 +250,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    // this.init()
     this.ppname = this.$route.query.paperName
     // this.getOneSectionQues() // // 此试卷的所有题
     this.getPreRecord() // 获取之前的记录
@@ -257,22 +259,24 @@ export default {
   },
   watch: { // 监听题号的索引的变化
     selectIndex (val, oldval) {
-      // console.log('55555555555', this.quesList)
-      this.selectRight = this.quesList[this.selectIndex].selectRight
-      if (this.quesList[this.selectIndex].showDetail === true) {
-        // console.log('daduileme :', this.showDetail)
-        this.showDetail = true
-      } else {
-        this.showDetail = false
+      if (this.quesList.length > 0) {
+        this.selectRight = this.quesList[this.selectIndex].selectRight
+        if (this.quesList[this.selectIndex].showDetail === true) {
+          // console.log('daduileme :', this.showDetail)
+          this.showDetail = true
+        } else {
+          this.showDetail = false
+        }
+        this.n = this.quesList[this.selectIndex].n
+        // console.log('索引李：', this.selectIndex)
+        // if (this.flag === 0) {
+        this.getCollect()
+        this.str = ''
+        this.reset()
+        this.start()
+        this.getChongxin()
       }
-      this.n = this.quesList[this.selectIndex].n
-      // console.log('索引李：', this.selectIndex)
-      // if (this.flag === 0) {
-      this.getCollect()
-      this.str = ''
-      this.reset()
-      this.start()
-      this.getChongxin()
+      // console.log('55555555555', this.quesList)
       // this.showCollec = this.quesList[this.selectIndex].showCollec
       // this.showCollec = this.one_section_content[this.selectIndex].collect
       // } else {
@@ -492,19 +496,27 @@ export default {
               this.rightOpStr = ''
             }
             const oneDetail = {'index': item, 'n': this.userOption, 'selectRight': this.selectToRight, 'id': this.one_section_content[item].question.id, 'rightOp': this.rightOp, 'rightOpStr': this.rightOpStr}
-            console.log('当前选项：', oneDetail)
+            // console.log('当前选项：', oneDetail)
             this.quesList.push(oneDetail)
             this.answer_to_ques[item] = this.one_section_content[item].userOption
           }
-        }
-        // else { // 没做过题
-        //   this.getOneSectionQues()
-        // }
-      })
-        .catch(res => {
-          console.log('异常')
+          this.init()
+          // this.$previewRefresh()
+        } else { // 没做过题
           this.getOneSectionQues()
-        })
+        }
+      })
+      // }, function (err) {
+      //   console.log('接口报错', err)
+      // })
+      // .catch(function (err) {
+      //   console.log('异常', err.response)
+      // })
+      // .catch(res => {
+      //   // if ()
+      //   console.log('异常', res.error)
+      //   this.getOneSectionQues()
+      // })
     },
     // getPreRecord () {
     //   this.quesList = []
@@ -687,7 +699,7 @@ export default {
         for (const item in this.one_section_content) {
           const imgs = []
           for (const i in this.one_section_content[item].imgList) {
-            const list = {'src': this.one_section_content[item].imgList[i], 'w': 600, 'h': 600}
+            const list = {'src': this.one_section_content[item].imgList[i], 'w': 600, 'h': '600'}
             imgs.push(list)
           }
           // console.log('picture:', imgs)
@@ -701,6 +713,7 @@ export default {
           this.answer_to_ques[item] = ''
           // console.log(parseInt(item) + 1)
         }
+        this.init()
         console.log(this.currentNotList)
         console.log(this.currentNotList.length)
       })
@@ -729,7 +742,7 @@ export default {
           console.log(that.rightOp)
           console.log(that.one_section_content[that.selectIndex].randomOption)
           console.log(that.one_section_content[that.selectIndex].randomOption[that.rightOp])
-          that.rightOpStr = that.one_section_content[that.selectIndex].randomOption[that.rightOp].split('.')[0]
+          that.rightOpStr = that.one_section_content[that.selectIndex].randomOption[that.rightOp].split('.')[0].replace(/(^\s*)|(\s*$)/g, '')
           // for (const item in options) {
           //   if (options[item].split('.')[0] === that.one_section_content[that.selectIndex].rightOption) {
           //     that.rightOp = parseInt(item)
@@ -838,6 +851,7 @@ export default {
     /*background-color: #fff;*/
   }
   .wrapper {
+    /*touch-action: default!important;*/
     touch-action: pan-y!important;
   }
   .section_exec_ques {
@@ -861,11 +875,14 @@ export default {
     /*max-height: 200px;*/
     /*height: 100px;*/
     margin-top: 10px;
-    max-width: 80%;
-    text-align: center;
+    /*max-width: 80%;*/
+    /*text-align: center;*/
     margin-left: 10%;
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
     img {
-      height: 100px;
+      /*height: 100px;*/
+      /*text-align: center;*/
     }
   }
   .yulan {

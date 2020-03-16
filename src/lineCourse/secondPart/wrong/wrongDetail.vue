@@ -18,7 +18,7 @@
                 {{errorSectionList.question.questionContext}}
                 <!--                {{item.question_imgs}}-->
                 <div class="section_exec_second_img" v-if="errorSectionList.imgList.length !== 0">
-                  <img v-for="(item, index) in errorSectionList.imgList" :src="item" alt="" style="width: 100%;height: 100%;" :key="index">
+                  <img v-for="(item, index) in errorSectionList.imgList" :src="item" alt="" style="width: 80%;" :key="index">
                 </div>
                 <div class="box">
                   <!--未选择选项时，selectRight为0-->
@@ -152,6 +152,7 @@
 import {getErrorDetail, cancelCollectCurrentQues, collectCurrentQues, delMasterErrorQues, commitKnowledgeDoRecord, gotoMaster} from '@/api/index'
 import BScroll from 'better-scroll'
 import { LoadMore, Group, Cell, TransferDom } from 'vux'
+import _ from 'underscore'
 export default {
   directives: {
     TransferDom
@@ -353,6 +354,7 @@ export default {
       }).then(res => {
         this.errorSectionList = res.data.data
         this.showCollec = this.errorSectionList.collect
+        // this.init()
         // this.quesList[this.newIndex].question_id = this.errorSectionList.question.questionId
         // const oneDetail = {'index': this.newIndex, 'n': -1, 'selectRight': 0, 'id': this.newQuesId, 'question_id': this.errorSectionList.question.questionId}
         // // 判断quesList中是否存在oneDetail
@@ -620,7 +622,7 @@ export default {
             // console.log(options[item].split('.')[0], that.errorSectionList[that.selectIndexd].correct_option)
             if (options[item].split('.')[0] === that.errorSectionList.question.correctOption) {
               that.rightOp = parseInt(item)
-              console.log('正确选项：', item)
+              // console.log('正确选项：', item)
             }
           }
           that.selectRight = 2 // 答错
@@ -670,7 +672,7 @@ export default {
     //     console.log('sdfdfl;fghgfh', res.data.data)
     //   })
     // },
-    commitRecord (ans) { // 提交专项练习做题记录
+    commitRecord: _.debounce(function (ans) { // 提交专项练习做题记录
       console.log('时间：', this.str)
       commitKnowledgeDoRecord({
         id: this.id,
@@ -684,7 +686,7 @@ export default {
       }).then(res => {
 
       })
-    },
+    }, 50, true),
     gotoNextQues () { // 回答正确时，跳到下一个
       this.newIndex += 1
       console.log('duima', this.newIndex)
@@ -766,8 +768,8 @@ export default {
     }
   }
   .section_exec_second_img {
-    max-height: 100px;
-    height: 100px;
+    /*max-height: 100px;*/
+    /*height: 100px;*/
     margin-top: 10px;
     width: 80%;
     margin-left: 10%;
