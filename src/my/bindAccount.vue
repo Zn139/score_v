@@ -11,7 +11,7 @@
         <x-input class="bind_school" title="学号" placeholder="请输入学号" text-align="right" placeholder-align="right" v-model="schoolNum" @on-change="changeSchoolNum"></x-input>
         <!--      <x-button plain class="bind_school_button">确定</x-button>-->
       </div>
-      <div v-if="schoolMember === 0"> <!-- 不是学校合作学生 -->
+      <div v-show="schoolMember === 0"> <!-- 不是学校合作学生 -->
         <popup-picker class="bind_school" title="选择学校" :data="[schoolList]" v-model="schoolValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="输入学校名称"></popup-picker>
         <popup-picker class="bind_school" title="选择阶段" :data="[levelList]" v-model="levelValue" @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="选择学习阶段"></popup-picker>
         <calendar class="bind_school" v-model="startYear" title="入学年份"></calendar>
@@ -19,16 +19,26 @@
         <div class="bind_school_tip">请设置密码，以便其他人登录</div>
         <x-input class="bind_school" type="password" title="设置密码" placeholder="请输入密码" text-align="right" placeholder-align="right" v-model="passwd"></x-input>
         <x-input class="bind_school" type="password" title="确认密码" placeholder="再次输入密码" text-align="right" placeholder-align="right" v-model="passwod" @on-blur="confirmPassword"></x-input>
-        <x-button plain class="bind_school_button" @click.native="bindOutUser">完成</x-button>
+        <div class="agreeStatement">
+          <i class="iconfont icon_lulukuang-" @click="agreeState"></i>
+          <span @click="gotoStatement">我已阅读免责条款</span>
+        </div>
+        <x-button plain class="bind_school_button" @click.native="bindOutUser" v-if="showAgree">完成</x-button>
+        <x-button plain class="bind_school_button_disAgree" @click.native="bindOutUser" v-else disabled>完成</x-button>
       </div>
-      <div class="bind_school_tip" v-if="schoolMember === 1"> <!-- 是学校合作学生，所以需要验证下 -->
+      <div class="bind_school_tip" v-show="schoolMember === 1"> <!-- 是学校合作学生，所以需要验证下 -->
         <!--      <alert title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>-->
         <alert v-model="schVerify" title="提示" @on-show="onShow" @on-hide="onHideAlert">您是学校用户，请提供初始密码验证~</alert>
         <!--      若为学校购买服务器用户，提示验证初始密码-->
       </div>
-      <div v-if="schoolMember === 2"> <!-- 是学校合作学生，所以需要验证下 -->
+      <div v-show="schoolMember === 2"> <!-- 是学校合作学生，所以需要验证下 -->
         <x-input class="bind_school" title="验证初始密码" placeholder="请输入初始密码" text-align="right" placeholder-align="right" v-model="schoolPasswod" ></x-input>
-        <x-button plain class="bind_school_button" @click.native="bindUser">完成</x-button>
+        <div class="agreeStatement">
+          <i class="iconfont icon_lulukuang-" @click="agreeState"></i>
+          <span @click="gotoStatement">我已阅读免责条款</span>
+        </div>
+        <x-button plain class="bind_school_button" @click.native="bindUser" v-if="showAgree">完成</x-button>
+        <x-button plain class="bind_school_button_disAgree" @click.native="bindUser" v-else disabled>完成</x-button>
       </div>
     </div>
     <div v-if="flag === 1">
@@ -50,6 +60,7 @@
 export default {
   data () {
     return {
+      showAgree: false, // 是否点击免责条款
       flag: 2, // 是否绑定学号
       stuInfoContent: [],
       myInfo: {
@@ -64,7 +75,7 @@ export default {
       // errorText: '',
       schoolPasswod: '', // 学校初始密码
       startYear: 'TODAY',
-      schVerify: true,
+      schVerify: false, // 是否展示学校用户的信息
       schoolMember: 3, // 是否为学校购买用户
       schoolList: ['中关村中学', '知春分校', '人大附中'],
       schoolValue: [],
@@ -80,11 +91,30 @@ export default {
     }
   },
   mounted () {
+    // console.log('youmeyou schoolnum', this.$store.state.lineCourse.school_number_temp)
+    this.schoolNum = this.$store.state.lineCourse.school_number_temp
     this.getUserInfo()
   },
   methods: {
     returnBack () {
+      this.$store.commit('SET_school_number_temp', '')
       this.$router.go(-1)
+    },
+    gotoStatement () { // 跳转免责声明
+      this.$store.commit('SET_school_number_temp', this.schoolNum)
+      this.$router.push({name: 'statement'})
+    },
+    agreeState () { // 同意免责条款
+      var agree = document.querySelector('.agreeStatement')
+      if (agree.children[0].className === 'iconfont icon_lulukuang-') {
+        agree.children[0].className = 'iconfont icon_luluduigoukuang1'
+        this.showAgree = true
+      } else {
+        agree.children[0].className = 'iconfont icon_lulukuang-'
+        this.showAgree = false
+      }
+      console.log(agree.childNodes)
+      console.log(agree.children[0].className)
     },
     getUserInfo () {
       this.$axios({
@@ -120,6 +150,7 @@ export default {
       })
     },
     changeSchoolNum (val) { // 根据输入的学号，查看是否存在（是否是合作学校学生）
+      this.schVerify = true
       this.$axios({
         method: 'get',
         url: 'http://www.kgai.tech/getAllInfoByDiyid',
@@ -128,18 +159,26 @@ export default {
           diyid: val
         }
       }).then(res => {
+        console.log('===0?', res.data.errno === 0)
+        console.log('===0?', this.schVerify)
         if (res.data.errno === 0) {
           // const a = res.data.data
           // this.schoolValue = [res.data.data.schoolName]
           // this.levelValue = [res.data.data.gradeName]
           // this.className = res.data.data.className
-          this.schoolMember = 1
+          if (this.$store.state.lineCourse.school_number_temp !== '') {
+            this.schVerify = false
+            this.schoolMember = 2
+          } else {
+            this.schoolMember = 1
+          }
           // console.log('cunzai:', a, res.data)
         } else {
           this.schoolMember = 0
         }
       })
       console.log('学号变化：', val)
+
       // this.$axios({
       //   method: 'get',
       //   url: 'http://zhongkeruitong.top/score_analysis/scoreTwo/verifyStudentId',
@@ -164,7 +203,7 @@ export default {
     // checkPassword (val) {
     //   console.log('xixixiiixixiix', val)
     // },
-    confirmPassword () {
+    confirmPassword () { // 验证密码
       if (this.passwod !== this.passwd) {
         // console.log('bupipei')
         this.$vux.alert.show({
@@ -187,20 +226,61 @@ export default {
     onHideAlert () {
       this.schoolMember = 2
     },
-    bindUser () {
-      // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
-      this.$axios({
-        method: 'post',
-        url: 'http://www.kgai.tech/rest/userRegister',
-        params: {
-          wechatId: this.openid,
-          initialPassword: this.schoolPasswod,
-          diyid: this.schoolNum
-        }
-      }).then(res => {
-        if (res.data.errno === 0) {
-          this.$vux.toast.text(res.data.errmsg)
+    bindUser () { // 绑定合作学校用户
+      var agree = document.querySelector('.agreeStatement') // 点击完已经阅读免责条款才可绑定成功
+      if (agree.children[0].className === 'iconfont icon_luluduigoukuang1') {
+        // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
+        localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
+        this.$axios({
+          method: 'post',
+          url: 'http://www.kgai.tech/rest/userRegister',
+          params: {
+            wechatId: this.openid,
+            initialPassword: this.schoolPasswod,
+            diyid: this.schoolNum
+          }
+        }).then(res => {
+          if (res.data.errno === 0) {
+            this.$vux.toast.text(res.data.errmsg)
+            // 绑定完账号以后，flag=1，展示已经绑定完的信息
+            this.flag = 1
+            this.stuInfoContent.diyid = this.schoolNum
+            this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
+              this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
+              this.myInfo.levelValue.push(resp.data.userLogin.level)
+              this.myInfo.grade = resp.data.userLogin.gradeLevel
+              this.myInfo.class = resp.data.userLogin.className
+              localStorage.setItem('SET_LEVEL_NAME', resp.data.userLogin.gradeLevel)
+            })
+          } else {
+            const msg = res.data.errmsg
+            this.$vux.toast.text(msg)
+            console.log('成功：', msg)
+          }
+        })
+      }
+    },
+    bindOutUser () { // 绑定非合作学校用户
+      var agree = document.querySelector('.agreeStatement') // 点击完已经阅读免责条款才可绑定成功
+      if (agree.children[0].className === 'iconfont icon_luluduigoukuang1') {
+        // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
+        localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
+        localStorage.setItem('SET_LEVEL_NAME', this.startYear)
+        this.$axios({
+          method: 'post',
+          url: 'http://www.kgai.tech/rest/userRegister',
+          params: {
+            wechatId: this.openid,
+            initialPassword: this.passwod,
+            diyid: this.schoolNum,
+            schoolName: this.schoolValue[0],
+            grade: this.startYear,
+            className: this.className,
+            levle: this.levelValue[0]
+          }
+        }).then(res => {
+          const msg = res.data.errmsg
+          this.$vux.toast.text(msg)
           // 绑定完账号以后，flag=1，展示已经绑定完的信息
           this.flag = 1
           this.stuInfoContent.diyid = this.schoolNum
@@ -209,46 +289,11 @@ export default {
             this.myInfo.levelValue.push(resp.data.userLogin.level)
             this.myInfo.grade = resp.data.userLogin.gradeLevel
             this.myInfo.class = resp.data.userLogin.className
-            localStorage.setItem('SET_LEVEL_NAME', resp.data.userLogin.gradeLevel)
+            console.log('信息：', resp.data)
           })
-        } else {
-          const msg = res.data.errmsg
-          this.$vux.toast.text(msg)
           console.log('成功：', msg)
-        }
-      })
-    },
-    bindOutUser () {
-      // this.$store.commit('SET_SCHOOLNUM', this.schoolNum)
-      localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
-      localStorage.setItem('SET_LEVEL_NAME', this.startYear)
-      this.$axios({
-        method: 'post',
-        url: 'http://www.kgai.tech/rest/userRegister',
-        params: {
-          wechatId: this.openid,
-          initialPassword: this.passwod,
-          diyid: this.schoolNum,
-          schoolName: this.schoolValue[0],
-          grade: this.startYear,
-          className: this.className,
-          levle: this.levelValue[0]
-        }
-      }).then(res => {
-        const msg = res.data.errmsg
-        this.$vux.toast.text(msg)
-        // 绑定完账号以后，flag=1，展示已经绑定完的信息
-        this.flag = 1
-        this.stuInfoContent.diyid = this.schoolNum
-        this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
-          this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
-          this.myInfo.levelValue.push(resp.data.userLogin.level)
-          this.myInfo.grade = resp.data.userLogin.gradeLevel
-          this.myInfo.class = resp.data.userLogin.className
-          console.log('信息：', resp.data)
         })
-        console.log('成功：', msg)
-      })
+      }
     }
   }
 }
@@ -281,7 +326,7 @@ export default {
     /*color: #fff;*/
     display: inline-block;
   }
-  .iconfont {
+  .icon_lulufanhui {
     margin-top: 10px;
     font-size: 20px;
   }
@@ -300,6 +345,31 @@ export default {
     border-bottom: 1px solid #e9e9e9;
     margin: 0 14px;
   }
+  .agreeStatement {
+    margin-top: 15px;
+    margin-left: 28px;
+    position: relative;
+    span {
+      color: #3c3c3c;
+      font-size: 14px;
+      margin-left: 22px;
+      /*position: absolute;*/
+    }
+    .icon_lulukuang- {
+      font-size: 18px;
+      position: absolute;
+      top: 0;
+      margin-right: 15px;
+    }
+    .icon_luluduigoukuang1 {
+      color: #f43530;
+      position: absolute;
+    }
+  }
+  /*.icon_lulukuang- {*/
+  /*  margin-top: 20px;*/
+  /*  margin-left: 28px;*/
+  /*}*/
   .my_info_first_item {
     /*padding-left: 15px;*/
     margin-left: 15px;
@@ -339,6 +409,15 @@ export default {
     border-color: rgba(66,185,130, 0.9);
     /*background-color: #42b982;*/
     background-color: rgba(66,185,130, 0.9);
+    color: #fff;
+  }
+  .bind_school_button_disAgree {
+    margin-top: 25px;
+    width: 85%;
+    border-radius: 99px;
+    border-color: #ececec;
+    /*background-color: #42b982;*/
+    background-color: #ececec;
     color: #fff;
   }
   .bind_school_tip {

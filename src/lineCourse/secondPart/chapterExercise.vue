@@ -164,6 +164,7 @@
 import BScroll from 'better-scroll'
 import {getOneSectionQues, getCurrentRecord, getPreDoneRecord, getNoSelectCurrentRecord, collectCurrentQues, cancelCollectCurrentQues, recordCurrentAnsToQues, getPreRecord, getShowCollect} from '@/api/index'
 import { LoadMore, TransferDom, Group, XSwitch, Cell } from 'vux'
+import _ from 'underscore'
 // import ToggleText from './ToggleText'
 export default {
   directives: {
@@ -718,7 +719,7 @@ export default {
         console.log(this.currentNotList.length)
       })
     },
-    changeList (answer, index) {
+    changeList: _.debounce(function (answer, index) {
       this.n = index // index为选项的索引
       this.quesList[this.selectIndex].n = index
       // console.log(this.quesList)
@@ -752,7 +753,9 @@ export default {
           that.quesList[that.selectIndex].selectRight = 2
           that.quesList[that.selectIndex].rightOp = that.rightOp
           that.quesList[that.selectIndex].rightOpStr = that.rightOpStr
+          console.log('做错了？', that.currentError)
           that.currentError += 1 // 做对的个数加1
+          console.log('做错了？后', that.currentError)
           that.currentErrorList.push(that.selectIndex + 1)
           that.currentNotList.splice(that.currentNotList.indexOf(that.selectIndex + 1), 1)
           // console.log('错误了：')
@@ -771,8 +774,8 @@ export default {
         console.log('总结用时：', that.str)
       }, 400)
       // console.log('答案是：', this.answer_to_ques)
-    },
-    getCurrentRecord (ans) {
+    }, 50, true),
+    getCurrentRecord: _.debounce(function (ans) {
       getCurrentRecord({
         id: this.id,
         studentNumber: this.schoolNumber,
@@ -791,7 +794,7 @@ export default {
         // this.currentErrorList = res.data.data.doErrorList
         // this.currentNotList = res.data.data.notDoList
       })
-    },
+    }, 50, true),
     gotoNextQues () {
       this.selectIndex += 1
       // console.log('展示的题：', this.selectIndex)
