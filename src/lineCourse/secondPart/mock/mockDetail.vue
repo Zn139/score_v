@@ -661,7 +661,8 @@ export default {
           // console.log('当前获得的总分为：', that.allScore)
         } else {
           that.rightOp = parseInt(that.one_section_content[that.selectIndex].rightOption)
-          console.log(that.rightOp)
+          console.log('正确选项：', that.rightOp)
+          console.log('正确选项：', that.one_section_content[that.selectIndex])
           console.log(that.one_section_content[that.selectIndex].randomOption)
           console.log(that.one_section_content[that.selectIndex].randomOption[that.rightOp])
           that.rightOpStr = that.one_section_content[that.selectIndex].randomOption[that.rightOp].split('.')[0].replace(/(^\s*)|(\s*$)/g, '')

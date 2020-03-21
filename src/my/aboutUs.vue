@@ -115,7 +115,7 @@ export default {
     /*margin-top: 20px;*/
     background-color: #fff;
     padding: 20px 18px;
-    height: calc(100 - 50px);
+    height: calc(100% - 50px);
     overflow: hidden;
     /*border: 1px solid red;*/
   }

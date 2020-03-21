@@ -10,10 +10,7 @@
         <span>{{levelName}}</span>
       </div>
     </div>
-    <div class="noData" v-if="xtContent.length === 0">
-      该同学暂无做题统计数据
-    </div>
-    <div class="xitiStatic_second" v-if="xtContent.length > 0">
+    <div class="xitiStatic_second">
 <!--      <div class="xitiStatic_seconde_title">-->
 <!--        <x-button class="xitiStatic_second_title_button">{{subject_online}}</x-button>-->
 <!--        <popup-picker class="grade_info" title="年级" :data="list1" v-model="value" disabled @on-show="onShow" @on-hide="onHide" @on-change="onChange" placeholder="请选择"></popup-picker>-->
@@ -32,12 +29,15 @@
         </datetime>
       </div>
       <div class="xitiStatic_second_dateInfo">
-          <div class="xitiStatic_second_dateInfo_left">2019年</div>
-          <div class="xitiStatic_second_dateInfo_right">共做50道题，正确率80%</div>
+          <div class="xitiStatic_second_dateInfo_left">2020年</div>
+<!--          <div class="xitiStatic_second_dateInfo_right">共做50道题，正确率80%</div>-->
       </div>
     </div>
+    <div class="noData" v-if="xtContent.length === 0">
+      该同学暂无做题统计数据
+    </div>
 <!--    <div class="barChart" ref="wrongBarChart"></div>-->
-    <div class="xitStatic_third">
+    <div class="xitStatic_third" v-if="xtContent.length > 0">
       <div v-for="(item, index) in xtContent" :key="index" class="xitiStatic_third_info" @click="gotoStaticDetail(item.examPaperName, item.examSource)">
         <div class="xitiStatic_third_left">
           <div class="xitiStatic_third_left_top">{{item.examPaperName}}</div>

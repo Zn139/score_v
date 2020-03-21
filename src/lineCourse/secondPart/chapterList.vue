@@ -145,6 +145,7 @@ export default {
 <style scoped lang="scss">
   .chapter_list_info {
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background: #f8f8f8;
@@ -175,6 +176,7 @@ export default {
   }
   .title {
     display: inline-block;
+    /*text-align: center;*/
     margin-left: 35%;
     transform: translateX(-45%);
   }

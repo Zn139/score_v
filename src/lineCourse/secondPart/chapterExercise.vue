@@ -772,7 +772,7 @@ export default {
         that.paperid = that.one_section_content[that.selectIndex].sourcePaperId // 组卷id
         that.getCurrentRecord(answer)
         console.log('总结用时：', that.str)
-      }, 400)
+      }, 100)
       // console.log('答案是：', this.answer_to_ques)
     }, 50, true),
     getCurrentRecord: _.debounce(function (ans) {
