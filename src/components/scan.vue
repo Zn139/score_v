@@ -225,7 +225,7 @@ export default {
     // scan () {
     //   let _this = this
     //   let url = location.href.split('#')[0]
-    //   this.$axios.get('http://www.kgai.tech/wechat/getSign?url=' + url).then(res => {
+    //   this.$axios.get('http://zhongkeruitong.top/wechat_login/wechat/getSign?url=' + url).then(res => {
     //     this.jsonData = res.data.data
     //     wx.config({
     //       // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -274,8 +274,8 @@ export default {
       // console.log(url)
       // alert('url是啥：' + url)
       this.$axios.get('http://zhongkeruitong.top/score_analysis/wechat/getSign?url=' + url).then(res => {
-      // this.$axios.get('http://www.kgai.tech/wechat/getSign?url=' + url).then(res => {
-      // this.$axios.get('http://www.kgai.tech/wechat/getSign?url=http://zhongkeruitong.top/score_analysis/index.html').then(res => {
+      // this.$axios.get('http://zhongkeruitong.top/wechat_loginwechat/getSign?url=' + url).then(res => {
+      // this.$axios.get('http://zhongkeruitong.top/wechat_loginwechat/getSign?url=http://zhongkeruitong.top/score_analysis/index.html').then(res => {
       //   alert('url是啥：', url)
       //   console.log(res.data)
       //   this.configContent = res.data

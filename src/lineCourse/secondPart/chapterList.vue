@@ -193,10 +193,10 @@ export default {
     width: 85%;
     position: relative;
     margin-top: 15px;
-    margin-left: 50%;
+    margin-left: 5%;
+    /*transform: translateX(-50%);*/
     padding-left: 15px;
     min-height: 40px;
-    transform: translateX(-50%);
     background-color: #fff;
     /*box-shadow: 1px 1px 3px 2px rgba(66,185,130,0.4);*/
     border: 2px #ececec solid;

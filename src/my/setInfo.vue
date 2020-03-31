@@ -80,7 +80,7 @@ export default {
       })
     },
     getUserInfo () {
-      this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid).then(res => {
+      this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByWechatId?wechatId=' + this.openid).then(res => {
         this.content = res.data.userLogin
         console.log(this.content)
         // this.myInfo.userName = res.data.userLogin.userName
@@ -90,7 +90,7 @@ export default {
     },
     confirmOldPassword () { // 验证原密码
       this.$axios({
-        url: 'http://www.kgai.tech/rest/passwordMatch',
+        url: 'http://zhongkeruitong.top/wechat_login/rest/passwordMatch',
         method: 'get',
         params: {
           wechatId: this.openid,
@@ -116,7 +116,7 @@ export default {
         })
       } else {
         this.$axios({
-          url: 'http://www.kgai.tech/rest/updatePassword',
+          url: 'http://zhongkeruitong.top/wechat_login/rest/updatePassword',
           method: 'post',
           params: {
             wechatId: this.openid,

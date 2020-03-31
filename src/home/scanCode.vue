@@ -35,8 +35,8 @@ export default {
       let url = encodeURIComponent(window.location.href.split('#')[0])
       // alert('url是啥：' + url)
       this.$axios.get('http://zhongkeruitong.top/score_analysis/wechat/getSign?url=' + url).then(res => {
-      // this.$axios.get('http://www.kgai.tech/wechat/getSign?url=' + url).then(res => {
-      // this.$axios.get('http://www.kgai.tech/wechat/getSign?url=http://zhongkeruitong.top/score_analysis/index.html').then(res => {
+      // this.$axios.get('http://zhongkeruitong.top/wechat_login/wechat/getSign?url=' + url).then(res => {
+      // this.$axios.get('http://zhongkeruitong.top/wechat_login/wechat/getSign?url=http://zhongkeruitong.top/score_analysis/index.html').then(res => {
         if (res.data.code === 0) {
           this.configContent = res.data.data
           this.signWX()

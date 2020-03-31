@@ -54,11 +54,11 @@ export default {
   },
   methods: {
     checkRedict () {
-      this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid
+      this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByWechatId?wechatId=' + this.openid
         // this.$axios(
         //   {
         // method: 'get',
-        // url: 'http://www.kgai.tech//getAllInfoByWechatId',
+        // url: 'http://zhongkeruitong.top/wechat_login/getAllInfoByWechatId',
         // wechatId: this.openid
         // }
       ).then(res => {

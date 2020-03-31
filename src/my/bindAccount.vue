@@ -138,7 +138,7 @@ export default {
     getUserInfo () {
       this.$axios({
         method: 'get',
-        url: 'http://www.kgai.tech/getAllInfoByWechatId',
+        url: 'http://zhongkeruitong.top/wechat_login/getAllInfoByWechatId',
         params: {
           wechatId: this.openid
         }
@@ -153,7 +153,7 @@ export default {
           // localStorage.setItem('SET_SCHOOLNUM', res.data.userLogin.diyid)
           this.stuInfoContent = res.data.userLogin
           this.flag = 1
-          this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.stuInfoContent.diyid).then(resp => {
+          this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByDiyid?diyid=' + this.stuInfoContent.diyid).then(resp => {
             this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
             this.myInfo.levelValue.push(resp.data.userLogin.level)
             this.myInfo.grade = resp.data.userLogin.gradeLevel
@@ -172,7 +172,7 @@ export default {
       this.schVerify = true
       this.$axios({
         method: 'get',
-        url: 'http://www.kgai.tech/getAllInfoByDiyid',
+        url: 'http://zhongkeruitong.top/wechat_login/getAllInfoByDiyid',
         params: {
           // openid: this.openid,
           diyid: val
@@ -254,7 +254,7 @@ export default {
         localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
         this.$axios({
           method: 'post',
-          url: 'http://www.kgai.tech/rest/userRegister',
+          url: 'http://zhongkeruitong.top/wechat_login/rest/userRegister',
           params: {
             wechatId: this.openid,
             initialPassword: this.schoolPasswod,
@@ -266,7 +266,7 @@ export default {
             // 绑定完账号以后，flag=1，展示已经绑定完的信息
             this.flag = 1
             this.stuInfoContent.diyid = this.schoolNum
-            this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
+            this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
               this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
               this.myInfo.levelValue.push(resp.data.userLogin.level)
               this.myInfo.grade = resp.data.userLogin.gradeLevel
@@ -288,7 +288,7 @@ export default {
         localStorage.setItem('SET_SCHOOLNUM', this.schoolNum)
         this.$axios({
           method: 'post',
-          url: 'http://www.kgai.tech/rest/userRegister',
+          url: 'http://zhongkeruitong.top/wechat_login/rest/userRegister',
           params: {
             wechatId: this.openid,
             initialPassword: this.passwod,
@@ -304,7 +304,7 @@ export default {
           // 绑定完账号以后，flag=1，展示已经绑定完的信息
           this.flag = 1
           this.stuInfoContent.diyid = this.schoolNum
-          this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
+          this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByDiyid?diyid=' + this.schoolNum).then(resp => {
             this.myInfo.schoolValue.push(resp.data.userLogin.schoolName)
             this.myInfo.levelValue.push(resp.data.userLogin.level)
             this.myInfo.grade = resp.data.userLogin.gradeLevel

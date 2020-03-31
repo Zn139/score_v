@@ -105,7 +105,7 @@ export default {
     // },
     submitMyInfo () {
       this.$axios({
-        url: 'http://www.kgai.tech/rest/bindMyInfo',
+        url: 'http://zhongkeruitong.top/wechat_login/rest/bindMyInfo',
         method: 'post',
         params: {
           wechatId: this.openid,
@@ -130,11 +130,11 @@ export default {
     },
     getUserInfo: _.debounce(function () {
       console.log('执行几次啊')
-      this.$axios.get('http://www.kgai.tech//getAllInfoByWechatId?wechatId=' + this.openid).then(res => {
+      this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByWechatId?wechatId=' + this.openid).then(res => {
         // this.myInfo.userName = res.data.userLogin.userName
         // console.log('信息：', res.data)
         this.myInfo.schoolNum = res.data.userLogin.diyid
-        this.$axios.get('http://www.kgai.tech/getAllInfoByDiyid?diyid=' + this.myInfo.schoolNum).then(resp => {
+        this.$axios.get('http://zhongkeruitong.top/wechat_login/getAllInfoByDiyid?diyid=' + this.myInfo.schoolNum).then(resp => {
           this.reallName = resp.data.userLogin.realName
           this.nicheng = resp.data.userLogin.nickName
           this.sex = resp.data.userLogin.sex
