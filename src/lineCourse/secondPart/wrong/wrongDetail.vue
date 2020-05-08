@@ -15,7 +15,7 @@
               <!-- 这个是内容 -->
               <div class="section_exec_ques" v-if="Object.keys(errorSectionList).length !== 0">
                 <span>{{errorSectionList.question.questionType}}</span>
-                {{errorSectionList.question.questionContext}}
+                <div class="section_exec_ques_context"> {{errorSectionList.question.questionContext}}</div>
                 <!--                {{item.question_imgs}}-->
                 <div class="section_exec_second_img" v-if="errorSectionList.imgList.length !== 0">
                   <img v-for="(item, index) in errorSectionList.imgList" :src="item" alt="" style="width: 80%;" :key="index">
@@ -751,10 +751,12 @@ export default {
     touch-action: pan-y!important;
   }
   .section_exec_ques {
+
     background-color: #fff;
     padding: 20px 17px 15px;
     line-height: 30px;
     span {
+
       background-color: #417dda;
       font-size: 11px;
       color: #fff;
@@ -765,6 +767,14 @@ export default {
       border-top-right-radius: 1em;
       /*border-bottom-right-radius: 4em 0.5em;*/
       border-bottom-left-radius: 12px;
+    }
+    .section_exec_ques_context{
+      
+      word-wrap: break-word;
+      word-break: keep-all;
+
+      text-align: justify;
+      text-justify:inter-word;
     }
   }
   .section_exec_second_img {

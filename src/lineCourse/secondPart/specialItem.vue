@@ -614,6 +614,9 @@ export default {
       text-overflow:ellipsis;
     }
     .wrongQues_third_detail_title1 {
+      //
+      overflow-wrap:break-word;
+      word-break: keep-all;
       line-height: 27px;
     }
     .wrongQues_third_detail_open {
